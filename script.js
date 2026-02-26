@@ -21,7 +21,7 @@ const projects = [
     description: "JavaScript DOM project to toggle bulb and cat eyes interaction.",
     image: "./assets/bulb.png",
     live: "./projects/bulb-on-off-cat-eyes/index.html",
-    code: "#"
+    code: "https://github.com/gauravthombre/Gaurav-Projects-Lab-FSD/tree/main/projects/bulb-on-off-cat-eyes"
   }
 
 ];
