@@ -5,7 +5,7 @@ const projects = [
     description: "A tourism website showcasing destinations using static HTML and CSS.",
     image: "./assets/tourism.png",
     live: "./projects/tourism-static-website/index.html",
-    code: "#"
+    code: "https://github.com/gauravthombre/Gaurav-Projects-Lab-FSD/tree/main/projects/tourism-static-website"
   },
 
   {
@@ -13,7 +13,7 @@ const projects = [
     description: "Food ordering website with menu, UI interactions, and responsive design.",
     image: "./assets/food-order.png",
     live: "./projects/online-food-ordering/index.html",
-    code: "#"
+    code: "https://github.com/gauravthombre/Gaurav-Projects-Lab-FSD/tree/main/projects/online-food-ordering"
   },
 
   // {
