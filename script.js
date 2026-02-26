@@ -16,13 +16,13 @@ const projects = [
     code: "https://github.com/gauravthombre/Gaurav-Projects-Lab-FSD/tree/main/projects/online-food-ordering"
   },
 
-  // {
-  //   name: "Bulb ON/OFF Cat Eyes",
-  //   description: "JavaScript DOM project to toggle bulb and cat eyes interaction.",
-  //   image: "./assets/bulb.png",
-  //   live: "./projects/bulb-on-off-cat-eyes/index.html",
-  //   code: "#"
-  // }
+  {
+    name: "Bulb ON/OFF Cat Eyes",
+    description: "JavaScript DOM project to toggle bulb and cat eyes interaction.",
+    image: "./assets/bulb.png",
+    live: "./projects/bulb-on-off-cat-eyes/index.html",
+    code: "#"
+  }
 
 ];
 
