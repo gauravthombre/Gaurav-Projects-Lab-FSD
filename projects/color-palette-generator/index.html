@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Color Palette Generator</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+  <div class="container">
+    <h1>🎨 Color Palette Generator</h1>
+    <p>Click the button to generate a random color palette!</p>
+
+    <button id="generateBtn" class="btn">Generate Palette</button>
+
+    <div id="palette" class="palette">
+      <!-- Color boxes will be added here by JS -->
+    </div>
+
+    <p id="copyMsg" class="copy-msg" style="display:none;">✅ Hex code copied to clipboard!</p>
+
+    <!-- Saved Palettes -->
+    <div class="saved-section">
+      <h2>Saved Palettes</h2>
+      <button id="saveBtn" class="btn btn-outline">Save This Palette</button>
+      <div id="savedPalettes"></div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

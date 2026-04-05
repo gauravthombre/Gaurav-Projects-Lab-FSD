@@ -1,0 +1,140 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+  color: #333;
+  font-size: 15px;
+}
+
+.container {
+  max-width: 800px;
+  margin: 30px auto;
+  background: white;
+  padding: 40px;
+  border: 1px solid #ccc;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 25px;
+  border-bottom: 2px solid #2c3e50;
+  padding-bottom: 20px;
+}
+
+header h1 {
+  font-size: 32px;
+  color: #2c3e50;
+}
+
+.subtitle {
+  color: #555;
+  margin: 5px 0 12px;
+  font-size: 15px;
+}
+
+.contact-info {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  font-size: 13px;
+  color: #444;
+  margin-bottom: 15px;
+}
+
+.download-btn {
+  background-color: #2c3e50;
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.download-btn:hover {
+  background-color: #3498db;
+}
+
+section {
+  margin-bottom: 25px;
+}
+
+section h2 {
+  font-size: 18px;
+  color: #2c3e50;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 5px;
+  margin-bottom: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.entry {
+  margin-bottom: 14px;
+}
+
+.entry-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3px;
+}
+
+.entry-header span {
+  font-size: 13px;
+  color: #777;
+}
+
+.entry p {
+  font-size: 14px;
+  color: #555;
+  margin-top: 3px;
+}
+
+.entry ul {
+  margin-top: 5px;
+  padding-left: 20px;
+  font-size: 14px;
+  color: #555;
+}
+
+.entry ul li {
+  margin-bottom: 3px;
+}
+
+.skills-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.skill-group {
+  font-size: 14px;
+  color: #555;
+}
+
+.skill-group strong {
+  color: #333;
+}
+
+section ul {
+  padding-left: 20px;
+  font-size: 14px;
+  color: #555;
+}
+
+section ul li {
+  margin-bottom: 5px;
+}
+
+@media print {
+  body { background: white; }
+  .container { border: none; margin: 0; padding: 20px; }
+  .download-btn { display: none; }
+}

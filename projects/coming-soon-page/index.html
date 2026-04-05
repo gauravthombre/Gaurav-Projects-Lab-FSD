@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Coming Soon</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+  <div class="wrapper">
+    <h1>🚀 Something Awesome is Coming!</h1>
+    <p class="tagline">We're working hard to launch our new product. Stay tuned!</p>
+
+    <!-- Countdown Timer -->
+    <div class="countdown">
+      <div class="time-box">
+        <span id="days">00</span>
+        <label>Days</label>
+      </div>
+      <div class="time-box">
+        <span id="hours">00</span>
+        <label>Hours</label>
+      </div>
+      <div class="time-box">
+        <span id="minutes">00</span>
+        <label>Minutes</label>
+      </div>
+      <div class="time-box">
+        <span id="seconds">00</span>
+        <label>Seconds</label>
+      </div>
+    </div>
+
+    <!-- Email Signup -->
+    <p class="notify-text">Get notified when we launch:</p>
+    <form id="notifyForm">
+      <input type="email" id="emailInput" placeholder="Enter your email" required />
+      <button type="submit">Notify Me</button>
+    </form>
+    <p id="successMsg" style="display:none; color: #27ae60; margin-top: 12px;">
+      ✅ You're on the list! We'll email you when we launch.
+    </p>
+
+    <p class="footer-text">© 2024 Gaurav Thombre</p>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

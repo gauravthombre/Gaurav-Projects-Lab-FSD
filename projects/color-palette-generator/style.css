@@ -1,0 +1,145 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  color: #333;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+h1 {
+  font-size: 30px;
+  margin-bottom: 10px;
+}
+
+p {
+  font-size: 15px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+/* Buttons */
+.btn {
+  padding: 10px 25px;
+  background-color: #2c3e50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 15px;
+  cursor: pointer;
+  margin-bottom: 30px;
+}
+
+.btn:hover {
+  background-color: #3498db;
+}
+
+.btn-outline {
+  background-color: white;
+  color: #2c3e50;
+  border: 2px solid #2c3e50;
+  margin-left: 10px;
+}
+
+.btn-outline:hover {
+  background-color: #f0f0f0;
+}
+
+/* Palette */
+.palette {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.color-box {
+  width: 130px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #ddd;
+  background: white;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.color-box:hover {
+  transform: scale(1.05);
+}
+
+.color-swatch {
+  height: 100px;
+  width: 100%;
+}
+
+.color-info {
+  padding: 8px;
+  text-align: center;
+}
+
+.color-hex {
+  font-size: 13px;
+  font-weight: bold;
+  color: #333;
+}
+
+.color-label {
+  font-size: 11px;
+  color: #999;
+  margin-top: 2px;
+}
+
+/* Copy message */
+.copy-msg {
+  color: #27ae60;
+  font-size: 14px;
+  margin-bottom: 15px;
+}
+
+/* Saved Palettes */
+.saved-section {
+  margin-top: 30px;
+  text-align: left;
+}
+
+.saved-section h2 {
+  font-size: 20px;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 8px;
+}
+
+.saved-palette {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  align-items: center;
+  background: white;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+.saved-swatch {
+  width: 35px;
+  height: 35px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.saved-hex {
+  font-size: 12px;
+  color: #555;
+}
