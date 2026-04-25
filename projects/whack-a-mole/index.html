@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Whack-a-Mole</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+  <div class="container">
+    <h1>🔨 Whack-a-Mole</h1>
+
+    <div class="info-bar">
+      <span>Score: <strong id="score">0</strong></span>
+      <span>Time: <strong id="timeLeft">30s</strong></span>
+      <span>Best: <strong id="bestScore">0</strong></span>
+    </div>
+
+    <div id="startScreen">
+      <p>Hit the moles before they disappear!</p>
+      <div class="difficulty">
+        <label>Difficulty:</label>
+        <select id="difficulty">
+          <option value="easy">Easy (1s)</option>
+          <option value="medium" selected>Medium (0.7s)</option>
+          <option value="hard">Hard (0.4s)</option>
+        </select>
+      </div>
+      <button class="btn" id="startBtn">Start Game</button>
+    </div>
+
+    <div class="board" id="board" style="display:none;">
+      <div class="hole" data-index="0"><div class="mole" id="mole0">🐭</div></div>
+      <div class="hole" data-index="1"><div class="mole" id="mole1">🐭</div></div>
+      <div class="hole" data-index="2"><div class="mole" id="mole2">🐭</div></div>
+      <div class="hole" data-index="3"><div class="mole" id="mole3">🐭</div></div>
+      <div class="hole" data-index="4"><div class="mole" id="mole4">🐭</div></div>
+      <div class="hole" data-index="5"><div class="mole" id="mole5">🐭</div></div>
+      <div class="hole" data-index="6"><div class="mole" id="mole6">🐭</div></div>
+      <div class="hole" data-index="7"><div class="mole" id="mole7">🐭</div></div>
+      <div class="hole" data-index="8"><div class="mole" id="mole8">🐭</div></div>
+    </div>
+
+    <div id="gameOverScreen" style="display:none;">
+      <h2>⏰ Time's Up!</h2>
+      <p>Final Score: <strong id="finalScore">0</strong></p>
+      <button class="btn" id="playAgainBtn">Play Again</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

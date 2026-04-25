@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Unit Converter</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, Helvetica, sans-serif; }
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f4f6f8;
+      padding: 20px;
+    }
+    .card {
+      background: #fff;
+      width: 100%;
+      max-width: 420px;
+      padding: 26px;
+      border-radius: 16px;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 18px;
+      color: #333;
+      font-size: 1.5rem;
+    }
+    .field { margin-bottom: 14px; }
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.9rem;
+      color: #555;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      font-size: 1rem;
+      background: #fff;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: #4c8bf5;
+      box-shadow: 0 0 0 2px rgba(76,139,245,0.15);
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      background: #4c8bf5;
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 6px;
+    }
+    button:hover { background: #3a73d9; }
+    .result {
+      margin-top: 16px;
+      padding: 14px;
+      border-radius: 10px;
+      background: #eef4ff;
+      color: #1a3f8b;
+      font-weight: 600;
+      text-align: center;
+      display: none;
+    }
+    .error {
+      margin-top: 10px;
+      color: #c62828;
+      font-size: 0.9rem;
+      text-align: center;
+      display: none;
+    }
+    @media (max-width: 420px) {
+      .card { padding: 22px; }
+      h1 { font-size: 1.3rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Unit Converter</h1>
+
+    <div class="field">
+      <label for="type">Conversion Type</label>
+      <select id="type">
+        <option value="length">Length</option>
+        <option value="weight">Weight</option>
+        <option value="temperature">Temperature</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="value">Value</label>
+      <input type="number" id="value" placeholder="Enter value" />
+    </div>
+
+    <div class="field">
+      <label for="fromUnit">From</label>
+      <select id="fromUnit"></select>
+    </div>
+
+    <div class="field">
+      <label for="toUnit">To</label>
+      <select id="toUnit"></select>
+    </div>
+
+    <button id="convertBtn">Convert</button>
+
+    <div class="result" id="resultBox"></div>
+    <div class="error" id="errorMsg"></div>
+  </div>
+
+  <script>
+    const typeSelect = document.getElementById('type');
+    const valueInput = document.getElementById('value');
+    const fromUnit = document.getElementById('fromUnit');
+    const toUnit = document.getElementById('toUnit');
+    const convertBtn = document.getElementById('convertBtn');
+    const resultBox = document.getElementById('resultBox');
+    const errorMsg = document.getElementById('errorMsg');
+
+    const units = {
+      length: ['meters', 'kilometers', 'centimeters', 'inches', 'feet'],
+      weight: ['kilograms', 'grams', 'pounds'],
+      temperature: ['Celsius', 'Fahrenheit', 'Kelvin']
+    };
+
+    function populateUnits() {
+      const type = typeSelect.value;
+      fromUnit.innerHTML = '';
+      toUnit.innerHTML = '';
+      units[type].forEach(u => {
+        fromUnit.add(new Option(u, u));
+        toUnit.add(new Option(u, u));
+      });
+    }
+
+    function showError(msg) {
+      errorMsg.textContent = msg;
+      errorMsg.style.display = 'block';
+      resultBox.style.display = 'none';
+    }
+    function clearError() { errorMsg.style.display = 'none'; }
+
+    function convert(value, from, to, type) {
+      if (from === to) return value;
+
+      if (type === 'length') {
+        const toMeters = {
+          meters: 1,
+          kilometers: 1000,
+          centimeters: 0.01,
+          inches: 0.0254,
+          feet: 0.3048
+        };
+        return value * toMeters[from] / toMeters[to];
+      }
+
+      if (type === 'weight') {
+        const toKg = {
+          kilograms: 1,
+          grams: 0.001,
+          pounds: 0.453592
+        };
+        return value * toKg[from] / toKg[to];
+      }
+
+      if (type === 'temperature') {
+        let c;
+        if (from === 'Celsius') c = value;
+        if (from === 'Fahrenheit') c = (value - 32) * 5/9;
+        if (from === 'Kelvin') c = value - 273.15;
+
+        if (to === 'Celsius') return c;
+        if (to === 'Fahrenheit') return (c * 9/5) + 32;
+        if (to === 'Kelvin') return c + 273.15;
+      }
+    }
+
+    typeSelect.addEventListener('change', populateUnits);
+    populateUnits();
+
+    convertBtn.addEventListener('click', () => {
+      const val = parseFloat(valueInput.value);
+      if (valueInput.value === '' || isNaN(val)) {
+        showError('Please enter a valid number');
+        return;
+      }
+
+      const result = convert(val, fromUnit.value, toUnit.value, typeSelect.value);
+      clearError();
+
+      resultBox.textContent = `${val} ${fromUnit.value} = ${result.toFixed(2)} ${toUnit.value}`;
+      resultBox.style.display = 'block';
+    });
+  </script>
+</body>
+</html>

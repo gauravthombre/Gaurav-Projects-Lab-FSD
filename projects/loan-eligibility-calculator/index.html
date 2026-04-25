@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Loan Eligibility Calculator</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;font-family:Arial,Helvetica,sans-serif}
+    body{
+      min-height:100vh;display:flex;align-items:center;justify-content:center;
+      background:#f4f6f8;padding:20px
+    }
+    .card{
+      width:100%;max-width:480px;background:#fff;border-radius:16px;
+      box-shadow:0 14px 30px rgba(0,0,0,.08);padding:24px
+    }
+    h1{text-align:center;margin-bottom:18px;color:#1a3f8b;font-size:1.5rem}
+    .field{margin-bottom:14px}
+    label{display:block;margin-bottom:6px;font-size:.85rem;color:#555}
+    input{
+      width:100%;padding:10px 12px;border-radius:10px;border:1px solid #ddd;
+      font-size:.95rem
+    }
+    input:focus{outline:none;border-color:#4c8bf5;box-shadow:0 0 0 2px rgba(76,139,245,.15)}
+    button{
+      width:100%;padding:12px;border:none;border-radius:10px;
+      background:#1a3f8b;color:#fff;font-size:1rem;cursor:pointer;
+      margin-top:6px;transition:background .2s
+    }
+    button:hover{background:#153272}
+    .result{
+      margin-top:18px;padding:14px;border-radius:12px;font-weight:600;
+      display:none
+    }
+    .eligible{background:#e8f7ee;color:#1b5e20}
+    .not-eligible{background:#fdecea;color:#b71c1c}
+    .error{
+      margin-top:10px;color:#c62828;font-size:.85rem;text-align:center;display:none
+    }
+    .small{font-size:.85rem;margin-top:6px;font-weight:500}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Loan Eligibility Calculator</h1>
+
+    <div class="field">
+      <label>Monthly Income (₹)</label>
+      <input type="number" id="income" placeholder="Enter monthly income" />
+    </div>
+
+    <div class="field">
+      <label>Existing EMI (₹)</label>
+      <input type="number" id="existingEmi" placeholder="Enter existing EMI" />
+    </div>
+
+    <div class="field">
+      <label>Age</label>
+      <input type="number" id="age" placeholder="Enter age" />
+    </div>
+
+    <div class="field">
+      <label>Desired Loan Amount (₹)</label>
+      <input type="number" id="desiredLoan" placeholder="Enter desired loan" />
+    </div>
+
+    <button id="checkBtn">Check Eligibility</button>
+
+    <div id="resultBox" class="result"></div>
+    <div id="errorMsg" class="error"></div>
+  </div>
+
+  <script>
+    const incomeInput = document.getElementById('income');
+    const existingEmiInput = document.getElementById('existingEmi');
+    const ageInput = document.getElementById('age');
+    const desiredLoanInput = document.getElementById('desiredLoan');
+    const checkBtn = document.getElementById('checkBtn');
+    const resultBox = document.getElementById('resultBox');
+    const errorMsg = document.getElementById('errorMsg');
+
+    function showError(msg){
+      errorMsg.textContent = msg;
+      errorMsg.style.display = 'block';
+      resultBox.style.display = 'none';
+    }
+    function clearError(){ errorMsg.style.display = 'none'; }
+
+    function formatINR(val){
+      return '₹' + val.toLocaleString('en-IN', {minimumFractionDigits:2, maximumFractionDigits:2});
+    }
+
+    checkBtn.addEventListener('click', ()=>{
+      const income = parseFloat(incomeInput.value);
+      const existingEmi = parseFloat(existingEmiInput.value);
+      const age = parseInt(ageInput.value,10);
+      const desiredLoan = parseFloat(desiredLoanInput.value);
+
+      if(!incomeInput.value || !existingEmiInput.value || !ageInput.value || !desiredLoanInput.value){
+        showError('Please fill all fields');
+        return;
+      }
+      if(income <= 0 || existingEmi < 0 || desiredLoan <= 0){
+        showError('Enter valid positive values');
+        return;
+      }
+      if(age < 21 || age > 60){
+        clearError();
+        resultBox.className = 'result not-eligible';
+        resultBox.innerHTML = '❌ Not Eligible<div class="small">Age must be between 21 and 60.</div>';
+        resultBox.style.display = 'block';
+        return;
+      }
+      if(existingEmi > income * 0.5){
+        clearError();
+        resultBox.className = 'result not-eligible';
+        resultBox.innerHTML = '❌ Not Eligible<div class="small">Existing EMI exceeds 50% of income.</div>';
+        resultBox.style.display = 'block';
+        return;
+      }
+
+      clearError();
+
+      const maxEMI = income * 0.4;
+      const estimatedLoan = maxEMI * 60; // 5 years assumption
+
+      if(desiredLoan <= estimatedLoan){
+        resultBox.className = 'result eligible';
+        resultBox.innerHTML = `✅ Eligible
+          <div class="small">Maximum Eligible Loan: ${formatINR(estimatedLoan)}</div>`;
+      }else{
+        resultBox.className = 'result not-eligible';
+        resultBox.innerHTML = `❌ Not Eligible
+          <div class="small">Maximum Eligible Loan: ${formatINR(estimatedLoan)}</div>
+          <div class="small">Desired loan exceeds eligible amount.</div>`;
+      }
+
+      resultBox.style.display = 'block';
+    });
+  </script>
+</body>
+</html>

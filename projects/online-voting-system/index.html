@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VoteNow — Online Voting System</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:#f0f4ff;min-height:100vh;padding:24px 16px}
+.container{max-width:800px;margin:0 auto}
+header{text-align:center;margin-bottom:2rem}
+header h1{font-size:2rem;font-weight:900;color:#1e1b4b;margin-bottom:4px}
+header p{color:#94a3b8;font-size:0.9rem}
+
+.tabs{display:flex;background:#fff;border-radius:14px;padding:4px;gap:0;box-shadow:0 2px 8px rgba(0,0,0,0.07);margin-bottom:1.5rem}
+.tab{flex:1;padding:10px;text-align:center;border-radius:10px;cursor:pointer;font-size:0.88rem;font-weight:700;color:#94a3b8;transition:all 0.2s}
+.tab.active{background:#4f46e5;color:#fff}
+
+/* POLLS */
+.poll-card{background:#fff;border-radius:20px;padding:24px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,0.06);border:1px solid #e5e7eb}
+.poll-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;gap:10px}
+.poll-question{font-size:1.05rem;font-weight:800;color:#1e1b4b;flex:1}
+.poll-status{font-size:0.72rem;padding:4px 12px;border-radius:50px;font-weight:700;white-space:nowrap}
+.status-active{background:#dcfce7;color:#166534}
+.status-closed{background:#fee2e2;color:#991b1b}
+.poll-meta{font-size:0.75rem;color:#94a3b8;margin-bottom:14px;display:flex;gap:12px;flex-wrap:wrap}
+.poll-options{display:flex;flex-direction:column;gap:8px}
+.option-row{cursor:pointer;transition:transform 0.15s}
+.option-row:hover:not(.disabled){transform:translateX(3px)}
+.option-inner{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:12px;border:2px solid #e5e7eb;background:#f8fafc;transition:all 0.2s;position:relative;overflow:hidden}
+.option-inner.selected{border-color:#4f46e5;background:#eef2ff}
+.option-inner.winner{border-color:#f59e0b;background:#fffbeb}
+.option-bar{position:absolute;left:0;top:0;bottom:0;background:rgba(79,70,229,0.08);transition:width 0.6s;border-radius:10px}
+.option-bar.winner-bar{background:rgba(245,158,11,0.12)}
+.option-emoji{font-size:1.4rem;z-index:1;flex-shrink:0}
+.option-name{flex:1;font-size:0.9rem;font-weight:600;color:#374151;z-index:1}
+.option-check{width:22px;height:22px;border-radius:50%;border:2px solid #d1d5db;display:flex;align-items:center;justify-content:center;font-size:0.75rem;z-index:1;flex-shrink:0}
+.option-check.checked{background:#4f46e5;border-color:#4f46e5;color:#fff}
+.option-pct{font-size:0.82rem;font-weight:700;color:#6366f1;z-index:1;min-width:36px;text-align:right}
+.option-pct.winner-pct{color:#f59e0b}
+.vote-btn{margin-top:12px;padding:11px 28px;background:#4f46e5;color:#fff;border:none;border-radius:50px;font-size:0.88rem;font-weight:700;cursor:pointer;transition:background 0.2s}
+.vote-btn:hover{background:#4338ca}
+.voted-label{margin-top:10px;font-size:0.82rem;color:#10b981;font-weight:700}
+.poll-footer{display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:12px;border-top:1px solid #f3f4f6;flex-wrap:wrap;gap:8px}
+.vote-count{font-size:0.78rem;color:#94a3b8}
+
+/* CREATE POLL */
+.create-card{background:#fff;border-radius:20px;padding:28px;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
+.form-row{margin-bottom:16px}
+label{font-size:0.82rem;font-weight:700;color:#475569;display:block;margin-bottom:6px}
+.inp{width:100%;padding:11px 14px;border-radius:12px;border:2px solid #e5e7eb;font-size:0.9rem;outline:none;font-family:inherit;transition:border-color 0.2s;background:#f8fafc}
+.inp:focus{border-color:#4f46e5}
+.options-editor{display:flex;flex-direction:column;gap:8px;margin-bottom:8px}
+.opt-edit-row{display:flex;gap:8px}
+.opt-inp{flex:1;padding:10px 14px;border-radius:10px;border:2px solid #e5e7eb;font-size:0.88rem;outline:none;transition:border-color 0.2s;background:#f8fafc}
+.opt-inp:focus{border-color:#4f46e5}
+.rm-btn{padding:10px 14px;background:#fee2e2;border:none;border-radius:10px;color:#ef4444;cursor:pointer;font-size:0.9rem;transition:background 0.2s}
+.rm-btn:hover{background:#fecaca}
+.add-opt-btn{padding:9px 18px;background:#eef2ff;border:none;border-radius:10px;color:#4f46e5;cursor:pointer;font-size:0.85rem;font-weight:700}
+.add-opt-btn:hover{background:#e0e7ff}
+.create-btn{width:100%;padding:13px;background:#4f46e5;color:#fff;border:none;border-radius:12px;font-size:0.95rem;font-weight:800;cursor:pointer;margin-top:6px}
+.create-btn:hover{background:#4338ca}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:1.5rem}
+.stat-box{background:#fff;border-radius:14px;padding:14px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.05)}
+.stat-n{font-size:1.8rem;font-weight:800;margin-bottom:2px}
+.stat-l{font-size:0.72rem;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>🗳️ VoteNow</h1>
+    <p>Create polls, cast votes, see live results</p>
+  </header>
+
+  <div class="stats-row" id="stats-row"></div>
+
+  <div class="tabs">
+    <div class="tab active" onclick="showTab('polls',this)">Active Polls</div>
+    <div class="tab" onclick="showTab('results',this)">All Results</div>
+    <div class="tab" onclick="showTab('create',this)">+ Create Poll</div>
+  </div>
+
+  <div id="tab-polls"></div>
+  <div id="tab-results" style="display:none"></div>
+  <div id="tab-create" style="display:none">
+    <div class="create-card">
+      <div class="form-row"><label>Poll Question *</label><input class="inp" id="p-question" placeholder="What would you like to ask?"></div>
+      <div class="form-row"><label>Category</label>
+        <select class="inp" id="p-cat">
+          <option>General</option><option>Technology</option><option>Sports</option>
+          <option>Food</option><option>Politics</option><option>Entertainment</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label>Options (min 2) *</label>
+        <div class="options-editor" id="options-editor">
+          <div class="opt-edit-row"><input class="opt-inp" placeholder="Option A (add emoji too!)"><button class="rm-btn" onclick="rmOpt(this)">✕</button></div>
+          <div class="opt-edit-row"><input class="opt-inp" placeholder="Option B"><button class="rm-btn" onclick="rmOpt(this)">✕</button></div>
+        </div>
+        <button class="add-opt-btn" onclick="addOpt()">+ Add Option</button>
+      </div>
+      <button class="create-btn" onclick="createPoll()">Create Poll 🚀</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let polls=[
+  {id:1,question:"What is your favourite programming language?",cat:"Technology",status:"active",options:[{text:"🐍 Python",votes:45},{text:"⚡ JavaScript",votes:38},{text:"☕ Java",votes:22},{text:"🦀 Rust",votes:15}],created:"Mar 15, 2025"},
+  {id:2,question:"Best Indian street food?",cat:"Food",status:"active",options:[{text:"🥟 Vada Pav",votes:67},{text:"🌮 Pani Puri",votes:54},{text:"🌯 Bhel Puri",votes:28},{text:"🥙 Samosa",votes:41}],created:"Mar 10, 2025"},
+  {id:3,question:"Which frontend framework do you prefer?",cat:"Technology",status:"active",options:[{text:"⚛️ React",votes:89},{text:"💚 Vue",votes:34},{text:"🅰️ Angular",votes:27},{text:"🔥 Svelte",votes:18}],created:"Mar 8, 2025"},
+  {id:4,question:"Best streaming platform?",cat:"Entertainment",status:"closed",options:[{text:"📺 Netflix",votes:112},{text:"🎬 Amazon Prime",votes:78},{text:"🎭 Disney+",votes:43},{text:"📱 Hotstar",votes:95}],created:"Feb 28, 2025"},
+  {id:5,question:"Preferred way to learn coding?",cat:"Technology",status:"active",options:[{text:"🎥 YouTube videos",votes:56},{text:"📚 Online courses",votes:44},{text:"💻 Build projects",votes:73},{text:"📖 Books",votes:19}],created:"Mar 12, 2025"},
+];
+let nextId=6;let voted=new Set();let selected={};
+try{const s=localStorage.getItem('votenow_v1');if(s){const d=JSON.parse(s);polls=d.polls;nextId=d.nextId;voted=new Set(d.voted);}}catch(e){}
+function save(){localStorage.setItem('votenow_v1',JSON.stringify({polls,nextId,voted:[...voted]});}
+
+function showTab(t,btn){
+  ['polls','results','create'].forEach(x=>document.getElementById('tab-'+x).style.display='none');
+  document.getElementById('tab-'+t).style.display='block';
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  if(t==='polls')renderPolls('active');
+  if(t==='results')renderPolls('all');
+  renderStats();
+}
+
+function renderStats(){
+  const active=polls.filter(p=>p.status==='active').length;
+  const totalVotes=polls.reduce((s,p)=>s+p.options.reduce((ss,o)=>ss+o.votes,0),0);
+  document.getElementById('stats-row').innerHTML=`
+    <div class="stat-box"><div class="stat-n" style="color:#4f46e5">${polls.length}</div><div class="stat-l">Total Polls</div></div>
+    <div class="stat-box"><div class="stat-n" style="color:#10b981">${active}</div><div class="stat-l">Active</div></div>
+    <div class="stat-box"><div class="stat-n" style="color:#f59e0b">${totalVotes}</div><div class="stat-l">Total Votes</div></div>
+    <div class="stat-box"><div class="stat-n" style="color:#ef4444">${voted.size}</div><div class="stat-l">Participated</div></div>
+  `;
+}
+
+function renderPolls(filter){
+  const target=filter==='active'?'polls':'results';
+  const list=filter==='active'?polls.filter(p=>p.status==='active'):polls;
+  document.getElementById('tab-'+target).innerHTML=list.length===0?'<div style="text-align:center;padding:40px;color:#94a3b8;font-size:3rem">🗳️<p style="font-size:0.9rem;margin-top:8px">No polls yet!</p></div>':list.map(p=>{
+    const total=p.options.reduce((s,o)=>s+o.votes,0);
+    const hasVoted=voted.has(p.id);
+    const showResults=hasVoted||p.status==='closed'||filter==='all';
+    const maxVotes=Math.max(...p.options.map(o=>o.votes));
+    const selOpt=selected[p.id]??-1;
+    return`<div class="poll-card">
+      <div class="poll-header">
+        <div class="poll-question">${p.question}</div>
+        <div class="poll-status ${p.status==='active'?'status-active':'status-closed'}">${p.status==='active'?'🟢 Active':'🔴 Closed'}</div>
+      </div>
+      <div class="poll-meta"><span>📂 ${p.cat}</span><span>🗳️ ${total} votes</span><span>📅 ${p.created}</span></div>
+      <div class="poll-options">
+        ${p.options.map((o,i)=>{
+          const pct=total>0?Math.round(o.votes/total*100):0;
+          const isWinner=o.votes===maxVotes&&total>0;
+          const isSel=selOpt===i;
+          return`<div class="option-row ${(showResults||p.status==='closed')?'disabled':''}" onclick="${!showResults&&p.status==='active'?`selectOption(${p.id},${i})`:''}">
+            <div class="option-inner ${isSel&&!showResults?'selected':''} ${isWinner&&showResults?'winner':''}">
+              ${showResults?`<div class="option-bar ${isWinner?'winner-bar':''}" style="width:${pct}%"></div>`:''}
+              <div class="option-emoji">${o.text.split(' ')[0]}</div>
+              <div class="option-name">${o.text.split(' ').slice(1).join(' ')||o.text}</div>
+              ${!showResults?`<div class="option-check ${isSel?'checked':''}">✓</div>`:''}
+              ${showResults?`<div class="option-pct ${isWinner?'winner-pct':''}">${pct}%</div>`:''}
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+      ${!showResults&&p.status==='active'?`<button class="vote-btn" onclick="castVote(${p.id})">Cast Vote →</button>`:''}
+      ${showResults&&hasVoted?'<div class="voted-label">✅ You voted on this poll</div>':''}
+      ${showResults&&p.status==='closed'?'<div class="voted-label" style="color:#94a3b8">🔒 This poll is closed</div>':''}
+      <div class="poll-footer">
+        <div class="vote-count">${total} total vote${total!==1?'s':''}</div>
+        ${p.status==='active'?`<button style="padding:6px 14px;border:2px solid #fee2e2;background:transparent;color:#ef4444;border-radius:50px;cursor:pointer;font-size:0.78px;font-weight:700;font-size:0.78rem" onclick="closePoll(${p.id})">Close Poll</button>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function selectOption(pollId,idx){
+  selected[pollId]=idx;renderPolls('active');}
+
+function castVote(pollId){
+  if(voted.has(pollId)){alert('You already voted on this poll!');return;}
+  const idx=selected[pollId];
+  if(idx===undefined||idx<0){alert('Please select an option first!');return;}
+  polls.find(p=>p.id===pollId).options[idx].votes++;
+  voted.add(pollId);save();renderPolls('active');renderStats();
+}
+
+function closePoll(id){polls.find(p=>p.id===id).status='closed';save();renderPolls('active');renderStats();}
+
+function addOpt(){const d=document.getElementById('options-editor');const row=document.createElement('div');row.className='opt-edit-row';row.innerHTML='<input class="opt-inp" placeholder="New option"><button class="rm-btn" onclick="rmOpt(this)">✕</button>';d.appendChild(row);}
+function rmOpt(btn){const ed=document.getElementById('options-editor');if(ed.children.length<=2){alert('Need at least 2 options.');return;}btn.parentElement.remove();}
+
+function createPoll(){
+  const q=document.getElementById('p-question').value.trim();
+  const cat=document.getElementById('p-cat').value;
+  const opts=[...document.querySelectorAll('.opt-inp')].map(i=>i.value.trim()).filter(Boolean);
+  if(!q){alert('Please enter a question.');return;}
+  if(opts.length<2){alert('Please add at least 2 options.');return;}
+  polls.unshift({id:nextId++,question:q,cat,status:'active',options:opts.map(t=>({text:t,votes:0})),created:new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'})});
+  save();document.getElementById('p-question').value='';document.querySelectorAll('.opt-inp').forEach(i=>i.value='');
+  showTab('polls',document.querySelector('.tab'));
+  alert('Poll created successfully!');
+}
+
+showTab('polls',null);document.querySelector('.tab').classList.add('active');
+</script>
+</body>
+</html>

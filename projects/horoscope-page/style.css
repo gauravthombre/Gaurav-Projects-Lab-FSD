@@ -1,0 +1,103 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #1a1a2e, #16213e);
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 30px 20px;
+  color: white;
+}
+
+.container {
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+}
+
+h1 { font-size: 28px; margin-bottom: 6px; }
+.subtitle { font-size: 14px; color: #aaa; margin-bottom: 6px; }
+.today-date { font-size: 13px; color: #7f8c8d; margin-bottom: 22px; }
+
+.signs-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+.sign-btn {
+  background: #16213e;
+  border: 1px solid #2c3e50;
+  border-radius: 8px;
+  padding: 10px 6px;
+  cursor: pointer;
+  color: white;
+  transition: border-color 0.2s, background 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.sign-btn:hover { border-color: #9b59b6; background: #1e2a45; }
+.sign-btn.active { border-color: #9b59b6; background: #2c1654; }
+
+.sign-btn .s-emoji { font-size: 22px; }
+.sign-btn .s-name  { font-size: 11px; color: #ccc; }
+
+.horoscope-card {
+  background: #16213e;
+  border: 1px solid #9b59b6;
+  border-radius: 12px;
+  padding: 22px;
+  text-align: left;
+}
+
+.sign-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #2c3e50;
+  padding-bottom: 14px;
+}
+
+.sign-emoji { font-size: 50px; }
+
+.sign-header h2 { font-size: 22px; color: #d7bde2; }
+.sign-dates    { font-size: 12px; color: #888; margin-top: 3px; }
+
+.horoscope-body {
+  background: rgba(155,89,182,0.1);
+  border-left: 3px solid #9b59b6;
+  padding: 14px;
+  border-radius: 0 6px 6px 0;
+  margin-bottom: 18px;
+}
+
+.horoscope-body p { font-size: 14px; color: #ccc; line-height: 1.8; }
+
+.ratings-row {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #2c3e50;
+  padding-bottom: 16px;
+}
+
+.rating-box { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+.r-label    { font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 0.05em; }
+.stars      { font-size: 16px; letter-spacing: 2px; }
+
+.lucky-row {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.lucky-item { font-size: 13px; color: #aaa; }
+.lucky-item strong { color: #d7bde2; }

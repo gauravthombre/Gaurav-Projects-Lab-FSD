@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mad Libs Generator</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <div class="container">
+    <h1>😂 Mad Libs Generator</h1>
+    <p class="subtitle">Fill in the blanks to create a funny story!</p>
+
+    <div class="story-selector">
+      <label>Choose a story:</label>
+      <select id="storySelect" onchange="loadStory()">
+        <option value="0">The Adventure</option>
+        <option value="1">The Birthday Party</option>
+        <option value="2">A Day at School</option>
+      </select>
+    </div>
+
+    <div id="inputForm" class="input-form"></div>
+
+    <button class="btn" id="generateBtn">Generate Story!</button>
+
+    <div id="storyOutput" class="story-output" style="display:none;">
+      <h2>📖 Your Story</h2>
+      <p id="storyText"></p>
+      <button class="btn btn-outline" id="tryAgainBtn">Try Again</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -108,7 +108,251 @@ const projects = [
 
 { name: "Weight Converter", description: "Converts weight units.", image: "./assets/weight-converter.png", live: "./projects/weight-converter/index.html", code: "https://github.com/gauravthombre/Gaurav-Projects-Lab-FSD/tree/main/projects/weight-converter" }
 
-];
+{
+    name: "Clothing Store",
+    description: "Fashion e-commerce website with product listing and UI interactions.",
+    image: "./assets/clothing-store.png",
+    live: "./projects/01-clothing-store/index.html",
+    code: "https://github.com/KrushnaTaur/frontend-ecommerce-projects/tree/main/projects/01-clothing-store"
+  },
+  {
+    name: "Grocery Store",
+    description: "Online grocery shop layout with clean UI and responsive design.",
+    image: "./assets/grocery-store.png",
+    live: "./projects/02-grocery-store/index.html",
+    code: "https://github.com/KrushnaTaur/frontend-ecommerce-projects/tree/main/projects/02-grocery-store"
+  },
+  {
+    name: "Electronics Store",
+    description: "Electronics e-commerce website with filters, cart, and product comparison.",
+    image: "./assets/electronics-store.png",
+    live: "./projects/03-electronics-store/index.html",
+    code: "https://github.com/KrushnaTaur/frontend-ecommerce-projects/tree/main/projects/03-electronics-store"
+  },
+  {
+    name: "Book Store",
+    description: "Online book store with genre filter, search, sorting, and shopping cart functionality.",
+    image: "./assets/book-store.png",
+    live: "./projects/04-book-store/index.html",
+    code: "https://github.com/KrushnaTaur/frontend-ecommerce-projects/tree/main/projects/04-book-store"
+  },
+  {
+    name: "Footwear Store",
+    description: "Modern shoe store with size selection, price & category filters, and cart system.",
+    image: "./assets/footwear-store.png",
+    live: "./projects/05-footwear-store/index.html",
+    code: "https://github.com/KrushnaTaur/frontend-ecommerce-projects/tree/main/projects/05-footwear-store"
+  },
+  {
+    name: "Furniture Store",
+    description: "Premium furniture showroom website with room-based browsing and catalog-style layout.",
+    image: "./assets/furniture-store.png",
+    live: "./projects/06-furniture-store/index.html",
+    code: "https://github.com/KrushnaTaur/frontend-ecommerce-projects/tree/main/projects/06-furniture-store"
+  },
+  {
+    name: "Plant Nursery Store",
+    description: "Calm, nature-inspired plant nursery website with care-based filtering and educational plant details.",
+    image: "./assets/plant-nursery-store.png",
+    live: "./projects/07-plant-nursery-store/index.html",
+    code: "https://github.com/KrushnaTaur/frontend-ecommerce-projects/tree/main/projects/07-plant-nursery-store"
+  },
+  {
+    name: "Sports Equipment Store",
+    description: "Bold sports gear ecommerce website with filters, cart, and energetic UI using online images.",
+    image: "./assets/sports-equipment-store.png",
+    live: "./projects/08-sports-equipment-store/index.html",
+    code: "https://github.com/KrushnaTaur/frontend-ecommerce-projects/tree/main/projects/08-sports-equipment-store"
+  },
+  {
+    name: "Gift Shop",
+    description: "Cheerful gift store website with occasion-based browsing, filters, and shopping cart.",
+    image: "./assets/gift-shop.png",
+    live: "./projects/09-gift-shop/index.html",
+    code: "https://github.com/KrushnaTaur/frontend-ecommerce-projects/tree/main/projects/09-gift-shop"
+  },
+  {
+    name: "Pharmacy Store",
+    description: "Clean healthcare ecommerce website with prescription filtering and medical UI design.",
+    image: "./assets/pharmacy-store.png",
+    live: "./projects/10-pharmacy-store/index.html",
+    code: "https://github.com/KrushnaTaur/frontend-ecommerce-projects/tree/main/projects/10-pharmacy-store"
+  },
+  {
+    name: "Pet Supplies Store",
+    description: "Friendly pet products ecommerce website with pet-type filtering and warm UI design.",
+    image: "./assets/pet-supplies-store.png",
+    live: "./projects/11-pet-supplies-store/index.html",
+    code: "https://github.com/KrushnaTaur/frontend-ecommerce-projects/tree/main/projects/11-pet-supplies-store"
+  },
+  {
+    name: "Mobile Store",
+    description: "Modern smartphone ecommerce website with brand filters and side-by-side phone comparison.",
+    image: "./assets/mobile-store.png",
+    live: "./projects/12-mobile-store/index.html",
+    code: "https://github.com/KrushnaTaur/frontend-ecommerce-projects/tree/main/projects/12-mobile-store"
+  },
+  {
+    name: "Toy Store",
+    description: "Playful toy shop website with age-based browsing, colorful UI, and shopping cart.",
+    image: "./assets/toy-store.png",
+    live: "./projects/13-toy-store/index.html",
+    code: "https://github.com/KrushnaTaur/frontend-ecommerce-projects/tree/main/projects/13-toy-store"
+  },
+  {
+    name: "Jewelry Store",
+    description: "Luxury jewelry ecommerce website with elegant UI, material filtering, and premium design.",
+    image: "./assets/jewelry-store.png",
+    live: "./projects/14-jewelry-store/index.html",
+    code: "https://github.com/KrushnaTaur/frontend-ecommerce-projects/tree/main/projects/14-jewelry-store"
+  },
+  {
+    name: "Bakery Store",
+    description: "Warm bakery ecommerce website with category browsing, eggless filter, and cozy food UI.",
+    image: "./assets/bakery-store.png",
+    live: "./projects/15-bakery-store/index.html",
+    code: "https://github.com/KrushnaTaur/frontend-ecommerce-projects/tree/main/projects/15-bakery-store"
+  },
+{
+    name: "QR Code Generator",
+    description: "Generate and download QR codes from text or URLs.",
+    image: "./assets/qr.png",
+    live: "./tools/qr-generator/index.html",
+    code: "https://github.com/KrushnaTaur/frontend-tools-and-utilities/tree/main/tools/qr-generator"
+  },
+  {
+    name: "BMI Calculator",
+    description: "Calculate Body Mass Index based on height and weight.",
+    image: "./assets/bmi.png",
+    live: "./tools/bmi-calculator/index.html",
+    code: "https://github.com/KrushnaTaur/frontend-tools-and-utilities/tree/main/tools/bmi-calculator"
+  },
+  {
+    name: "Age Calculator",
+    description: "Compute exact age from birth date.",
+    image: "./assets/age.png",
+    live: "./tools/age-calculator/index.html",
+    code: "https://github.com/KrushnaTaur/frontend-tools-and-utilities/tree/main/tools/age-calculator"
+  },
+  {
+    name: "Password Generator",
+    description: "Generate secure customizable passwords.",
+    image: "./assets/password.png",
+    live: "./tools/password-generator/index.html",
+    code: "https://github.com/KrushnaTaur/frontend-tools-and-utilities/tree/main/tools/password-generator"
+  },
+  {
+    name: "Unit Converter",
+    description: "Convert between length, weight, and temperature units.",
+    image: "./assets/unit.png",
+    live: "./tools/unit-converter/index.html",
+    code: "https://github.com/KrushnaTaur/frontend-tools-and-utilities/tree/main/tools/unit-converter"
+  },
+    {
+    name: "Tip Calculator",
+    description: "Calculate tip, total bill, and split amount per person.",
+    image: "./assets/tip.png",
+    live: "./tools/tip-calculator/index.html",
+    code: "https://github.com/KrushnaTaur/frontend-tools-and-utilities/tree/main/tools/tip-calculator"
+  },
+  {
+    name: "EMI Calculator",
+    description: "Calculate monthly loan EMI, total interest, and total payment.",
+    image: "./assets/emi.png",
+    live: "./tools/emi-calculator/index.html",
+    code: "https://github.com/KrushnaTaur/frontend-tools-and-utilities/tree/main/tools/emi-calculator"
+  },
+  {
+    name: "Color Picker",
+    description: "Pick colors and copy HEX or RGB values.",
+    image: "./assets/color.png",
+    live: "./tools/color-picker/index.html",
+    code: "https://github.com/KrushnaTaur/frontend-tools-and-utilities/tree/main/tools/color-picker"
+  },
+  {
+    name: "Text Case Converter",
+    description: "Convert text to uppercase, lowercase, sentence case, and more.",
+    image: "./assets/text.png",
+    live: "./tools/text-case-converter/index.html",
+    code: "https://github.com/KrushnaTaur/frontend-tools-and-utilities/tree/main/tools/text-case-converter"
+  },
+  {
+    name: "Stopwatch",
+    description: "Digital stopwatch with start, pause, and reset functionality.",
+    image: "./assets/stopwatch.png",
+    live: "./tools/stopwatch/index.html",
+    code: "https://github.com/KrushnaTaur/frontend-tools-and-utilities/tree/main/tools/stopwatch"
+  },
+  {
+    name: "Random Number Generator",
+    description: "Generate a random number within a custom range.",
+    image: "./assets/random.png",
+    live: "./tools/random-number-generator/index.html",
+    code: "https://github.com/KrushnaTaur/frontend-tools-and-utilities/tree/main/tools/random-number-generator"
+  },
+  {
+    name: "Markdown Previewer",
+    description: "Live Markdown editor with real-time HTML preview.",
+    image: "./assets/markdown.png",
+    live: "./tools/markdown-previewer/index.html",
+    code: "https://github.com/KrushnaTaur/frontend-tools-and-utilities/tree/main/tools/markdown-previewer"
+  },
+  {
+    name: "JSON Formatter & Validator",
+    description: "Validate and pretty-format JSON with error messages.",
+    image: "./assets/json.png",
+    live: "./tools/json-formatter/index.html",
+    code: "https://github.com/KrushnaTaur/frontend-tools-and-utilities/tree/main/tools/json-formatter"
+  },
+  {
+    name: "Base64 Encoder / Decoder",
+    description: "Encode text to Base64 and decode Base64 back to readable text.",
+    image: "./assets/base64.png",
+    live: "./tools/base64-encoder-decoder/index.html",
+    code: "https://github.com/KrushnaTaur/frontend-tools-and-utilities/tree/main/tools/base64-encoder-decoder"
+  },
+  {
+    name: "Text Statistics Tool",
+    description: "Live character, word, sentence, and paragraph counter.",
+    image: "./assets/text-stats.png",
+    live: "./tools/text-statistics/index.html",
+    code: "https://github.com/KrushnaTaur/frontend-tools-and-utilities/tree/main/tools/text-statistics"
+  },
+  {
+    name: "Text Diff Checker",
+    description: "Compare two texts and highlight line-by-line differences.",
+    image: "./assets/diff.png",
+    live: "./tools/text-diff-checker/index.html",
+    code: "https://github.com/KrushnaTaur/frontend-tools-and-utilities/tree/main/tools/text-diff-checker"
+  },
+  {
+    name: "Regex Tester",
+    description: "Test regular expressions with live match highlighting.",
+    image: "./assets/regex.png",
+    live: "./tools/regex-tester/index.html",
+    code: "https://github.com/KrushnaTaur/frontend-tools-and-utilities/tree/main/tools/regex-tester"
+  },
+  {
+    name: "CSS Gradient Generator",
+    description: "Create linear CSS gradients with live preview and copyable code.",
+    image: "./assets/gradient.png",
+    live: "./tools/css-gradient-generator/index.html",
+    code: "https://github.com/KrushnaTaur/frontend-tools-and-utilities/tree/main/tools/css-gradient-generator"
+  },
+  {
+    name: "Time Zone Converter",
+    description: "Convert date and time between global time zones instantly.",
+    image: "./assets/timezone.png",
+    live: "./tools/time-zone-converter/index.html",
+    code: "https://github.com/KrushnaTaur/frontend-tools-and-utilities/tree/main/tools/time-zone-converter"
+  },
+  {
+    name: "Loan Eligibility Calculator",
+    description: "Check loan eligibility based on income, EMIs, and age.",
+    image: "./assets/loan.png",
+    live: "./tools/loan-eligibility-calculator/index.html",
+    code: "https://github.com/KrushnaTaur/frontend-tools-and-utilities/tree/main/tools/loan-eligibility-calculator"
+  }];
 
 
 const grid = document.getElementById("projectsGrid");

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clothing Store</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="logo">Clothify</div>
+
+    <nav>
+      <a href="#">Home</a>
+      <a href="#products">Shop</a>
+      <a href="#categories">Categories</a>
+      <a href="#cart">Cart (<span id="cart-count">0</span>)</a>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-text">
+      <h1>New Season Arrivals</h1>
+      <p>Discover trendy outfits for everyone</p>
+      <a href="#products" class="btn">Shop Now</a>
+    </div>
+  </section>
+
+  <!-- Category & Search -->
+  <section class="controls" id="categories">
+    <div class="filters">
+      <button onclick="filterCategory('All')">All</button>
+      <button onclick="filterCategory('Men')">Men</button>
+      <button onclick="filterCategory('Women')">Women</button>
+      <button onclick="filterCategory('Kids')">Kids</button>
+    </div>
+
+    <input
+      type="text"
+      id="searchInput"
+      placeholder="Search products..."
+      onkeyup="searchProducts()"
+    />
+  </section>
+
+  <!-- Products -->
+  <section class="products" id="products">
+    <h2>Featured Products</h2>
+    <div class="product-grid" id="product-list"></div>
+  </section>
+
+  <!-- Cart -->
+  <section class="cart" id="cart">
+    <h2>Your Cart</h2>
+    <div id="cart-items"></div>
+    <h3>Total: ₹<span id="total-price">0</span></h3>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>

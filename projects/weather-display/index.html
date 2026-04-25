@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Weather Display</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <div class="container">
+    <h1>🌤️ Weather App</h1>
+
+    <div class="search-bar">
+      <input type="text" id="cityInput" placeholder="Enter city name..." />
+      <button class="btn" id="searchBtn">Search</button>
+    </div>
+
+    <p id="errorMsg" class="error-msg" style="display:none;">City not found. Please try again.</p>
+
+    <!-- Weather Card -->
+    <div id="weatherCard" class="weather-card" style="display:none;">
+      <div class="weather-header">
+        <div>
+          <h2 id="cityName"></h2>
+          <p id="countryName" class="country"></p>
+        </div>
+        <div class="weather-icon" id="weatherIcon"></div>
+      </div>
+      <div class="temp-display">
+        <span id="tempC" class="temp-big"></span>
+        <div class="unit-toggle">
+          <button class="unit-btn active" id="btnC" onclick="showCelsius()">°C</button>
+          <button class="unit-btn" id="btnF" onclick="showFahrenheit()">°F</button>
+        </div>
+      </div>
+      <p id="description" class="description"></p>
+
+      <div class="details-grid">
+        <div class="detail-box">
+          <span class="detail-label">Humidity</span>
+          <span class="detail-val" id="humidity"></span>
+        </div>
+        <div class="detail-box">
+          <span class="detail-label">Wind</span>
+          <span class="detail-val" id="wind"></span>
+        </div>
+        <div class="detail-box">
+          <span class="detail-label">Feels Like</span>
+          <span class="detail-val" id="feelsLike"></span>
+        </div>
+        <div class="detail-box">
+          <span class="detail-label">Visibility</span>
+          <span class="detail-val" id="visibility"></span>
+        </div>
+      </div>
+
+      <p class="last-updated" id="lastUpdated"></p>
+    </div>
+
+    <!-- Note about API -->
+    <div class="api-note">
+      <p>⚠️ This app uses the <strong>OpenWeatherMap API</strong>.</p>
+      <p>Replace <code>YOUR_API_KEY</code> in script.js with your free key from <a href="https://openweathermap.org/api" target="_blank">openweathermap.org</a>.</p>
+      <p>Until then, demo data is shown for popular cities.</p>
+    </div>
+
+    <div class="quick-cities">
+      <p>Quick search:</p>
+      <div class="city-chips">
+        <span class="chip" onclick="quickSearch('Mumbai')">Mumbai</span>
+        <span class="chip" onclick="quickSearch('London')">London</span>
+        <span class="chip" onclick="quickSearch('New York')">New York</span>
+        <span class="chip" onclick="quickSearch('Tokyo')">Tokyo</span>
+        <span class="chip" onclick="quickSearch('Paris')">Paris</span>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

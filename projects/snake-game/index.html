@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Snake Game</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+  <div class="container">
+    <h1>🐍 Snake Game</h1>
+
+    <div class="info-bar">
+      <span>Score: <strong id="score">0</strong></span>
+      <span>Best: <strong id="best">0</strong></span>
+      <span>Speed: <strong id="speedLabel">Normal</strong></span>
+    </div>
+
+    <canvas id="gameCanvas" width="400" height="400"></canvas>
+
+    <div id="overlay" class="overlay">
+      <div class="overlay-box">
+        <h2 id="overlayTitle">Snake Game</h2>
+        <p id="overlayMsg">Use arrow keys or WASD to move</p>
+        <div class="speed-select">
+          <label>Speed:</label>
+          <select id="speedSelect">
+            <option value="200">Slow</option>
+            <option value="130" selected>Normal</option>
+            <option value="80">Fast</option>
+          </select>
+        </div>
+        <button class="btn" id="startBtn">Start Game</button>
+      </div>
+    </div>
+
+    <div class="controls-hint">
+      <span>⬆ W</span><span>⬇ S</span><span>⬅ A</span><span>➡ D</span>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

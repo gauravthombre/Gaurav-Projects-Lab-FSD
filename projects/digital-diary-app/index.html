@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyDiary — Digital Diary App</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:#fdf6e3;min-height:100vh;padding:24px 16px}
+.container{max-width:900px;margin:0 auto;display:grid;grid-template-columns:300px 1fr;gap:20px}
+@media(max-width:700px){.container{grid-template-columns:1fr}}
+
+/* SIDEBAR */
+.sidebar{background:#fff;border-radius:20px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,0.07);height:fit-content;position:sticky;top:20px}
+.diary-brand{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.diary-icon{font-size:2rem}
+.brand-text h2{font-size:1.1rem;font-weight:800;color:#1e1b4b}
+.brand-text p{font-size:0.75rem;color:#94a3b8}
+.new-btn{width:100%;padding:12px;background:#6366f1;color:#fff;border:none;border-radius:12px;font-size:0.9rem;font-weight:700;cursor:pointer;margin-bottom:16px;transition:background 0.2s}
+.new-btn:hover{background:#4f46e5}
+.search-inp{width:100%;padding:9px 14px;border-radius:10px;border:2px solid #e5e7eb;font-size:0.85rem;outline:none;margin-bottom:12px;background:#fdf6e3;transition:border-color 0.2s}
+.search-inp:focus{border-color:#6366f1}
+.mood-filter{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px}
+.mood-pill{padding:5px 10px;border-radius:50px;border:2px solid #e5e7eb;cursor:pointer;font-size:0.75rem;transition:all 0.2s}
+.mood-pill.active{border-color:#6366f1;background:#eef2ff;color:#4f46e5}
+.entries-list{display:flex;flex-direction:column;gap:6px;max-height:480px;overflow-y:auto;scrollbar-width:thin}
+.entry-item{padding:12px 14px;border-radius:12px;cursor:pointer;transition:all 0.2s;border:2px solid transparent}
+.entry-item:hover{background:#f8fafc;border-color:#e5e7eb}
+.entry-item.active{background:#eef2ff;border-color:#6366f1}
+.entry-date{font-size:0.72rem;color:#94a3b8;margin-bottom:2px}
+.entry-title{font-size:0.88rem;font-weight:700;color:#1e293b;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.entry-preview{font-size:0.75rem;color:#94a3b8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.entry-mood{font-size:0.8rem}
+.no-entries{text-align:center;padding:24px;color:#94a3b8;font-size:0.85rem}
+
+/* MAIN AREA */
+.main-area{background:#fff;border-radius:20px;padding:28px;box-shadow:0 2px 12px rgba(0,0,0,0.07)}
+
+/* EMPTY STATE */
+.empty-state{text-align:center;padding:60px 20px;color:#94a3b8}
+.empty-state div{font-size:4rem;margin-bottom:12px}
+.empty-state h3{font-size:1.2rem;font-weight:700;color:#374151;margin-bottom:6px}
+.empty-state p{font-size:0.85rem}
+
+/* EDITOR */
+.editor-area{display:none}
+.editor-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px}
+.editor-header h2{font-size:1rem;font-weight:700;color:#94a3b8}
+.editor-btns{display:flex;gap:8px}
+.save-btn{padding:9px 22px;background:#6366f1;color:#fff;border:none;border-radius:50px;font-size:0.85rem;font-weight:700;cursor:pointer;transition:background 0.2s}
+.save-btn:hover{background:#4f46e5}
+.del-btn{padding:9px 14px;background:#fee2e2;border:none;border-radius:50px;font-size:0.85rem;font-weight:700;cursor:pointer;color:#ef4444}
+.del-btn:hover{background:#fecaca}
+.title-inp{width:100%;font-size:1.5rem;font-weight:800;color:#1e1b4b;border:none;outline:none;padding:0 0 12px;border-bottom:2px solid #f3f4f6;margin-bottom:16px;font-family:inherit;background:transparent}
+.title-inp::placeholder{color:#d1d5db}
+.meta-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px;align-items:center}
+.meta-row input[type=date]{padding:8px 12px;border-radius:10px;border:2px solid #f3f4f6;font-size:0.85rem;outline:none;background:#fdf6e3}
+.mood-selector{display:flex;gap:6px;flex-wrap:wrap}
+.mood-opt{padding:6px 12px;border-radius:50px;border:2px solid #e5e7eb;cursor:pointer;font-size:0.85rem;transition:all 0.2s}
+.mood-opt.selected{border-color:#6366f1;background:#eef2ff}
+.tags-inp{flex:1;min-width:120px;padding:8px 12px;border-radius:10px;border:2px solid #f3f4f6;font-size:0.85rem;outline:none;font-family:inherit;background:#fdf6e3}
+.toolbar{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
+.tool-btn{padding:6px 12px;background:#f8fafc;border:2px solid #e5e7eb;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:700;color:#475569;transition:all 0.2s}
+.tool-btn:hover{background:#eef2ff;border-color:#6366f1;color:#4f46e5}
+.content-area{width:100%;min-height:300px;padding:16px;border-radius:14px;border:2px solid #f3f4f6;font-size:0.95rem;line-height:1.8;outline:none;resize:vertical;font-family:'Georgia',serif;background:#fffef8;transition:border-color 0.2s;color:#374151}
+.content-area:focus{border-color:#6366f1}
+.word-count{font-size:0.75rem;color:#94a3b8;margin-top:6px;text-align:right}
+
+/* VIEW MODE */
+.view-area{display:none}
+.view-title{font-size:1.8rem;font-weight:800;color:#1e1b4b;margin-bottom:10px}
+.view-meta{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:20px;padding-bottom:16px;border-bottom:2px solid #f3f4f6}
+.view-date{font-size:0.82rem;color:#94a3b8;font-weight:600}
+.view-mood{font-size:1.1rem}
+.view-tags{display:flex;gap:6px;flex-wrap:wrap}
+.view-tag{font-size:0.72rem;padding:3px 10px;border-radius:50px;background:#eef2ff;color:#4f46e5;font-weight:600}
+.view-content{font-size:1rem;line-height:1.9;color:#374151;white-space:pre-wrap;font-family:'Georgia',serif}
+.edit-btn{padding:9px 22px;background:#f8fafc;border:2px solid #e5e7eb;border-radius:50px;font-size:0.85rem;font-weight:700;cursor:pointer;color:#475569;transition:all 0.2s}
+.edit-btn:hover{border-color:#6366f1;color:#4f46e5}
+
+.stats-mini{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:16px;padding-top:16px;border-top:2px solid #f3f4f6}
+.mini-stat{text-align:center}
+.mini-n{font-size:1.3rem;font-weight:800;color:#6366f1}
+.mini-l{font-size:0.72rem;color:#94a3b8}
+</style>
+</head>
+<body>
+<div class="container">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="diary-brand">
+      <div class="diary-icon">📔</div>
+      <div class="brand-text"><h2>MyDiary</h2><p>Your personal journal</p></div>
+    </div>
+    <button class="new-btn" onclick="newEntry()">✍️ New Entry</button>
+    <input class="search-inp" id="search-inp" type="text" placeholder="Search entries..." oninput="renderList()">
+    <div class="mood-filter" id="mood-filter">
+      <div class="mood-pill active" onclick="setMoodFilter('',this)">All</div>
+      <div class="mood-pill" onclick="setMoodFilter('😊',this)">😊</div>
+      <div class="mood-pill" onclick="setMoodFilter('😔',this)">😔</div>
+      <div class="mood-pill" onclick="setMoodFilter('😤',this)">😤</div>
+      <div class="mood-pill" onclick="setMoodFilter('😴',this)">😴</div>
+      <div class="mood-pill" onclick="setMoodFilter('🥳',this)">🥳</div>
+      <div class="mood-pill" onclick="setMoodFilter('😰',this)">😰</div>
+    </div>
+    <div id="entries-list"></div>
+    <div class="stats-mini" id="stats-mini"></div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main-area">
+    <!-- EMPTY -->
+    <div class="empty-state" id="empty-state">
+      <div>📖</div>
+      <h3>Your diary awaits</h3>
+      <p>Start writing your thoughts, memories and reflections. Every day is a new page.</p>
+    </div>
+
+    <!-- EDITOR -->
+    <div class="editor-area" id="editor-area">
+      <div class="editor-header">
+        <h2 id="editor-label">New Entry</h2>
+        <div class="editor-btns">
+          <button class="del-btn" id="del-btn" onclick="deleteEntry()" style="display:none">Delete</button>
+          <button class="save-btn" onclick="saveEntry()">Save Entry</button>
+        </div>
+      </div>
+      <input class="title-inp" id="e-title" placeholder="Entry title...">
+      <div class="meta-row">
+        <input type="date" id="e-date">
+        <div class="mood-selector">
+          <div class="mood-opt" onclick="setMood('😊',this)">😊</div>
+          <div class="mood-opt" onclick="setMood('😔',this)">😔</div>
+          <div class="mood-opt" onclick="setMood('😤',this)">😤</div>
+          <div class="mood-opt" onclick="setMood('😴',this)">😴</div>
+          <div class="mood-opt" onclick="setMood('🥳',this)">🥳</div>
+          <div class="mood-opt" onclick="setMood('😰',this)">😰</div>
+        </div>
+        <input class="tags-inp" id="e-tags" placeholder="Tags (comma separated)">
+      </div>
+      <div class="toolbar">
+        <button class="tool-btn" onclick="insertText('**','**')"><b>B</b></button>
+        <button class="tool-btn" onclick="insertText('_','_')"><i>I</i></button>
+        <button class="tool-btn" onclick="insertText('\n• ','')">• List</button>
+        <button class="tool-btn" onclick="insertText('\n❤️ ','')">❤️</button>
+        <button class="tool-btn" onclick="insertText('\n🌟 ','')">🌟</button>
+        <button class="tool-btn" onclick="insertText('\n💭 ','')">💭</button>
+        <button class="tool-btn" onclick="insertText('\n✅ ','')">✅</button>
+      </div>
+      <textarea class="content-area" id="e-content" placeholder="Write your thoughts here... What happened today? How are you feeling? What are you grateful for?" oninput="updateWordCount()"></textarea>
+      <div class="word-count" id="word-count">0 words</div>
+    </div>
+
+    <!-- VIEW -->
+    <div class="view-area" id="view-area">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <div style="font-size:0.82rem;color:#94a3b8">Reading mode</div>
+        <div style="display:flex;gap:8px">
+          <button class="edit-btn" onclick="editCurrent()">✏️ Edit</button>
+          <button class="del-btn" onclick="deleteEntry()">Delete</button>
+        </div>
+      </div>
+      <div class="view-title" id="v-title"></div>
+      <div class="view-meta">
+        <span class="view-date" id="v-date"></span>
+        <span class="view-mood" id="v-mood"></span>
+        <div class="view-tags" id="v-tags"></div>
+      </div>
+      <div class="view-content" id="v-content"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+let entries=[];let nextId=1;let currentId=null;let currentMood='';let moodFilter='';
+try{const s=localStorage.getItem('mydiary_v1');if(s){const d=JSON.parse(s);entries=d.entries;nextId=d.nextId;}}catch(e){}
+function save(){localStorage.setItem('mydiary_v1',JSON.stringify({entries,nextId}));}
+
+function setMoodFilter(m,btn){moodFilter=m;document.querySelectorAll('.mood-pill').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderList();}
+function setMood(m,btn){currentMood=m;document.querySelectorAll('.mood-opt').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');}
+
+function renderList(){
+  const q=document.getElementById('search-inp').value.toLowerCase();
+  let list=entries.filter(e=>{
+    const mq=!q||e.title.toLowerCase().includes(q)||e.content.toLowerCase().includes(q);
+    const mm=!moodFilter||e.mood===moodFilter;
+    return mq&&mm;
+  });
+  const el=document.getElementById('entries-list');
+  if(list.length===0){el.innerHTML='<div class="no-entries">No entries found</div>';return;}
+  el.innerHTML=list.map(e=>`
+    <div class="entry-item${currentId===e.id?' active':''}" onclick="viewEntry(${e.id})">
+      <div class="entry-date">${e.date}</div>
+      <div class="entry-title">${e.mood||''} ${e.title||'Untitled'}</div>
+      <div class="entry-preview">${e.content.slice(0,60)}${e.content.length>60?'...':''}</div>
+    </div>`).join('');
+  const total=entries.length;const wds=entries.reduce((s,e)=>s+(e.content.split(/\s+/).filter(Boolean).length),0);
+  document.getElementById('stats-mini').innerHTML=`
+    <div class="mini-stat"><div class="mini-n">${total}</div><div class="mini-l">Entries</div></div>
+    <div class="mini-stat"><div class="mini-n">${wds}</div><div class="mini-l">Words</div></div>
+    <div class="mini-stat"><div class="mini-n">${[...new Set(entries.map(e=>e.date))].length}</div><div class="mini-l">Days</div></div>
+  `;
+}
+
+function show(state){
+  document.getElementById('empty-state').style.display=state==='empty'?'block':'none';
+  document.getElementById('editor-area').style.display=state==='editor'?'block':'none';
+  document.getElementById('view-area').style.display=state==='view'?'block':'none';
+}
+
+function newEntry(){
+  currentId=null;currentMood='';
+  document.getElementById('e-title').value='';
+  document.getElementById('e-date').value=new Date().toISOString().split('T')[0];
+  document.getElementById('e-content').value='';
+  document.getElementById('e-tags').value='';
+  document.querySelectorAll('.mood-opt').forEach(b=>b.classList.remove('selected'));
+  document.getElementById('del-btn').style.display='none';
+  document.getElementById('editor-label').textContent='New Entry';
+  document.getElementById('word-count').textContent='0 words';
+  show('editor');
+  document.getElementById('e-title').focus();
+}
+
+function saveEntry(){
+  const title=document.getElementById('e-title').value.trim()||'Untitled';
+  const content=document.getElementById('e-content').value.trim();
+  if(!content){alert('Write something first!');return;}
+  const date=document.getElementById('e-date').value||new Date().toISOString().split('T')[0];
+  const tags=document.getElementById('e-tags').value.split(',').map(t=>t.trim()).filter(Boolean);
+  const fmtDate=new Date(date).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
+  if(currentId){
+    const e=entries.find(x=>x.id===currentId);
+    Object.assign(e,{title,content,date:fmtDate,mood:currentMood,tags});
+  }else{
+    const e={id:nextId++,title,content,date:fmtDate,mood:currentMood,tags};
+    entries.unshift(e);currentId=e.id;
+  }
+  save();renderList();viewEntry(currentId);
+}
+
+function viewEntry(id){
+  currentId=id;const e=entries.find(x=>x.id===id);if(!e)return;
+  document.getElementById('v-title').textContent=e.title||'Untitled';
+  document.getElementById('v-date').textContent='📅 '+e.date;
+  document.getElementById('v-mood').textContent=e.mood||'';
+  document.getElementById('v-tags').innerHTML=(e.tags||[]).map(t=>`<span class="view-tag">#${t}</span>`).join('');
+  document.getElementById('v-content').textContent=e.content;
+  show('view');renderList();
+}
+
+function editCurrent(){
+  const e=entries.find(x=>x.id===currentId);if(!e)return;
+  currentMood=e.mood||'';
+  document.getElementById('e-title').value=e.title;
+  document.getElementById('e-date').value=new Date(e.date).toISOString().split('T')[0];
+  document.getElementById('e-content').value=e.content;
+  document.getElementById('e-tags').value=(e.tags||[]).join(', ');
+  document.querySelectorAll('.mood-opt').forEach(b=>b.classList.toggle('selected',b.textContent===e.mood));
+  document.getElementById('del-btn').style.display='block';
+  document.getElementById('editor-label').textContent='Edit Entry';
+  updateWordCount();show('editor');
+}
+
+function deleteEntry(){
+  if(!currentId||!confirm('Delete this entry?'))return;
+  entries=entries.filter(e=>e.id!==currentId);currentId=null;save();renderList();
+  if(entries.length>0)viewEntry(entries[0].id);else show('empty');
+}
+
+function updateWordCount(){
+  const words=document.getElementById('e-content').value.trim().split(/\s+/).filter(Boolean).length;
+  document.getElementById('word-count').textContent=words+' word'+(words!==1?'s':'');
+}
+
+function insertText(before,after){
+  const ta=document.getElementById('e-content');const start=ta.selectionStart;const end=ta.selectionEnd;
+  const selected=ta.value.substring(start,end);
+  ta.value=ta.value.substring(0,start)+before+selected+after+ta.value.substring(end);
+  ta.focus();ta.selectionStart=start+before.length;ta.selectionEnd=start+before.length+(selected.length||0);
+  updateWordCount();
+}
+
+renderList();
+if(entries.length===0)show('empty');else viewEntry(entries[0].id);
+</script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Base64 Encoder / Decoder</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      min-height:100vh;display:flex;align-items:center;justify-content:center;
+      background:#0f172a;padding:20px;font-family:Arial,Helvetica,sans-serif;color:#e2e8f0
+    }
+    .card{
+      width:100%;max-width:720px;background:#020617;border-radius:16px;
+      box-shadow:0 20px 40px rgba(0,0,0,.5);padding:22px
+    }
+    h1{text-align:center;margin-bottom:12px;font-size:1.4rem}
+    .area{margin-bottom:10px}
+    label{font-size:.8rem;color:#94a3b8;margin-bottom:4px;display:block}
+    textarea{
+      width:100%;min-height:120px;border-radius:10px;border:1px solid #1e293b;
+      background:#020617;color:#e2e8f0;padding:10px;font-family:"Courier New",monospace;
+      font-size:.85rem;resize:vertical
+    }
+    textarea:focus{outline:none;border-color:#4c8bf5;box-shadow:0 0 0 1px #4c8bf5}
+    .buttons{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+    button{
+      flex:1;min-width:120px;padding:10px;border:none;border-radius:8px;
+      font-size:.85rem;cursor:pointer;background:#1e40af;color:#fff
+    }
+    button:hover{background:#1d4ed8}
+    .secondary{background:#334155}
+    .secondary:hover{background:#475569}
+    .status{font-size:.85rem;margin-top:6px;display:none}
+    .ok{color:#22c55e}.err{color:#ef4444}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Base64 Encoder / Decoder</h1>
+
+    <div class="area">
+      <label>Input</label>
+      <textarea id="inputText" placeholder="Enter text or Base64..."></textarea>
+    </div>
+
+    <div class="buttons">
+      <button id="encodeBtn">Encode → Base64</button>
+      <button id="decodeBtn">Decode ← Base64</button>
+      <button class="secondary" id="copyBtn">Copy Output</button>
+      <button class="secondary" id="clearBtn">Clear</button>
+    </div>
+
+    <div class="area">
+      <label>Output</label>
+      <textarea id="outputText" placeholder="Result..."></textarea>
+    </div>
+
+    <div id="status" class="status"></div>
+  </div>
+
+  <script>
+    const input = document.getElementById('inputText');
+    const output = document.getElementById('outputText');
+    const status = document.getElementById('status');
+    const encodeBtn = document.getElementById('encodeBtn');
+    const decodeBtn = document.getElementById('decodeBtn');
+    const copyBtn = document.getElementById('copyBtn');
+    const clearBtn = document.getElementById('clearBtn');
+
+    function show(msg, ok){
+      status.textContent = msg;
+      status.className = 'status ' + (ok?'ok':'err');
+      status.style.display = 'block';
+    }
+
+    function utf8ToB64(str){ return btoa(unescape(encodeURIComponent(str))); }
+    function b64ToUtf8(str){ return decodeURIComponent(escape(atob(str))); }
+
+    encodeBtn.onclick = () => {
+      if(!input.value.trim()) return show('❌ Empty input', false);
+      try{
+        output.value = utf8ToB64(input.value);
+        show('Encoded to Base64', true);
+      }catch(e){ show('❌ Encode error', false); }
+    };
+
+    decodeBtn.onclick = () => {
+      if(!input.value.trim()) return show('❌ Empty input', false);
+      try{
+        output.value = b64ToUtf8(input.value.trim());
+        show('Decoded from Base64', true);
+      }catch(e){ show('❌ Invalid Base64', false); }
+    };
+
+    copyBtn.onclick = async () => {
+      if(!output.value) return;
+      try{ await navigator.clipboard.writeText(output.value); show('Copied!', true); }
+      catch{ show('Copy failed', false); }
+    };
+
+    clearBtn.onclick = () => {
+      input.value=''; output.value=''; status.style.display='none';
+    };
+  </script>
+</body>
+</html>

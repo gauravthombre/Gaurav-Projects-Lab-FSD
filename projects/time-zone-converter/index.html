@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Time Zone Converter</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,Helvetica,sans-serif}
+body{min-height:100vh;display:flex;align-items:center;justify-content:center;background:#f4f6f8;padding:20px}
+.card{width:100%;max-width:480px;background:#fff;border-radius:16px;box-shadow:0 14px 30px rgba(0,0,0,.08);padding:24px}
+h1{text-align:center;margin-bottom:18px;color:#1a3f8b;font-size:1.4rem}
+.field{margin-bottom:14px}
+label{display:block;margin-bottom:6px;font-size:.85rem;color:#555}
+input,select{width:100%;padding:10px 12px;border-radius:10px;border:1px solid #ddd;font-size:.95rem}
+input:focus,select:focus{outline:none;border-color:#4c8bf5;box-shadow:0 0 0 2px rgba(76,139,245,.15)}
+button{width:100%;padding:12px;border:none;border-radius:10px;background:#1a3f8b;color:#fff;font-size:1rem;cursor:pointer;margin-top:6px}
+button:hover{background:#153272}
+.result{margin-top:18px;padding:14px;border-radius:12px;background:#eef4ff;color:#1a3f8b;font-weight:600;display:none}
+.error{margin-top:10px;color:#c62828;font-size:.85rem;text-align:center;display:none}
+</style>
+</head>
+<body>
+<div class="card">
+<h1>Time Zone Converter</h1>
+
+<div class="field">
+<label>Select Date & Time</label>
+<input type="datetime-local" id="dateTime">
+</div>
+
+<div class="field">
+<label>From Time Zone</label>
+<select id="fromZone"></select>
+</div>
+
+<div class="field">
+<label>To Time Zone</label>
+<select id="toZone"></select>
+</div>
+
+<button id="convertBtn">Convert Time</button>
+
+<div id="resultBox" class="result"></div>
+<div id="errorMsg" class="error"></div>
+</div>
+
+<script>
+const zones = {
+  "IST (India Standard Time)": "Asia/Kolkata",
+  "UTC": "UTC",
+  "PST (Pacific Standard Time)": "America/Los_Angeles",
+  "EST (Eastern Standard Time)": "America/New_York",
+  "GMT": "Europe/London",
+  "CET": "Europe/Paris"
+};
+
+const fromZone = document.getElementById('fromZone');
+const toZone = document.getElementById('toZone');
+const dateTimeInput = document.getElementById('dateTime');
+const convertBtn = document.getElementById('convertBtn');
+const resultBox = document.getElementById('resultBox');
+const errorMsg = document.getElementById('errorMsg');
+
+Object.keys(zones).forEach(zone => {
+  fromZone.add(new Option(zone, zones[zone]));
+  toZone.add(new Option(zone, zones[zone]));
+});
+
+function showError(msg){
+  errorMsg.textContent = msg;
+  errorMsg.style.display = 'block';
+  resultBox.style.display = 'none';
+}
+
+function clearError(){ errorMsg.style.display = 'none'; }
+
+convertBtn.addEventListener('click', ()=>{
+  const inputValue = dateTimeInput.value;
+  if(!inputValue){
+    showError('Please select date and time');
+    return;
+  }
+
+  clearError();
+
+  const fromTZ = fromZone.value;
+  const toTZ = toZone.value;
+
+  const date = new Date(inputValue);
+
+  if(fromTZ === toTZ){
+    const formatted = new Intl.DateTimeFormat('en-GB', {
+      dateStyle: 'long',
+      timeStyle: 'short',
+      timeZone: fromTZ
+    }).format(date);
+
+    resultBox.textContent = formatted + ` (${fromZone.options[fromZone.selectedIndex].text})`;
+    resultBox.style.display = 'block';
+    return;
+  }
+
+  const utcDate = new Date(date.toLocaleString('en-US', { timeZone: fromTZ }));
+
+  const converted = new Intl.DateTimeFormat('en-GB', {
+    dateStyle: 'long',
+    timeStyle: 'short',
+    timeZone: toTZ
+  }).format(utcDate);
+
+  resultBox.textContent = converted + ` (${toZone.options[toZone.selectedIndex].text})`;
+  resultBox.style.display = 'block';
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Text Diff Checker</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,Helvetica,sans-serif}
+body{min-height:100vh;display:flex;flex-direction:column;background:#0f172a;color:#e2e8f0;padding:20px}
+h1{text-align:center;margin-bottom:16px}
+.container{display:flex;gap:12px;flex:1}
+.panel{flex:1;display:flex;flex-direction:column}
+label{font-size:.8rem;margin-bottom:4px;color:#94a3b8}
+textarea{flex:1;padding:10px;border-radius:8px;border:1px solid #1e293b;background:#020617;color:#e2e8f0;font-family:"Courier New",monospace;font-size:.85rem;resize:none}
+textarea:focus{outline:none;border-color:#4c8bf5;box-shadow:0 0 0 1px #4c8bf5}
+.buttons{margin:12px 0;display:flex;gap:10px}
+button{flex:1;padding:10px;border:none;border-radius:8px;font-size:.9rem;cursor:pointer;background:#1e40af;color:#fff}
+button:hover{background:#1d4ed8}
+.secondary{background:#334155}
+.secondary:hover{background:#475569}
+.output{margin-top:12px;font-family:"Courier New",monospace;font-size:.85rem;white-space:pre-wrap}
+.added{background:#14532d}
+.removed{background:#7f1d1d}
+.modified{background:#78350f}
+.summary{margin-top:10px;font-size:.85rem}
+@media(max-width:768px){.container{flex-direction:column}}
+</style>
+</head>
+<body>
+<h1>Text Diff Checker</h1>
+<div class="container">
+<div class="panel">
+<label>Original Text</label>
+<textarea id="text1" placeholder="Enter original text..."></textarea>
+</div>
+<div class="panel">
+<label>Modified Text</label>
+<textarea id="text2" placeholder="Enter modified text..."></textarea>
+</div>
+</div>
+
+<div class="buttons">
+<button id="compareBtn">Compare</button>
+<button class="secondary" id="clearBtn">Clear</button>
+</div>
+
+<div id="diffOutput" class="output"></div>
+<div id="summary" class="summary"></div>
+
+<script>
+const text1=document.getElementById('text1');
+const text2=document.getElementById('text2');
+const compareBtn=document.getElementById('compareBtn');
+const clearBtn=document.getElementById('clearBtn');
+const diffOutput=document.getElementById('diffOutput');
+const summary=document.getElementById('summary');
+
+compareBtn.addEventListener('click',()=>{
+const lines1=text1.value.split('\n');
+const lines2=text2.value.split('\n');
+let added=0,removed=0,modified=0;
+diffOutput.innerHTML='';
+
+const max=Math.max(lines1.length,lines2.length);
+for(let i=0;i<max;i++){
+const l1=lines1[i]||'';
+const l2=lines2[i]||'';
+let line=document.createElement('div');
+
+if(l1===l2){
+line.textContent=l1;
+}else if(!l1 && l2){
+line.textContent='+ '+l2;
+line.className='added';
+added++;
+}else if(l1 && !l2){
+line.textContent='- '+l1;
+line.className='removed';
+removed++;
+}else{
+line.textContent='~ '+l2;
+line.className='modified';
+modified++;
+}
+
+diffOutput.appendChild(line);
+}
+
+summary.textContent=`Added: ${added} | Removed: ${removed} | Modified: ${modified}`;
+});
+
+clearBtn.addEventListener('click',()=>{
+text1.value='';
+text2.value='';
+diffOutput.innerHTML='';
+summary.textContent='';
+});
+</script>
+</body>
+</html>

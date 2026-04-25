@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Toy Store</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- Navbar -->
+<header class="navbar">
+  <div class="logo">🧸 Toy Store</div>
+  <nav>
+    <a href="#">Home</a>
+    <a href="#toys">Toys</a>
+    <a href="#ages">Age Groups</a>
+    <a href="#cart">Cart (<span id="cart-count">0</span>)</a>
+  </nav>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-content">
+    <h1>Fun for Every Age</h1>
+    <p>Safe, colorful, joyful toys</p>
+    <a href="#toys" class="cta">Explore Toys</a>
+  </div>
+</section>
+
+<!-- Age Groups -->
+<section class="ages" id="ages">
+  <h2>Shop by Age</h2>
+  <div class="age-grid">
+    <div class="tile">0–2</div>
+    <div class="tile">3–5</div>
+    <div class="tile">6–8</div>
+    <div class="tile">9–12</div>
+  </div>
+</section>
+
+<!-- Filters -->
+<section class="filters">
+  <select onchange="filterAge(this.value)">
+    <option value="All">All Ages</option>
+    <option value="0-2">0–2</option>
+    <option value="3-5">3–5</option>
+    <option value="6-8">6–8</option>
+    <option value="9-12">9–12</option>
+  </select>
+
+  <select onchange="filterCategory(this.value)">
+    <option value="All">All Categories</option>
+    <option value="Educational">Educational</option>
+    <option value="Puzzle">Puzzle</option>
+    <option value="Action">Action</option>
+    <option value="Soft Toy">Soft Toy</option>
+  </select>
+</section>
+
+<!-- Toys -->
+<section class="toys" id="toys">
+  <h2>Toy Collection</h2>
+  <div class="grid" id="toy-grid"></div>
+</section>
+
+<!-- Cart -->
+<section class="cart" id="cart">
+  <h2>Your Cart</h2>
+  <div id="cart-items"></div>
+  <h3>Total: ₹<span id="total-price">0</span></h3>
+</section>
+
+<script src="script.js"></script>
+</body>
+</html>

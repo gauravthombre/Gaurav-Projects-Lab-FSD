@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sports Store</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- Navbar -->
+<header class="navbar">
+  <div class="logo">🏆 Sports Store</div>
+  <nav>
+    <a href="#">Home</a>
+    <a href="#equipment">Equipment</a>
+    <a href="#categories">Categories</a>
+    <a href="#cart">Cart (<span id="cart-count">0</span>)</a>
+  </nav>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-content">
+    <h1>Gear Up for Performance</h1>
+    <p>Train harder. Play stronger.</p>
+    <a href="#equipment" class="cta">Shop Equipment</a>
+  </div>
+</section>
+
+<!-- Categories -->
+<section class="categories" id="categories">
+  <h2>Shop by Sport</h2>
+  <div class="category-grid">
+    <div class="cat">Cricket</div>
+    <div class="cat">Football</div>
+    <div class="cat">Gym</div>
+    <div class="cat">Badminton</div>
+    <div class="cat">Fitness</div>
+  </div>
+</section>
+
+<!-- Filters -->
+<section class="filters">
+  <select onchange="filterCategory(this.value)">
+    <option value="All">All Categories</option>
+    <option value="Cricket">Cricket</option>
+    <option value="Football">Football</option>
+    <option value="Gym">Gym</option>
+    <option value="Badminton">Badminton</option>
+    <option value="Fitness">Fitness</option>
+  </select>
+
+  <select onchange="filterPrice(this.value)">
+    <option value="All">All Prices</option>
+    <option value="low">Under ₹2000</option>
+    <option value="mid">₹2000–₹5000</option>
+    <option value="high">Above ₹5000</option>
+  </select>
+
+  <select onchange="filterBrand(this.value)">
+    <option value="All">All Brands</option>
+    <option value="Nike">Nike</option>
+    <option value="Adidas">Adidas</option>
+    <option value="SG">SG</option>
+    <option value="Yonex">Yonex</option>
+  </select>
+</section>
+
+<!-- Equipment -->
+<section class="equipment" id="equipment">
+  <h2>Sports Equipment</h2>
+  <div class="grid" id="product-grid"></div>
+</section>
+
+<!-- Cart -->
+<section class="cart" id="cart">
+  <h2>Your Cart</h2>
+  <div id="cart-items"></div>
+  <h3>Total: ₹<span id="total-price">0</span></h3>
+</section>
+
+<script src="script.js"></script>
+</body>
+</html>

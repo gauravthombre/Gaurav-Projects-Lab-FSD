@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Digital Business Card</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+  <div class="page">
+
+    <div class="card">
+      <!-- Avatar -->
+      <div class="avatar">GT</div>
+
+      <!-- Name & Title -->
+      <h1 class="name">Gaurav Thombre</h1>
+      <p class="title">Full Stack Developer</p>
+      <p class="company">📍 Nagpur, India</p>
+
+      <!-- Divider -->
+      <div class="divider"></div>
+
+      <!-- Contact Info -->
+      <div class="contact-list">
+        <a class="contact-item" href="mailto:gaurav@example.com">
+          <span class="icon">✉️</span>
+          <span>gaurav@example.com</span>
+        </a>
+        <a class="contact-item" href="tel:+919876543210">
+          <span class="icon">📞</span>
+          <span>+91 98765 43210</span>
+        </a>
+        <a class="contact-item" href="https://github.com/gauravthombre" target="_blank">
+          <span class="icon">💻</span>
+          <span>github.com/gauravthombre</span>
+        </a>
+        <a class="contact-item" href="#" target="_blank">
+          <span class="icon">🔗</span>
+          <span>linkedin.com/in/gauravthombre</span>
+        </a>
+        <a class="contact-item" href="#" target="_blank">
+          <span class="icon">🌐</span>
+          <span>gauravthombre.dev</span>
+        </a>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Skills -->
+      <div class="skills-section">
+        <p class="section-label">Skills</p>
+        <div class="skill-chips">
+          <span class="chip">HTML</span>
+          <span class="chip">CSS</span>
+          <span class="chip">JavaScript</span>
+          <span class="chip">React</span>
+          <span class="chip">Node.js</span>
+          <span class="chip">MongoDB</span>
+          <span class="chip">Git</span>
+        </div>
+      </div>
+
+      <!-- Buttons -->
+      <div class="action-buttons">
+        <button class="btn btn-primary" onclick="window.print()">Download Card</button>
+        <button class="btn btn-outline" id="shareBtn">Share</button>
+      </div>
+
+      <p class="footer-text">© 2024 Gaurav Thombre</p>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

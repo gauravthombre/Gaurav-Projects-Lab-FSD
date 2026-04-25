@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Password Generator</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, Helvetica, sans-serif; }
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f4f6f8;
+      padding: 20px;
+    }
+    .card {
+      background: #fff;
+      width: 100%;
+      max-width: 420px;
+      padding: 26px;
+      border-radius: 16px;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 18px;
+      color: #333;
+      font-size: 1.5rem;
+    }
+    .field { margin-bottom: 14px; }
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.9rem;
+      color: #555;
+    }
+    input[type="number"] {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      font-size: 1rem;
+    }
+    .options { margin: 10px 0 14px; }
+    .options label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+      font-size: 0.95rem;
+      color: #444;
+    }
+    input[type="checkbox"] { accent-color: #4c8bf5; }
+    .password-box {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    #password {
+      flex: 1;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      background: #f1f3f5;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+    button {
+      border: none;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .primary {
+      width: 100%;
+      background: #4c8bf5;
+      color: #fff;
+      margin-top: 10px;
+    }
+    .primary:hover { background: #3a73d9; }
+    .copy {
+      background: #e8f0ff;
+      color: #2a4dbf;
+      white-space: nowrap;
+    }
+    .copy:hover { background: #d8e6ff; }
+    .error {
+      margin-top: 10px;
+      color: #c62828;
+      font-size: 0.9rem;
+      display: none;
+      text-align: center;
+    }
+    .copied {
+      margin-top: 8px;
+      font-size: 0.85rem;
+      color: #2e7d32;
+      display: none;
+      text-align: right;
+    }
+    @media (max-width: 420px) {
+      .card { padding: 22px; }
+      h1 { font-size: 1.3rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Password Generator</h1>
+
+    <div class="field">
+      <label for="length">Password Length (4–32)</label>
+      <input type="number" id="length" min="4" max="32" value="12" />
+    </div>
+
+    <div class="options">
+      <label><input type="checkbox" id="upper" checked /> Include uppercase (A–Z)</label>
+      <label><input type="checkbox" id="lower" checked /> Include lowercase (a–z)</label>
+      <label><input type="checkbox" id="number" checked /> Include numbers (0–9)</label>
+      <label><input type="checkbox" id="symbol" /> Include symbols (!@#$...)</label>
+    </div>
+
+    <button class="primary" id="generate">Generate Password</button>
+
+    <div class="password-box">
+      <input type="text" id="password" readonly placeholder="Your password" />
+      <button class="copy" id="copyBtn">Copy</button>
+    </div>
+    <div class="copied" id="copiedMsg">Copied!</div>
+    <div class="error" id="errorMsg"></div>
+  </div>
+
+  <script>
+    const lengthInput = document.getElementById('length');
+    const upper = document.getElementById('upper');
+    const lower = document.getElementById('lower');
+    const number = document.getElementById('number');
+    const symbol = document.getElementById('symbol');
+    const generateBtn = document.getElementById('generate');
+    const passwordField = document.getElementById('password');
+    const copyBtn = document.getElementById('copyBtn');
+    const errorMsg = document.getElementById('errorMsg');
+    const copiedMsg = document.getElementById('copiedMsg');
+
+    const UPPER = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const LOWER = 'abcdefghijklmnopqrstuvwxyz';
+    const NUMBER = '0123456789';
+    const SYMBOL = '!@#$%^&*()_+';
+
+    function showError(msg) {
+      errorMsg.textContent = msg;
+      errorMsg.style.display = 'block';
+    }
+    function clearError() { errorMsg.style.display = 'none'; }
+
+    function buildPool() {
+      let pool = '';
+      if (upper.checked) pool += UPPER;
+      if (lower.checked) pool += LOWER;
+      if (number.checked) pool += NUMBER;
+      if (symbol.checked) pool += SYMBOL;
+      return pool;
+    }
+
+    function generatePassword(len, pool) {
+      let pwd = '';
+      for (let i = 0; i < len; i++) {
+        const idx = Math.floor(Math.random() * pool.length);
+        pwd += pool[idx];
+      }
+      return pwd;
+    }
+
+    generateBtn.addEventListener('click', () => {
+      copiedMsg.style.display = 'none';
+      const len = parseInt(lengthInput.value, 10);
+      if (!len || len < 4 || len > 32) {
+        showError('Length must be between 4 and 32');
+        return;
+      }
+      const pool = buildPool();
+      if (!pool) {
+        showError('Select at least one character type');
+        return;
+      }
+      clearError();
+      const pwd = generatePassword(len, pool);
+      passwordField.value = pwd;
+    });
+
+    copyBtn.addEventListener('click', async () => {
+      const pwd = passwordField.value;
+      if (!pwd) return;
+      try {
+        await navigator.clipboard.writeText(pwd);
+        copiedMsg.style.display = 'block';
+      } catch (e) {
+        showError('Copy failed');
+      }
+    });
+  </script>
+</body>
+</html>

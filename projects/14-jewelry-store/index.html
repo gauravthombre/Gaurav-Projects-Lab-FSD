@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Jewelry Store</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- Navbar -->
+<header class="navbar">
+  <div class="logo">💎 Jewelry Store</div>
+  <nav>
+    <a href="#">Home</a>
+    <a href="#products">Collections</a>
+    <a href="#categories">Categories</a>
+    <a href="#cart">Cart (<span id="cart-count">0</span>)</a>
+  </nav>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-content">
+    <h1>Timeless Elegance</h1>
+    <p>Luxury crafted for every moment</p>
+    <a href="#products" class="cta">Explore Collection</a>
+  </div>
+</section>
+
+<!-- Collections -->
+<section class="collections" id="categories">
+  <h2>Collections</h2>
+  <div class="collection-grid">
+    <div class="tile">Rings</div>
+    <div class="tile">Necklaces</div>
+    <div class="tile">Earrings</div>
+    <div class="tile">Bracelets</div>
+  </div>
+</section>
+
+<!-- Filters -->
+<section class="filters">
+  <select onchange="filterCategory(this.value)">
+    <option value="All">All Categories</option>
+    <option value="Rings">Rings</option>
+    <option value="Necklaces">Necklaces</option>
+    <option value="Earrings">Earrings</option>
+    <option value="Bracelets">Bracelets</option>
+  </select>
+
+  <select onchange="filterMaterial(this.value)">
+    <option value="All">All Materials</option>
+    <option value="Gold">Gold</option>
+    <option value="Silver">Silver</option>
+    <option value="Diamond">Diamond</option>
+  </select>
+</section>
+
+<!-- Products -->
+<section class="products" id="products">
+  <h2>Jewelry</h2>
+  <div class="grid" id="product-grid"></div>
+</section>
+
+<!-- Cart -->
+<section class="cart" id="cart">
+  <h2>Your Cart</h2>
+  <div id="cart-items"></div>
+  <h3>Total: ₹<span id="total-price">0</span></h3>
+</section>
+
+<script src="script.js"></script>
+</body>
+</html>

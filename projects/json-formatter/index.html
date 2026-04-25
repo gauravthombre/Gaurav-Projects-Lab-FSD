@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JSON Formatter & Validator</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #0f172a;
+      padding: 20px;
+      font-family: Arial, Helvetica, sans-serif;
+      color: #e2e8f0;
+    }
+    .card {
+      width: 100%;
+      max-width: 760px;
+      background: #020617;
+      border-radius: 16px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+      padding: 22px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 14px;
+      font-size: 1.4rem;
+      letter-spacing: 0.5px;
+    }
+    textarea {
+      width: 100%;
+      height: 240px;
+      border-radius: 10px;
+      border: 1px solid #1e293b;
+      background: #020617;
+      color: #e2e8f0;
+      padding: 12px;
+      font-family: "Courier New", monospace;
+      font-size: 0.9rem;
+      resize: vertical;
+      margin-bottom: 10px;
+    }
+    textarea:focus {
+      outline: none;
+      border-color: #4c8bf5;
+      box-shadow: 0 0 0 1px #4c8bf5;
+    }
+    .buttons {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+    button {
+      flex: 1;
+      min-width: 110px;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      background: #1e40af;
+      color: #fff;
+      transition: background 0.2s;
+    }
+    button:hover { background: #1d4ed8; }
+    .secondary { background: #334155; }
+    .secondary:hover { background: #475569; }
+    .status {
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-top: 4px;
+      display: none;
+    }
+    .valid { color: #22c55e; }
+    .error { color: #ef4444; }
+    @media (max-width: 600px) {
+      textarea { height: 200px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>JSON Formatter & Validator</h1>
+    <textarea id="jsonInput" placeholder="Paste JSON here..."></textarea>
+    <div class="buttons">
+      <button id="formatBtn">Format JSON</button>
+      <button id="validateBtn">Validate JSON</button>
+      <button class="secondary" id="copyBtn">Copy</button>
+      <button class="secondary" id="clearBtn">Clear</button>
+    </div>
+    <div id="status" class="status"></div>
+  </div>
+
+  <script>
+    const input = document.getElementById('jsonInput');
+    const formatBtn = document.getElementById('formatBtn');
+    const validateBtn = document.getElementById('validateBtn');
+    const copyBtn = document.getElementById('copyBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const status = document.getElementById('status');
+
+    function showStatus(msg, isValid) {
+      status.textContent = msg;
+      status.className = 'status ' + (isValid ? 'valid' : 'error');
+      status.style.display = 'block';
+    }
+
+    function parseJSON() {
+      return JSON.parse(input.value);
+    }
+
+    formatBtn.addEventListener('click', () => {
+      if (!input.value.trim()) {
+        showStatus('❌ Empty input', false);
+        return;
+      }
+      try {
+        const obj = parseJSON();
+        input.value = JSON.stringify(obj, null, 2);
+        showStatus('✅ Valid JSON formatted', true);
+      } catch (e) {
+        showStatus('❌ ' + e.message, false);
+      }
+    });
+
+    validateBtn.addEventListener('click', () => {
+      if (!input.value.trim()) {
+        showStatus('❌ Empty input', false);
+        return;
+      }
+      try {
+        parseJSON();
+        showStatus('✅ Valid JSON', true);
+      } catch (e) {
+        showStatus('❌ ' + e.message, false);
+      }
+    });
+
+    copyBtn.addEventListener('click', async () => {
+      if (!input.value) return;
+      try {
+        await navigator.clipboard.writeText(input.value);
+        showStatus('Copied!', true);
+      } catch {
+        showStatus('Copy failed', false);
+      }
+    });
+
+    clearBtn.addEventListener('click', () => {
+      input.value = '';
+      status.style.display = 'none';
+    });
+  </script>
+</body>
+</html>

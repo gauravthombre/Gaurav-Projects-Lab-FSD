@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grocery Store</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- Header -->
+<header class="navbar">
+  <div class="logo">🥦 Grocery Store</div>
+  <nav>
+    <a href="#">Home</a>
+    <a href="#products">Categories</a>
+    <a href="#cart">Cart (<span id="cart-count">0</span>)</a>
+  </nav>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <h1>Fresh Groceries Delivered Daily</h1>
+  <p>Quality products at your doorstep</p>
+  <a href="#products" class="btn">Shop Now</a>
+</section>
+
+<!-- Controls -->
+<section class="controls">
+  <div class="filters">
+    <button onclick="filterProducts('All')">All</button>
+    <button onclick="filterProducts('Vegetables')">Vegetables</button>
+    <button onclick="filterProducts('Fruits')">Fruits</button>
+    <button onclick="filterProducts('Dairy')">Dairy</button>
+    <button onclick="filterProducts('Snacks')">Snacks</button>
+  </div>
+
+  <input
+    type="text"
+    id="searchInput"
+    placeholder="Search groceries..."
+    onkeyup="searchProducts()"
+  />
+</section>
+
+<!-- Products -->
+<section class="products" id="products">
+  <h2>Products</h2>
+  <div class="product-grid" id="product-list"></div>
+</section>
+
+<!-- Cart -->
+<section class="cart" id="cart">
+  <h2>Your Cart</h2>
+  <div id="cart-items"></div>
+  <h3>Total: ₹<span id="total-price">0</span></h3>
+</section>
+
+<script src="script.js"></script>
+</body>
+</html>

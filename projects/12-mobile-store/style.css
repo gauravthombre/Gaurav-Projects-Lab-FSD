@@ -1,0 +1,135 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+}
+
+body {
+  background: #0f172a;
+  color: #fff;
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 30px;
+  background: #020617;
+}
+
+.navbar nav a {
+  color: #fff;
+  margin-left: 20px;
+  text-decoration: none;
+}
+
+/* Hero */
+.hero {
+  height: 65vh;
+  background: url("https://images.unsplash.com/photo-1510557880182-3c8b2d3d7d9c") center/cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-content {
+  background: rgba(0,0,0,0.6);
+  padding: 30px;
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: 42px;
+}
+
+.cta {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 10px 20px;
+  background: #3b82f6;
+  color: #fff;
+  text-decoration: none;
+}
+
+/* Filters */
+.brands {
+  padding: 20px 30px;
+}
+
+.brands button {
+  margin-right: 10px;
+  padding: 8px 14px;
+  border: none;
+  background: #1e293b;
+  color: #fff;
+  cursor: pointer;
+}
+
+.price-filter {
+  padding: 0 30px 20px;
+}
+
+.price-filter select {
+  padding: 8px;
+}
+
+/* Phones */
+.phones {
+  padding: 40px 30px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  background: #020617;
+  padding: 15px;
+  border-radius: 10px;
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+}
+
+.card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.compare-check {
+  margin-top: 8px;
+}
+
+/* Compare */
+.compare {
+  padding: 40px 30px;
+}
+
+.compare table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.compare th,
+.compare td {
+  border: 1px solid #334155;
+  padding: 8px;
+  text-align: center;
+}
+
+/* Cart */
+.cart {
+  padding: 40px 30px;
+}
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}

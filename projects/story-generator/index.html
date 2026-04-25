@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Story Generator</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <div class="container">
+    <h1>📖 Story Generator</h1>
+    <p class="subtitle">Click the button to generate a random short story prompt!</p>
+
+    <div class="filters">
+      <label>Genre:</label>
+      <select id="genreSelect">
+        <option value="all">All Genres</option>
+        <option value="adventure">Adventure</option>
+        <option value="mystery">Mystery</option>
+        <option value="fantasy">Fantasy</option>
+        <option value="scifi">Sci-Fi</option>
+        <option value="romance">Romance</option>
+      </select>
+    </div>
+
+    <button class="btn" id="generateBtn">Generate Story Prompt</button>
+
+    <div id="promptCard" class="prompt-card" style="display:none;">
+      <div class="genre-badge" id="genreBadge"></div>
+      <h2 id="promptTitle"></h2>
+      <p id="promptText"></p>
+      <div class="elements-row">
+        <div class="element-box">
+          <span class="el-label">Character</span>
+          <span class="el-value" id="elChar"></span>
+        </div>
+        <div class="element-box">
+          <span class="el-label">Setting</span>
+          <span class="el-value" id="elSetting"></span>
+        </div>
+        <div class="element-box">
+          <span class="el-label">Conflict</span>
+          <span class="el-value" id="elConflict"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="saved-section">
+      <div class="saved-header">
+        <h3>Saved Prompts (<span id="savedCount">0</span>)</h3>
+        <button class="btn-save" id="saveBtn" style="display:none;">Save This Prompt</button>
+      </div>
+      <div id="savedList"></div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

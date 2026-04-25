@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSS Gradient Generator</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,Helvetica,sans-serif}
+body{min-height:100vh;display:flex;align-items:center;justify-content:center;background:#f4f6f8;padding:20px}
+.card{width:100%;max-width:520px;background:#fff;border-radius:16px;box-shadow:0 14px 30px rgba(0,0,0,.08);padding:24px}
+h1{text-align:center;margin-bottom:18px;color:#333;font-size:1.5rem}
+.controls{display:grid;gap:12px;margin-bottom:16px}
+label{font-size:.85rem;color:#555;margin-bottom:4px;display:block}
+select,input[type="color"]{width:100%;padding:8px;border-radius:10px;border:1px solid #ddd}
+.preview{height:160px;border-radius:14px;margin:16px 0;border:1px solid #ddd}
+.code-box{background:#0f172a;color:#e2e8f0;padding:12px;border-radius:10px;font-family:"Courier New",monospace;font-size:.85rem;word-break:break-all}
+.buttons{display:flex;gap:10px;margin-top:12px}
+button{flex:1;padding:10px;border:none;border-radius:10px;font-size:.9rem;cursor:pointer;background:#4c8bf5;color:#fff}
+button:hover{background:#3a73d9}
+.secondary{background:#e8f0ff;color:#2a4dbf}
+.secondary:hover{background:#d8e6ff}
+.copied{font-size:.8rem;color:#2e7d32;margin-top:6px;display:none;text-align:right}
+@media(max-width:480px){.card{padding:20px}}
+</style>
+</head>
+<body>
+<div class="card">
+<h1>CSS Gradient Generator</h1>
+
+<div class="controls">
+<div>
+<label>Color 1</label>
+<input type="color" id="color1" value="#ff7e5f">
+</div>
+<div>
+<label>Color 2</label>
+<input type="color" id="color2" value="#feb47b">
+</div>
+<div>
+<label>Direction</label>
+<select id="direction">
+<option value="to right">To Right</option>
+<option value="to left">To Left</option>
+<option value="to bottom">To Bottom</option>
+<option value="to top">To Top</option>
+<option value="45deg">45deg</option>
+</select>
+</div>
+</div>
+
+<div class="preview" id="preview"></div>
+
+<div class="code-box" id="cssCode"></div>
+
+<div class="buttons">
+<button id="generateBtn">Generate Gradient</button>
+<button class="secondary" id="copyBtn">Copy CSS Code</button>
+</div>
+<div id="copiedMsg" class="copied">Copied!</div>
+</div>
+
+<script>
+const color1=document.getElementById('color1');
+const color2=document.getElementById('color2');
+const direction=document.getElementById('direction');
+const preview=document.getElementById('preview');
+const cssCode=document.getElementById('cssCode');
+const generateBtn=document.getElementById('generateBtn');
+const copyBtn=document.getElementById('copyBtn');
+const copiedMsg=document.getElementById('copiedMsg');
+
+function generateGradient(){
+const gradient=`linear-gradient(${direction.value}, ${color1.value}, ${color2.value})`;
+preview.style.background=gradient;
+cssCode.textContent=`background: ${gradient};`;
+copiedMsg.style.display='none';
+}
+
+generateBtn.addEventListener('click',generateGradient);
+
+copyBtn.addEventListener('click',async()=>{
+if(!cssCode.textContent) return;
+try{
+await navigator.clipboard.writeText(cssCode.textContent);
+copiedMsg.style.display='block';
+setTimeout(()=>copiedMsg.style.display='none',1200);
+}catch{}
+});
+
+// Initial gradient
+generateGradient();
+</script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Book Store</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- Navbar -->
+<header class="navbar">
+  <div class="logo">📚 Book Store</div>
+  <nav>
+    <a href="#">Home</a>
+    <a href="#books">Books</a>
+    <a href="#filters">Categories</a>
+    <a href="#cart">Cart (<span id="cart-count">0</span>)</a>
+  </nav>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <h1>Discover Your Next Favorite Book</h1>
+  <p>Read. Learn. Grow.</p>
+  <a href="#books" class="btn">Browse Books</a>
+</section>
+
+<!-- Filters -->
+<section class="filters" id="filters">
+  <select onchange="filterGenre(this.value)">
+    <option value="All">All Genres</option>
+    <option value="Fiction">Fiction</option>
+    <option value="Non-Fiction">Non-Fiction</option>
+    <option value="Education">Education</option>
+    <option value="Biography">Biography</option>
+  </select>
+
+  <select onchange="sortBooks(this.value)">
+    <option value="default">Sort By</option>
+    <option value="low">Price: Low → High</option>
+    <option value="high">Price: High → Low</option>
+    <option value="az">Title: A → Z</option>
+  </select>
+
+  <input
+    type="text"
+    placeholder="Search by title or author..."
+    onkeyup="searchBooks(this.value)"
+  />
+</section>
+
+<!-- Books -->
+<section class="books" id="books">
+  <h2>Available Books</h2>
+  <div class="book-grid" id="book-list"></div>
+</section>
+
+<!-- Cart -->
+<section class="cart" id="cart">
+  <h2>Your Cart</h2>
+  <div id="cart-items"></div>
+  <h3>Total: ₹<span id="total-price">0</span></h3>
+</section>
+
+<script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Text Statistics Tool</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;font-family:Arial,Helvetica,sans-serif}
+    body{
+      min-height:100vh;display:flex;align-items:center;justify-content:center;
+      background:#f4f6f8;padding:20px
+    }
+    .card{
+      width:100%;max-width:760px;background:#fff;border-radius:16px;
+      box-shadow:0 12px 28px rgba(0,0,0,.08);padding:22px
+    }
+    h1{text-align:center;margin-bottom:14px;color:#333;font-size:1.4rem}
+    textarea{
+      width:100%;min-height:160px;border-radius:12px;border:1px solid #ddd;
+      padding:12px;font-size:.95rem;resize:vertical;margin-bottom:14px
+    }
+    textarea:focus{outline:none;border-color:#4c8bf5;box-shadow:0 0 0 2px rgba(76,139,245,.15)}
+    .stats{
+      display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:12px
+    }
+    .stat{
+      background:#f1f3f5;border-radius:10px;padding:10px;text-align:center
+    }
+    .label{font-size:.8rem;color:#666}
+    .value{font-size:1.1rem;font-weight:700;color:#1a3f8b}
+    .buttons{display:flex;gap:8px}
+    button{
+      flex:1;padding:10px;border:none;border-radius:10px;font-size:.9rem;
+      cursor:pointer;background:#4c8bf5;color:#fff
+    }
+    button:hover{background:#3a73d9}
+    .secondary{background:#e8f0ff;color:#2a4dbf}
+    .secondary:hover{background:#d8e6ff}
+    .copied{font-size:.8rem;color:#2e7d32;margin-top:6px;display:none;text-align:right}
+    @media(max-width:520px){.stats{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Text Statistics Tool</h1>
+    <textarea id="textInput" placeholder="Type or paste text..."></textarea>
+
+    <div class="stats">
+      <div class="stat"><div class="label">Characters</div><div id="charWith" class="value">0</div></div>
+      <div class="stat"><div class="label">Characters (no spaces)</div><div id="charWithout" class="value">0</div></div>
+      <div class="stat"><div class="label">Words</div><div id="words" class="value">0</div></div>
+      <div class="stat"><div class="label">Sentences</div><div id="sentences" class="value">0</div></div>
+      <div class="stat"><div class="label">Paragraphs</div><div id="paragraphs" class="value">0</div></div>
+    </div>
+
+    <div class="buttons">
+      <button class="secondary" id="clearBtn">Clear</button>
+      <button id="copyBtn">Copy Text</button>
+    </div>
+    <div id="copiedMsg" class="copied">Copied!</div>
+  </div>
+
+  <script>
+    const input = document.getElementById('textInput');
+    const charWith = document.getElementById('charWith');
+    const charWithout = document.getElementById('charWithout');
+    const wordsEl = document.getElementById('words');
+    const sentencesEl = document.getElementById('sentences');
+    const paragraphsEl = document.getElementById('paragraphs');
+    const copyBtn = document.getElementById('copyBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const copiedMsg = document.getElementById('copiedMsg');
+
+    function updateStats(){
+      const text = input.value;
+      charWith.textContent = text.length;
+      charWithout.textContent = text.replace(/\s/g,'').length;
+
+      const words = text.trim().match(/\b\w+\b/g);
+      wordsEl.textContent = words ? words.length : 0;
+
+      const sentences = text.split(/[.!?]+/).filter(s=>s.trim().length>0);
+      sentencesEl.textContent = sentences.length;
+
+      const paragraphs = text.split(/\n+/).filter(p=>p.trim().length>0);
+      paragraphsEl.textContent = paragraphs.length;
+    }
+
+    input.addEventListener('input', updateStats);
+
+    clearBtn.onclick = ()=>{
+      input.value=''; updateStats(); copiedMsg.style.display='none';
+    };
+
+    copyBtn.onclick = async ()=>{
+      if(!input.value) return;
+      try{await navigator.clipboard.writeText(input.value); copiedMsg.style.display='block';
+        setTimeout(()=>copiedMsg.style.display='none',1200);}catch{}
+    };
+
+    updateStats();
+  </script>
+</body>
+</html>

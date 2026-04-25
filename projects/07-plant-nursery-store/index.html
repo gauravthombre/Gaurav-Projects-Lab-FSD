@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Plant Nursery</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- Header -->
+<header class="header">
+  <div class="logo">🌿 Plant Nursery</div>
+  <nav>
+    <a href="#">Home</a>
+    <a href="#plants">Plants</a>
+    <a href="#categories">Categories</a>
+    <a href="#care">Care Tips</a>
+  </nav>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-text">
+    <h1>Bring Nature Home</h1>
+    <p>Calm your space with living greenery</p>
+    <a href="#plants" class="cta">Explore Plants</a>
+  </div>
+</section>
+
+<!-- Categories -->
+<section class="categories" id="categories">
+  <h2>Shop by Category</h2>
+  <div class="category-grid">
+    <div class="category-card">Indoor Plants</div>
+    <div class="category-card">Outdoor Plants</div>
+    <div class="category-card">Flowering Plants</div>
+    <div class="category-card">Succulents</div>
+  </div>
+</section>
+
+<!-- Care Filters -->
+<section class="care-filters" id="care">
+  <h2>Find Plants by Care</h2>
+  <div class="tags">
+    <span onclick="filterSun('Low')">☁️ Low Sun</span>
+    <span onclick="filterSun('Medium')">🌤 Medium Sun</span>
+    <span onclick="filterSun('High')">☀️ High Sun</span>
+
+    <span onclick="filterWater('Light')">💧 Light Water</span>
+    <span onclick="filterWater('Moderate')">💦 Moderate Water</span>
+    <span onclick="filterWater('Regular')">🚿 Regular Water</span>
+
+    <span onclick="resetFilters()">♻️ Reset</span>
+  </div>
+</section>
+
+<!-- Plants -->
+<section class="plants" id="plants">
+  <h2>Our Plants</h2>
+  <div class="plant-grid" id="plant-grid"></div>
+</section>
+
+<!-- Plant Detail Panel -->
+<div class="detail-panel" id="detail-panel">
+  <div class="detail-content">
+    <span class="close" onclick="closeDetails()">×</span>
+    <h3 id="detail-name"></h3>
+    <p id="detail-desc"></p>
+    <p><strong>Sunlight:</strong> <span id="detail-sun"></span></p>
+    <p><strong>Water:</strong> <span id="detail-water"></span></p>
+    <p><strong>Best Place:</strong> <span id="detail-place"></span></p>
+    <p class="price">₹<span id="detail-price"></span></p>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

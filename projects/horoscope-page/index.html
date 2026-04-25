@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Daily Horoscope</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+  <div class="container">
+    <h1>🔮 Daily Horoscope</h1>
+    <p class="subtitle">Select your zodiac sign to read today's horoscope</p>
+    <p class="today-date" id="todayDate"></p>
+
+    <div class="signs-grid" id="signsGrid"></div>
+
+    <div id="horoscopeCard" class="horoscope-card" style="display:none;">
+      <div class="sign-header">
+        <span class="sign-emoji" id="signEmoji"></span>
+        <div>
+          <h2 id="signName"></h2>
+          <p class="sign-dates" id="signDates"></p>
+        </div>
+      </div>
+
+      <div class="horoscope-body">
+        <p id="horoscopeText"></p>
+      </div>
+
+      <div class="ratings-row">
+        <div class="rating-box">
+          <span class="r-label">Love</span>
+          <div class="stars" id="loveStars"></div>
+        </div>
+        <div class="rating-box">
+          <span class="r-label">Career</span>
+          <div class="stars" id="careerStars"></div>
+        </div>
+        <div class="rating-box">
+          <span class="r-label">Health</span>
+          <div class="stars" id="healthStars"></div>
+        </div>
+      </div>
+
+      <div class="lucky-row">
+        <span class="lucky-item">🍀 Lucky Number: <strong id="luckyNum"></strong></span>
+        <span class="lucky-item">🎨 Lucky Color: <strong id="luckyColor"></strong></span>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

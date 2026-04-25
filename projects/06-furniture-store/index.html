@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Furniture Store</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- Header -->
+<header class="header">
+  <div class="logo">Furniture Store</div>
+  <nav>
+    <a href="#">Home</a>
+    <a href="#collections">Collections</a>
+    <a href="#rooms">Rooms</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-text">
+    <h1>Design Your Space</h1>
+    <p>Timeless furniture crafted for modern living</p>
+    <a href="#collections" class="cta">Explore Collections</a>
+  </div>
+</section>
+
+<!-- Shop by Room -->
+<section class="rooms" id="rooms">
+  <h2>Shop by Room</h2>
+  <div id="room-sections"></div>
+</section>
+
+<!-- Catalog -->
+<section class="catalog" id="collections">
+  <h2>Furniture Catalog</h2>
+
+  <div class="filters">
+    <select onchange="filterRoom(this.value)">
+      <option value="All">All Rooms</option>
+      <option value="Living">Living Room</option>
+      <option value="Bedroom">Bedroom</option>
+      <option value="Office">Office</option>
+      <option value="Dining">Dining</option>
+    </select>
+
+    <select onchange="filterMaterial(this.value)">
+      <option value="All">All Materials</option>
+      <option value="Wood">Wood</option>
+      <option value="Metal">Metal</option>
+      <option value="Fabric">Fabric</option>
+    </select>
+  </div>
+
+  <div class="grid" id="furniture-grid"></div>
+</section>
+
+<!-- Product Detail Panel -->
+<div class="detail-panel" id="detail-panel">
+  <div class="detail-content">
+    <span class="close" onclick="closeDetails()">×</span>
+    <h3 id="detail-name"></h3>
+    <p id="detail-desc"></p>
+    <p><strong>Material:</strong> <span id="detail-material"></span></p>
+    <p><strong>Dimensions:</strong> <span id="detail-dimensions"></span></p>
+    <p class="price">₹<span id="detail-price"></span></p>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

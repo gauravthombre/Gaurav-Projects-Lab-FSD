@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mobile Store</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- Navbar -->
+<header class="navbar">
+  <div class="logo">📱 Mobile Store</div>
+  <nav>
+    <a href="#">Home</a>
+    <a href="#phones">Phones</a>
+    <a href="#brands">Brands</a>
+    <a href="#compare">Compare</a>
+    <a href="#cart">Cart (<span id="cart-count">0</span>)</a>
+  </nav>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-content">
+    <h1>Discover the Latest Smartphones</h1>
+    <p>Power, performance, and innovation</p>
+    <a href="#phones" class="cta">Browse Phones</a>
+  </div>
+</section>
+
+<!-- Brand Filter -->
+<section class="brands" id="brands">
+  <button onclick="filterBrand('All')">All</button>
+  <button onclick="filterBrand('Apple')">Apple</button>
+  <button onclick="filterBrand('Samsung')">Samsung</button>
+  <button onclick="filterBrand('OnePlus')">OnePlus</button>
+  <button onclick="filterBrand('Xiaomi')">Xiaomi</button>
+  <button onclick="filterBrand('Realme')">Realme</button>
+</section>
+
+<!-- Price Filter -->
+<section class="price-filter">
+  <select onchange="filterPrice(this.value)">
+    <option value="All">All Prices</option>
+    <option value="low">Under ₹20k</option>
+    <option value="mid">₹20k–₹50k</option>
+    <option value="high">Above ₹50k</option>
+  </select>
+</section>
+
+<!-- Phones -->
+<section class="phones" id="phones">
+  <h2>Smartphones</h2>
+  <div class="grid" id="phone-grid"></div>
+</section>
+
+<!-- Comparison -->
+<section class="compare" id="compare">
+  <h2>Phone Comparison</h2>
+  <table id="compare-table">
+    <tr>
+      <th>Feature</th>
+      <th>Phone 1</th>
+      <th>Phone 2</th>
+    </tr>
+  </table>
+</section>
+
+<!-- Cart -->
+<section class="cart" id="cart">
+  <h2>Your Cart</h2>
+  <div id="cart-items"></div>
+  <h3>Total: ₹<span id="total-price">0</span></h3>
+</section>
+
+<script src="script.js"></script>
+</body>
+</html>

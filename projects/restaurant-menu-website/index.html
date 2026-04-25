@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spice Garden — Restaurant Menu</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',sans-serif;background:#fffdf8}
+nav{background:#1a0a00;padding:0 32px;height:68px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{font-size:1.4rem;font-weight:800;color:#fff}.logo span{color:#f59e0b}
+.nav-links{display:flex;gap:24px}
+.nav-links a{color:rgba(255,255,255,0.75);text-decoration:none;font-size:0.88rem;font-weight:500;transition:color 0.2s}
+.nav-links a:hover{color:#f59e0b}
+.reserve-btn{padding:9px 20px;background:#f59e0b;color:#1a0a00;border:none;border-radius:50px;font-weight:800;cursor:pointer;font-size:0.85rem}
+
+.hero{background:linear-gradient(135deg,#1a0a00 0%,#3d1a00 50%,#7c2d12 100%);color:#fff;padding:72px 32px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")}
+.hero-badge{display:inline-block;background:rgba(245,158,11,0.2);border:1px solid rgba(245,158,11,0.4);color:#fbbf24;padding:6px 18px;border-radius:50px;font-size:0.8rem;font-weight:700;letter-spacing:1px;margin-bottom:16px;position:relative;z-index:1}
+.hero h1{font-size:2.8rem;font-weight:900;margin-bottom:8px;position:relative;z-index:1}
+.hero p{opacity:0.75;font-size:0.95rem;margin-bottom:24px;position:relative;z-index:1}
+.hero-info{display:flex;justify-content:center;gap:32px;flex-wrap:wrap;position:relative;z-index:1}
+.hero-item{display:flex;align-items:center;gap:8px;font-size:0.88rem;opacity:0.85}
+
+.cat-tabs{background:#fff;border-bottom:2px solid #fef3c7;padding:0 32px;display:flex;gap:0;overflow-x:auto;scrollbar-width:none;position:sticky;top:68px;z-index:50}
+.cat-tabs::-webkit-scrollbar{display:none}
+.cat-tab{padding:16px 22px;border-bottom:3px solid transparent;cursor:pointer;font-size:0.88rem;font-weight:700;color:#9ca3af;white-space:nowrap;transition:all 0.2s;margin-bottom:-2px}
+.cat-tab.active,.cat-tab:hover{color:#f59e0b;border-bottom-color:#f59e0b}
+
+.main{max-width:1100px;margin:0 auto;padding:36px 20px}
+.special-banner{background:linear-gradient(135deg,#f59e0b,#ef4444);border-radius:20px;padding:24px 28px;margin-bottom:32px;color:#fff;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.special-banner h3{font-size:1.3rem;font-weight:800;margin-bottom:4px}
+.special-banner p{opacity:0.85;font-size:0.88rem}
+.special-code{background:rgba(255,255,255,0.2);border:2px dashed rgba(255,255,255,0.5);padding:8px 18px;border-radius:10px;font-weight:800;font-size:1rem;letter-spacing:2px}
+
+.category-section{margin-bottom:40px}
+.cat-title{font-size:1.2rem;font-weight:800;color:#1a0a00;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.cat-count{font-size:0.78rem;background:#fef3c7;color:#92400e;padding:3px 10px;border-radius:50px;font-weight:600}
+.menu-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.item-card{background:#fff;border-radius:18px;padding:18px;border:1px solid #f3f4f6;display:flex;gap:14px;transition:all 0.2s;position:relative}
+.item-card:hover{border-color:#f59e0b;box-shadow:0 4px 20px rgba(245,158,11,0.1)}
+.item-emoji{width:70px;height:70px;background:#fef9c3;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:2.2rem;flex-shrink:0}
+.item-info{flex:1}
+.item-name{font-weight:700;font-size:0.95rem;color:#1a0a00;margin-bottom:3px}
+.item-desc{font-size:0.78rem;color:#9ca3af;line-height:1.5;margin-bottom:8px}
+.item-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px}
+.tag{font-size:0.7rem;padding:2px 7px;border-radius:50px;font-weight:700}
+.tag-veg{background:#d1fae5;color:#065f46}
+.tag-nonveg{background:#fee2e2;color:#991b1b}
+.tag-spicy{background:#fef3c7;color:#92400e}
+.tag-chef{background:#ede9fe;color:#5b21b6}
+.tag-new{background:#dbeafe;color:#1e40af}
+.item-footer{display:flex;align-items:center;justify-content:space-between}
+.item-price{font-size:1.05rem;font-weight:800;color:#f59e0b}
+.item-price del{font-size:0.78rem;color:#d1d5db;font-weight:400;margin-right:4px}
+.add-item-btn{padding:6px 16px;background:#1a0a00;color:#fff;border:none;border-radius:50px;font-size:0.8rem;font-weight:700;cursor:pointer;transition:all 0.2s}
+.add-item-btn:hover{background:#f59e0b;color:#1a0a00}
+.badge-popular{position:absolute;top:12px;right:12px;background:#f59e0b;color:#fff;font-size:0.68rem;font-weight:800;padding:2px 8px;border-radius:50px}
+
+/* INFO */
+.info-section{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:40px;margin-bottom:32px}
+.info-card{background:#fff;border-radius:18px;padding:20px;border:1px solid #f3f4f6;text-align:center}
+.info-card .icon{font-size:2rem;margin-bottom:10px;display:block}
+.info-card h3{font-weight:700;font-size:0.95rem;color:#1a0a00;margin-bottom:4px}
+.info-card p{font-size:0.8rem;color:#9ca3af;line-height:1.5}
+
+footer{background:#1a0a00;color:#aaa;padding:32px;text-align:center}
+footer h3{color:#fff;font-size:1.2rem;margin-bottom:4px}.footer-logo span{color:#f59e0b}
+footer p{font-size:0.83rem;margin-bottom:8px}
+.footer-links{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.footer-links a{color:#9ca3af;text-decoration:none;font-size:0.82rem;transition:color 0.2s}
+.footer-links a:hover{color:#f59e0b}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:#1a0a00;color:#fff;padding:12px 22px;border-radius:14px;font-size:0.88rem;font-weight:600;z-index:300;opacity:0;transform:translateY(20px);transition:all 0.3s}
+.toast.show{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo">Spice<span>Garden</span></div>
+  <div class="nav-links">
+    <a href="#starters">Starters</a>
+    <a href="#mains">Mains</a>
+    <a href="#breads">Breads</a>
+    <a href="#desserts">Desserts</a>
+    <a href="#drinks">Drinks</a>
+  </div>
+  <button class="reserve-btn">Reserve Table</button>
+</nav>
+
+<div class="hero">
+  <div class="hero-badge">🌟 Authentic Indian Cuisine</div>
+  <h1>Taste the Tradition</h1>
+  <p>Bringing the finest flavours of India to your table since 2005</p>
+  <div class="hero-info">
+    <div class="hero-item">🕐 Open: 12PM – 11PM</div>
+    <div class="hero-item">📍 Pune, Maharashtra</div>
+    <div class="hero-item">⭐ 4.8 Rating (2300+ reviews)</div>
+    <div class="hero-item">📞 +91 98765 43210</div>
+  </div>
+</div>
+
+<div class="cat-tabs">
+  <div class="cat-tab active" onclick="scrollTo('#starters',this)">Starters</div>
+  <div class="cat-tab" onclick="scrollTo('#mains',this)">Main Course</div>
+  <div class="cat-tab" onclick="scrollTo('#breads',this)">Breads & Rice</div>
+  <div class="cat-tab" onclick="scrollTo('#desserts',this)">Desserts</div>
+  <div class="cat-tab" onclick="scrollTo('#drinks',this)">Drinks</div>
+</div>
+
+<div class="main">
+  <div class="special-banner">
+    <div>
+      <h3>🎉 Weekend Special Offer!</h3>
+      <p>Get 20% off on orders above ₹500 this Saturday & Sunday only</p>
+    </div>
+    <div class="special-code">SPICE20</div>
+  </div>
+
+  <div id="starters" class="category-section">
+    <div class="cat-title">🥗 Starters <span class="cat-count">7 items</span></div>
+    <div class="menu-grid" id="grid-starters"></div>
+  </div>
+  <div id="mains" class="category-section">
+    <div class="cat-title">🍛 Main Course <span class="cat-count">8 items</span></div>
+    <div class="menu-grid" id="grid-mains"></div>
+  </div>
+  <div id="breads" class="category-section">
+    <div class="cat-title">🫓 Breads & Rice <span class="cat-count">6 items</span></div>
+    <div class="menu-grid" id="grid-breads"></div>
+  </div>
+  <div id="desserts" class="category-section">
+    <div class="cat-title">🍮 Desserts <span class="cat-count">5 items</span></div>
+    <div class="menu-grid" id="grid-desserts"></div>
+  </div>
+  <div id="drinks" class="category-section">
+    <div class="cat-title">🥤 Drinks <span class="cat-count">5 items</span></div>
+    <div class="menu-grid" id="grid-drinks"></div>
+  </div>
+
+  <div class="info-section">
+    <div class="info-card"><span class="icon">🚗</span><h3>Free Parking</h3><p>Complimentary parking for all dine-in guests</p></div>
+    <div class="info-card"><span class="icon">👨‍🍳</span><h3>Master Chefs</h3><p>Trained in authentic regional Indian cuisines</p></div>
+    <div class="info-card"><span class="icon">🌿</span><h3>Fresh Ingredients</h3><p>Farm-to-table produce, zero preservatives</p></div>
+    <div class="info-card"><span class="icon">🎊</span><h3>Private Events</h3><p>Book our hall for weddings, birthdays & corporate events</p></div>
+  </div>
+</div>
+
+<footer>
+  <h3 class="footer-logo">Spice<span>Garden</span></h3>
+  <p>Authentic Indian Cuisine · Pune, Maharashtra</p>
+  <div class="footer-links">
+    <a href="#">Home</a><a href="#">Menu</a><a href="#">Gallery</a><a href="#">About Us</a><a href="#">Contact</a><a href="#">Reservations</a>
+  </div>
+  <p style="margin-top:12px;font-size:0.75rem;color:#4b5563">© 2025 SpiceGarden. Built by Gaurav Thombre</p>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const menuData={
+  starters:[
+    {n:"Paneer Tikka",d:"Marinated cottage cheese grilled in tandoor with spices",p:220,op:280,e:"🧀",type:"veg",tags:["veg","chef"],popular:true},
+    {n:"Chicken Tikka",d:"Tender chicken chunks marinated overnight and charcoal-grilled",p:280,op:0,e:"🍗",type:"nonveg",tags:["nonveg","spicy"],popular:true},
+    {n:"Dahi Ke Sholey",d:"Crispy pastry stuffed with hung curd and green chutney",p:180,op:220,e:"🥟",type:"veg",tags:["veg","new"],popular:false},
+    {n:"Seekh Kebab",d:"Minced mutton cooked with aromatic spices on skewers",p:320,op:0,e:"🍢",type:"nonveg",tags:["nonveg","spicy","chef"],popular:true},
+    {n:"Samosa Chaat",d:"Crispy samosas topped with chutneys, yogurt and sev",p:120,op:150,e:"🥙",type:"veg",tags:["veg"],popular:false},
+    {n:"Fish Amritsari",d:"Crispy battered fish fried to perfection, Amritsari style",p:300,op:0,e:"🐟",type:"nonveg",tags:["nonveg","spicy"],popular:false},
+    {n:"Veg Platter",d:"Assortment of 4 different vegetarian starters",p:380,op:480,e:"🍽️",type:"veg",tags:["veg","chef"],popular:false},
+  ],
+  mains:[
+    {n:"Butter Chicken",d:"Tender chicken in a rich, creamy tomato-based gravy",p:320,op:380,e:"🍛",type:"nonveg",tags:["nonveg","chef"],popular:true},
+    {n:"Dal Makhani",d:"Black lentils slow-cooked overnight in butter and cream",p:240,op:0,e:"🍲",type:"veg",tags:["veg","chef"],popular:true},
+    {n:"Palak Paneer",d:"Fresh spinach gravy with soft paneer cubes",p:260,op:300,e:"🌿",type:"veg",tags:["veg"],popular:false},
+    {n:"Mutton Rogan Josh",d:"Slow-cooked mutton in aromatic Kashmiri spice gravy",p:420,op:0,e:"🍖",type:"nonveg",tags:["nonveg","spicy","chef"],popular:true},
+    {n:"Chana Masala",d:"Spiced chickpeas in tangy onion-tomato gravy",p:200,op:240,e:"🫘",type:"veg",tags:["veg","spicy"],popular:false},
+    {n:"Chicken Korma",d:"Mild creamy chicken curry with cashews and cardamom",p:300,op:0,e:"🍗",type:"nonveg",tags:["nonveg"],popular:false},
+    {n:"Kadai Paneer",d:"Cottage cheese stir-fried with bell peppers in wok",p:280,op:320,e:"🧀",type:"veg",tags:["veg","spicy","new"],popular:false},
+    {n:"Lamb Biryani",d:"Slow-dum cooked basmati rice with tender lamb and saffron",p:480,op:550,e:"🍛",type:"nonveg",tags:["nonveg","chef"],popular:true},
+  ],
+  breads:[
+    {n:"Butter Naan",d:"Soft leavened bread baked in tandoor with butter",p:60,op:0,e:"🫓",type:"veg",tags:["veg"],popular:true},
+    {n:"Garlic Naan",d:"Naan brushed with garlic butter and fresh coriander",p:80,op:0,e:"🫓",type:"veg",tags:["veg","chef"],popular:true},
+    {n:"Stuffed Paratha",d:"Whole wheat bread stuffed with spiced potato and paneer",p:120,op:150,e:"🫓",type:"veg",tags:["veg"],popular:false},
+    {n:"Laccha Paratha",d:"Flaky layered whole wheat bread with ghee",p:90,op:0,e:"🥙",type:"veg",tags:["veg"],popular:false},
+    {n:"Veg Biryani",d:"Fragrant basmati with vegetables, saffron and whole spices",p:280,op:340,e:"🍛",type:"veg",tags:["veg","chef"],popular:true},
+    {n:"Jeera Rice",d:"Steamed basmati rice tempered with cumin seeds and ghee",p:140,op:0,e:"🍚",type:"veg",tags:["veg"],popular:false},
+  ],
+  desserts:[
+    {n:"Gulab Jamun",d:"Soft milk solid dumplings soaked in sugar syrup",p:120,op:0,e:"🍮",type:"veg",tags:["veg"],popular:true},
+    {n:"Rasmalai",d:"Soft chenna patties in sweetened saffron-infused milk",p:150,op:180,e:"🥛",type:"veg",tags:["veg","chef"],popular:true},
+    {n:"Kulfi Falooda",d:"Traditional Indian ice cream with rose syrup and basil seeds",p:140,op:160,e:"🍦",type:"veg",tags:["veg","new"],popular:false},
+    {n:"Gajar Ka Halwa",d:"Carrot pudding cooked in milk, sugar and ghee with dry fruits",p:160,op:0,e:"🥕",type:"veg",tags:["veg"],popular:false},
+    {n:"Chocolate Rabri",d:"Fusion dessert — traditional rabri with Belgian chocolate",p:180,op:0,e:"🍫",type:"veg",tags:["veg","new"],popular:false},
+  ],
+  drinks:[
+    {n:"Mango Lassi",d:"Fresh Alphonso mango blended with thick curd",p:120,op:0,e:"🥭",type:"veg",tags:["veg"],popular:true},
+    {n:"Masala Chaas",d:"Spiced buttermilk with cumin, mint and ginger",p:80,op:0,e:"🥤",type:"veg",tags:["veg"],popular:false},
+    {n:"Rose Sharbat",d:"Chilled rose-flavoured syrup with basil seeds",p:90,op:0,e:"🌹",type:"veg",tags:["veg"],popular:false},
+    {n:"Masala Chai",d:"Spiced Indian tea with ginger, cardamom and milk",p:60,op:0,e:"☕",type:"veg",tags:["veg"],popular:true},
+    {n:"Fresh Lime Soda",d:"Freshly squeezed lime with sparkling water, sweet or salty",p:80,op:0,e:"🍋",type:"veg",tags:["veg"],popular:false},
+  ],
+};
+
+function renderSection(key){
+  document.getElementById('grid-'+key).innerHTML=menuData[key].map(item=>`
+    <div class="item-card">
+      ${item.popular?'<div class="badge-popular">Popular</div>':''}
+      <div class="item-emoji">${item.e}</div>
+      <div class="item-info">
+        <div class="item-name">${item.n}</div>
+        <div class="item-desc">${item.d}</div>
+        <div class="item-tags">
+          ${item.tags.includes('veg')?'<span class="tag tag-veg">🟢 Veg</span>':'<span class="tag tag-nonveg">🔴 Non-Veg</span>'}
+          ${item.tags.includes('spicy')?'<span class="tag tag-spicy">🌶️ Spicy</span>':''}
+          ${item.tags.includes('chef')?'<span class="tag tag-chef">👨‍🍳 Chef Pick</span>':''}
+          ${item.tags.includes('new')?'<span class="tag tag-new">✨ New</span>':''}
+        </div>
+        <div class="item-footer">
+          <div class="item-price">${item.op?`<del>₹${item.op}</del> `:''}₹${item.p}</div>
+          <button class="add-item-btn" onclick="addToCart('${item.n}',${item.p})">Add +</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+Object.keys(menuData).forEach(renderSection);
+
+function addToCart(name,price){
+  const t=document.getElementById('toast');
+  t.textContent=`✅ ${name} (₹${price}) added to order!`;
+  t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+function scrollTo(id,btn){document.querySelector(id)?.scrollIntoView({behavior:'smooth'});document.querySelectorAll('.cat-tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');}
+</script>
+</body>
+</html>

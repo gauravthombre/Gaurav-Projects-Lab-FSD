@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SnapURL — URL Shortener</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;min-height:100vh;background:#0f172a;color:#e2e8f0;padding:30px 16px}
+.container{max-width:720px;margin:0 auto}
+header{text-align:center;padding:40px 0 36px}
+.logo{font-size:2.6rem;margin-bottom:8px}
+header h1{font-size:2rem;font-weight:800;background:linear-gradient(135deg,#38bdf8,#818cf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px}
+header p{color:#64748b;font-size:0.9rem}
+
+/* SHORTEN BOX */
+.shorten-box{background:#1e293b;border-radius:20px;padding:28px;margin-bottom:2rem;border:1px solid #334155}
+.input-row{display:flex;gap:10px;margin-bottom:12px}
+.url-input{
+  flex:1;padding:14px 18px;border-radius:12px;background:#0f172a;border:2px solid #334155;
+  color:#e2e8f0;font-size:0.95rem;outline:none;transition:border-color 0.2s;
+}
+.url-input:focus{border-color:#38bdf8}
+.url-input::placeholder{color:#475569}
+.shorten-btn{
+  padding:14px 24px;background:linear-gradient(135deg,#38bdf8,#818cf8);
+  color:#fff;border:none;border-radius:12px;font-size:0.95rem;font-weight:700;cursor:pointer;
+  white-space:nowrap;transition:opacity 0.2s;
+}
+.shorten-btn:hover{opacity:0.88}
+.custom-row{display:flex;gap:10px;flex-wrap:wrap}
+.custom-prefix{padding:9px 14px;background:#0f172a;border:2px solid #334155;color:#64748b;border-radius:10px;font-size:0.85rem;cursor:default}
+.custom-input{flex:1;min-width:100px;padding:9px 14px;background:#0f172a;border:2px solid #334155;color:#e2e8f0;border-radius:10px;font-size:0.85rem;outline:none;transition:border-color 0.2s}
+.custom-input:focus{border-color:#38bdf8}
+.custom-input::placeholder{color:#475569}
+
+/* RESULT */
+.result-box{display:none;background:#0f172a;border:2px solid #38bdf8;border-radius:14px;padding:18px;margin-top:14px}
+.result-label{font-size:0.75rem;color:#38bdf8;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px}
+.result-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.short-url{flex:1;font-size:1rem;font-weight:700;color:#38bdf8;word-break:break-all}
+.copy-btn{padding:8px 18px;background:#1e3a5f;border:1px solid #38bdf8;color:#38bdf8;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:700;transition:all 0.2s}
+.copy-btn:hover{background:#38bdf8;color:#fff}
+.copy-btn.copied{background:#10b981;border-color:#10b981;color:#fff}
+.qr-box{margin-top:12px;display:flex;align-items:center;gap:12px}
+.qr-img{width:72px;height:72px;background:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:2.2rem}
+
+/* HISTORY */
+.history-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.history-title{font-size:1rem;font-weight:700;color:#94a3b8;letter-spacing:1px;text-transform:uppercase}
+.clear-all{background:none;border:1px solid #334155;color:#64748b;padding:6px 14px;border-radius:8px;cursor:pointer;font-size:0.8rem}
+.clear-all:hover{border-color:#ef4444;color:#ef4444}
+
+.link-card{
+  background:#1e293b;border-radius:14px;padding:16px 18px;margin-bottom:10px;
+  border:1px solid #334155;display:flex;align-items:center;gap:14px;
+  transition:border-color 0.2s;
+}
+.link-card:hover{border-color:#38bdf8}
+.link-icon{width:40px;height:40px;background:#0f172a;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+.link-info{flex:1;min-width:0}
+.link-short{font-size:0.9rem;font-weight:700;color:#38bdf8;margin-bottom:3px}
+.link-long{font-size:0.78rem;color:#64748b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.link-meta{font-size:0.72rem;color:#475569;margin-top:3px}
+.link-actions{display:flex;gap:6px;flex-shrink:0}
+.act-btn{padding:6px 12px;border-radius:8px;border:1px solid #334155;background:transparent;color:#94a3b8;cursor:pointer;font-size:0.78rem;transition:all 0.2s}
+.act-btn:hover{border-color:#38bdf8;color:#38bdf8}
+.act-btn.del:hover{border-color:#ef4444;color:#ef4444}
+
+.stats-bar{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:1.5rem}
+.stat{background:#1e293b;border-radius:14px;padding:14px;text-align:center;border:1px solid #334155}
+.stat-n{font-size:1.6rem;font-weight:800;color:#38bdf8}
+.stat-l{font-size:0.72rem;color:#64748b;text-transform:uppercase;letter-spacing:0.5px}
+
+.empty{text-align:center;padding:40px;color:#334155;font-size:3rem}
+.empty p{color:#475569;font-size:0.9rem;margin-top:8px}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="logo">🔗</div>
+    <h1>SnapURL</h1>
+    <p>Shorten, share and track your links instantly</p>
+  </header>
+
+  <div class="shorten-box">
+    <div class="input-row">
+      <input class="url-input" id="long-url" type="url" placeholder="Paste your long URL here... (https://example.com/very/long/url)">
+      <button class="shorten-btn" onclick="shortenURL()">Shorten →</button>
+    </div>
+    <div class="custom-row">
+      <div class="custom-prefix">snap.url/</div>
+      <input class="custom-input" id="custom-alias" placeholder="custom-alias (optional)" maxlength="20">
+    </div>
+    <div class="result-box" id="result-box">
+      <div class="result-label">Your short URL is ready!</div>
+      <div class="result-row">
+        <div class="short-url" id="short-url-display"></div>
+        <button class="copy-btn" id="copy-btn" onclick="copyURL()">Copy</button>
+      </div>
+      <div class="qr-box">
+        <div class="qr-img">📱</div>
+        <div style="font-size:0.8rem;color:#64748b">QR Code would appear here in production.<br>Share your short link anywhere!</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stats-bar" id="stats-bar"></div>
+
+  <div class="history-header">
+    <div class="history-title">Link History</div>
+    <button class="clear-all" onclick="clearAll()">Clear All</button>
+  </div>
+  <div id="link-list"></div>
+</div>
+
+<script>
+let links=[];
+try{links=JSON.parse(localStorage.getItem('snapurl_v1')||'[]');}catch(e){}
+function save(){localStorage.setItem('snapurl_v1',JSON.stringify(links));}
+
+function genCode(len=6){const chars='abcdefghijklmnopqrstuvwxyz0123456789';return Array.from({length:len},()=>chars[Math.floor(Math.random()*chars.length)]).join('');}
+
+function getFavicon(url){
+  try{const h=new URL(url).hostname;return`https://www.google.com/s2/favicons?sz=32&domain=${h}`;}catch(e){return null;}
+}
+
+function shortenURL(){
+  const raw=document.getElementById('long-url').value.trim();
+  let url=raw;
+  if(!url){alert('Please enter a URL!');return;}
+  if(!/^https?:\/\//i.test(url))url='https://'+url;
+  try{new URL(url);}catch(e){alert('Please enter a valid URL.');return;}
+  const alias=document.getElementById('custom-alias').value.trim().replace(/[^a-z0-9-]/gi,'').toLowerCase()||genCode();
+  const exists=links.find(l=>l.alias===alias);
+  if(exists){alert('This alias is already taken! Try another.');return;}
+  const link={id:Date.now(),long:url,alias,short:`snap.url/${alias}`,clicks:0,date:new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}),favicon:getFavicon(url)};
+  links.unshift(link);save();
+  document.getElementById('short-url-display').textContent=link.short;
+  document.getElementById('result-box').style.display='block';
+  document.getElementById('copy-btn').textContent='Copy';document.getElementById('copy-btn').classList.remove('copied');
+  document.getElementById('custom-alias').value='';document.getElementById('long-url').value='';
+  renderList();
+}
+
+function copyURL(){
+  const url=document.getElementById('short-url-display').textContent;
+  navigator.clipboard.writeText(url).then(()=>{
+    const btn=document.getElementById('copy-btn');btn.textContent='Copied!';btn.classList.add('copied');
+    setTimeout(()=>{btn.textContent='Copy';btn.classList.remove('copied');},2000);
+  }).catch(()=>{});
+}
+
+function copyLink(alias){
+  const link=links.find(l=>l.alias===alias);if(!link)return;
+  navigator.clipboard.writeText(link.short).then(()=>{}).catch(()=>{});
+  link.clicks++;save();renderList();
+}
+
+function deleteLink(id){links=links.filter(l=>l.id!==id);save();renderList();}
+function clearAll(){if(confirm('Delete all links?')){links=[];save();document.getElementById('result-box').style.display='none';renderList();}}
+
+function renderList(){
+  const total=links.length;const totalClicks=links.reduce((s,l)=>s+l.clicks,0);
+  document.getElementById('stats-bar').innerHTML=`
+    <div class="stat"><div class="stat-n">${total}</div><div class="stat-l">Links</div></div>
+    <div class="stat"><div class="stat-n">${totalClicks}</div><div class="stat-l">Clicks</div></div>
+    <div class="stat"><div class="stat-n">${links.length>0?Math.round(totalClicks/links.length):0}</div><div class="stat-l">Avg Clicks</div></div>`;
+  const list=document.getElementById('link-list');
+  if(links.length===0){list.innerHTML='<div class="empty">🔗<p>No links yet. Shorten your first URL!</p></div>';return;}
+  list.innerHTML=links.map(l=>`
+    <div class="link-card">
+      <div class="link-icon">${l.favicon?`<img src="${l.favicon}" width="24" height="24" onerror="this.parentElement.textContent='🔗'">`:' 🔗'}</div>
+      <div class="link-info">
+        <div class="link-short">${l.short}</div>
+        <div class="link-long" title="${l.long}">${l.long}</div>
+        <div class="link-meta">${l.date} • ${l.clicks} click${l.clicks!==1?'s':''}</div>
+      </div>
+      <div class="link-actions">
+        <button class="act-btn" onclick="copyLink('${l.alias}')">Copy</button>
+        <button class="act-btn del" onclick="deleteLink(${l.id})">Delete</button>
+      </div>
+    </div>`).join('');
+}
+
+document.getElementById('long-url').addEventListener('keydown',e=>{if(e.key==='Enter')shortenURL();});
+renderList();
+</script>
+</body>
+</html>

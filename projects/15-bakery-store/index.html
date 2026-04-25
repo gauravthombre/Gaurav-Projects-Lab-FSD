@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bakery Store</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- Navbar -->
+<header class="navbar">
+  <div class="logo">🍰 Bakery Store</div>
+  <nav>
+    <a href="#">Home</a>
+    <a href="#products">Menu</a>
+    <a href="#categories">Categories</a>
+    <a href="#cart">Cart (<span id="cart-count">0</span>)</a>
+  </nav>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-content">
+    <h1>Freshly Baked Happiness</h1>
+    <p>Made with love, served warm</p>
+    <a href="#products" class="cta">Browse Menu</a>
+  </div>
+</section>
+
+<!-- Categories -->
+<section class="categories" id="categories">
+  <h2>Our Bakery</h2>
+  <div class="category-grid">
+    <div class="tile">Cakes</div>
+    <div class="tile">Pastries</div>
+    <div class="tile">Bread</div>
+    <div class="tile">Cookies</div>
+    <div class="tile">Desserts</div>
+  </div>
+</section>
+
+<!-- Filters -->
+<section class="filters">
+  <select onchange="filterCategory(this.value)">
+    <option value="All">All Categories</option>
+    <option value="Cakes">Cakes</option>
+    <option value="Pastries">Pastries</option>
+    <option value="Bread">Bread</option>
+    <option value="Cookies">Cookies</option>
+    <option value="Desserts">Desserts</option>
+  </select>
+
+  <select onchange="filterEggless(this.value)">
+    <option value="All">All Types</option>
+    <option value="eggless">Eggless</option>
+    <option value="regular">Regular</option>
+  </select>
+</section>
+
+<!-- Products -->
+<section class="products" id="products">
+  <h2>Bakery Menu</h2>
+  <div class="grid" id="product-grid"></div>
+</section>
+
+<!-- Cart -->
+<section class="cart" id="cart">
+  <h2>Your Cart</h2>
+  <div id="cart-items"></div>
+  <h3>Total: ₹<span id="total-price">0</span></h3>
+</section>
+
+<script src="script.js"></script>
+</body>
+</html>

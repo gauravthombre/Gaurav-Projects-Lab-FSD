@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HireHub — Job Application Portal</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:#f8fafc;min-height:100vh}
+nav{background:#fff;border-bottom:1px solid #e2e8f0;padding:0 32px;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{font-size:1.4rem;font-weight:800;color:#0f172a}.logo span{color:#6366f1}
+.nav-right{display:flex;gap:10px;align-items:center}
+.nav-btn{padding:8px 18px;border-radius:50px;font-size:0.85rem;font-weight:700;cursor:pointer;border:2px solid #e2e8f0;background:#fff;color:#555;transition:all 0.2s}
+.nav-btn.primary{background:#6366f1;color:#fff;border-color:#6366f1}
+.nav-btn:hover{border-color:#6366f1;color:#6366f1}
+.nav-btn.primary:hover{background:#4f46e5;color:#fff;border-color:#4f46e5}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#312e81,#4f46e5,#7c3aed);padding:56px 32px;text-align:center;color:#fff}
+.hero h1{font-size:2.4rem;font-weight:900;margin-bottom:8px}
+.hero p{opacity:0.8;margin-bottom:24px;font-size:0.95rem}
+.search-box{display:flex;gap:10px;max-width:640px;margin:0 auto;flex-wrap:wrap}
+.search-box input,.search-box select{flex:1;min-width:120px;padding:13px 18px;border-radius:12px;border:none;font-size:0.9rem;outline:none;background:rgba(255,255,255,0.95)}
+.search-box button{padding:13px 24px;background:#fbbf24;color:#1e1b4b;border:none;border-radius:12px;font-weight:800;cursor:pointer;font-size:0.9rem;white-space:nowrap}
+
+/* STATS */
+.stats-bar{background:#fff;border-bottom:1px solid #e2e8f0;padding:16px 32px;display:flex;gap:32px;overflow-x:auto;scrollbar-width:none}
+.stat-item{display:flex;align-items:center;gap:8px;white-space:nowrap}
+.stat-icon{font-size:1.3rem}
+.stat-text strong{display:block;font-size:1rem;font-weight:800;color:#1e293b}
+.stat-text span{font-size:0.75rem;color:#94a3b8}
+
+/* MAIN */
+.main{max-width:1100px;margin:0 auto;padding:28px 16px;display:grid;grid-template-columns:260px 1fr;gap:20px}
+@media(max-width:700px){.main{grid-template-columns:1fr}}
+/* FILTERS */
+.filter-panel{background:#fff;border-radius:18px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,0.05);height:fit-content;border:1px solid #e2e8f0}
+.filter-title{font-size:0.82rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px}
+.filter-group{margin-bottom:16px}
+.filter-group label{display:block;font-size:0.82rem;font-weight:600;color:#475569;margin-bottom:6px}
+.filter-select,.filter-input{width:100%;padding:9px 12px;border-radius:10px;border:2px solid #e2e8f0;font-size:0.85rem;outline:none;background:#f8fafc;transition:border-color 0.2s}
+.filter-select:focus,.filter-input:focus{border-color:#6366f1}
+.check-group{display:flex;flex-direction:column;gap:6px}
+.check-item{display:flex;align-items:center;gap:8px;font-size:0.83rem;color:#475569;cursor:pointer}
+.check-item input{accent-color:#6366f1}
+.apply-btn{width:100%;padding:10px;background:#6366f1;color:#fff;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-size:0.88rem}
+.clear-filter{width:100%;padding:8px;background:transparent;border:2px solid #e2e8f0;color:#94a3b8;border-radius:10px;font-size:0.82rem;cursor:pointer;margin-top:6px}
+
+/* JOB LIST */
+.job-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px}
+.results-info{font-size:0.88rem;color:#64748b}
+.sort-select{padding:8px 12px;border-radius:10px;border:2px solid #e2e8f0;font-size:0.82rem;outline:none;background:#fff}
+.job-card{background:#fff;border-radius:18px;padding:20px;margin-bottom:12px;border:1px solid #e2e8f0;transition:all 0.2s;cursor:pointer}
+.job-card:hover{border-color:#6366f1;box-shadow:0 4px 20px rgba(99,102,241,0.1)}
+.job-card.featured{border-left:4px solid #fbbf24}
+.job-top{display:flex;align-items:flex-start;gap:14px;margin-bottom:12px}
+.company-logo{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0}
+.job-main{flex:1}
+.job-title{font-size:1rem;font-weight:700;color:#1e293b;margin-bottom:2px}
+.company-name{font-size:0.85rem;color:#64748b;margin-bottom:6px}
+.job-tags{display:flex;flex-wrap:wrap;gap:6px}
+.job-tag{font-size:0.72rem;padding:3px 10px;border-radius:50px;font-weight:600}
+.tag-type{background:#ede9fe;color:#5b21b6}
+.tag-loc{background:#dbeafe;color:#1e40af}
+.tag-salary{background:#d1fae5;color:#065f46}
+.tag-exp{background:#fef9c3;color:#92400e}
+.tag-featured{background:#fef3c7;color:#92400e}
+.job-desc{font-size:0.83rem;color:#64748b;line-height:1.6;margin-bottom:12px}
+.job-skills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.skill-pill{font-size:0.72rem;padding:3px 10px;border-radius:50px;background:#f1f5f9;color:#475569;font-weight:600}
+.job-footer{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.job-date{font-size:0.75rem;color:#94a3b8}
+.apply-btn-card{padding:9px 22px;background:#6366f1;color:#fff;border:none;border-radius:50px;font-size:0.85rem;font-weight:700;cursor:pointer;transition:all 0.2s}
+.apply-btn-card:hover{background:#4f46e5}
+.apply-btn-card.applied{background:#10b981}
+.bookmark-btn{background:none;border:2px solid #e2e8f0;color:#94a3b8;border-radius:50px;padding:8px 14px;cursor:pointer;font-size:0.82rem;transition:all 0.2s}
+.bookmark-btn:hover,.bookmark-btn.active{border-color:#fbbf24;color:#f59e0b}
+
+/* MODAL APPLY */
+.apply-modal{position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:200;display:none;align-items:center;justify-content:center;padding:16px}
+.apply-modal.open{display:flex}
+.apply-form{background:#fff;border-radius:24px;padding:32px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto}
+.apply-form h2{font-size:1.2rem;font-weight:800;color:#1e293b;margin-bottom:4px}
+.apply-form p{font-size:0.85rem;color:#94a3b8;margin-bottom:20px}
+.form-row{margin-bottom:14px}
+.form-row label{font-size:0.82rem;font-weight:700;color:#475569;display:block;margin-bottom:5px}
+.form-row input,.form-row textarea,.form-row select{width:100%;padding:11px 14px;border-radius:12px;border:2px solid #e2e8f0;font-size:0.88rem;outline:none;font-family:inherit;transition:border-color 0.2s;background:#f8fafc}
+.form-row input:focus,.form-row textarea:focus,.form-row select:focus{border-color:#6366f1}
+.form-row textarea{min-height:90px;resize:vertical}
+.form-btns{display:flex;gap:10px}
+.cancel-btn{flex:1;padding:12px;border:2px solid #e2e8f0;background:#fff;color:#64748b;border-radius:12px;cursor:pointer;font-weight:700}
+.submit-apply-btn{flex:2;padding:12px;background:#6366f1;color:#fff;border:none;border-radius:12px;cursor:pointer;font-weight:700;font-size:0.95rem}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#10b981;color:#fff;padding:12px 24px;border-radius:50px;font-weight:700;font-size:0.9rem;z-index:300;opacity:0;transition:all 0.4s}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo">Hire<span>Hub</span></div>
+  <div class="nav-right">
+    <button class="nav-btn" onclick="showApplied()">My Applications (<span id="applied-count">0</span>)</button>
+    <button class="nav-btn primary" onclick="openApplyModal(null)">Post a Job</button>
+  </div>
+</nav>
+
+<div class="hero">
+  <h1>Find Your Dream Job</h1>
+  <p>Thousands of jobs from top companies — apply in seconds</p>
+  <div class="search-box">
+    <input type="text" id="job-search" placeholder="Job title, skills or company..." oninput="renderJobs()">
+    <select id="loc-filter" onchange="renderJobs()">
+      <option value="">All Locations</option>
+      <option>Mumbai</option><option>Bangalore</option><option>Delhi</option>
+      <option>Hyderabad</option><option>Pune</option><option>Remote</option>
+    </select>
+    <button onclick="renderJobs()">Search Jobs</button>
+  </div>
+</div>
+
+<div class="stats-bar">
+  <div class="stat-item"><div class="stat-icon">💼</div><div class="stat-text"><strong id="total-jobs">0</strong><span>Total Jobs</span></div></div>
+  <div class="stat-item"><div class="stat-icon">🏢</div><div class="stat-text"><strong>50+</strong><span>Companies</span></div></div>
+  <div class="stat-item"><div class="stat-icon">🚀</div><div class="stat-text"><strong id="new-jobs">0</strong><span>New Today</span></div></div>
+  <div class="stat-item"><div class="stat-icon">✅</div><div class="stat-text"><strong id="applied-stat">0</strong><span>Applied</span></div></div>
+</div>
+
+<div class="main">
+  <div class="filter-panel">
+    <div class="filter-title">Filters</div>
+    <div class="filter-group"><label>Job Type</label>
+      <div class="check-group">
+        <label class="check-item"><input type="checkbox" value="Full-time" onchange="renderJobs()"> Full-time</label>
+        <label class="check-item"><input type="checkbox" value="Part-time" onchange="renderJobs()"> Part-time</label>
+        <label class="check-item"><input type="checkbox" value="Remote" onchange="renderJobs()"> Remote</label>
+        <label class="check-item"><input type="checkbox" value="Internship" onchange="renderJobs()"> Internship</label>
+      </div>
+    </div>
+    <div class="filter-group"><label>Experience Level</label>
+      <select class="filter-select" id="exp-filter" onchange="renderJobs()">
+        <option value="">Any</option><option>Fresher</option><option>1-3 years</option><option>3-5 years</option><option>5+ years</option>
+      </select>
+    </div>
+    <div class="filter-group"><label>Category</label>
+      <select class="filter-select" id="cat-filter" onchange="renderJobs()">
+        <option value="">All Categories</option>
+        <option>Technology</option><option>Design</option><option>Marketing</option><option>Finance</option><option>HR</option><option>Sales</option>
+      </select>
+    </div>
+  </div>
+
+  <div>
+    <div class="job-header">
+      <div class="results-info" id="results-info">Loading...</div>
+      <select class="sort-select" id="sort-sel" onchange="renderJobs()"><option value="new">Newest First</option><option value="salary">Highest Salary</option></select>
+    </div>
+    <div id="jobs-list"></div>
+  </div>
+</div>
+
+<!-- APPLY MODAL -->
+<div class="apply-modal" id="apply-modal">
+  <div class="apply-form">
+    <h2 id="apply-job-title">Apply for Job</h2>
+    <p id="apply-company-name"></p>
+    <div class="form-row"><label>Full Name *</label><input id="a-name" placeholder="Your full name"></div>
+    <div class="form-row"><label>Email Address *</label><input id="a-email" type="email" placeholder="your@email.com"></div>
+    <div class="form-row"><label>Phone Number</label><input id="a-phone" placeholder="+91 9XXXXXXXXX"></div>
+    <div class="form-row"><label>Years of Experience</label><select id="a-exp"><option>0 (Fresher)</option><option>1 year</option><option>2 years</option><option>3-5 years</option><option>5+ years</option></select></div>
+    <div class="form-row"><label>LinkedIn / Portfolio URL</label><input id="a-link" placeholder="https://linkedin.com/in/..."></div>
+    <div class="form-row"><label>Cover Letter</label><textarea id="a-cover" placeholder="Tell us why you're a great fit..."></textarea></div>
+    <div class="form-btns">
+      <button class="cancel-btn" onclick="closeApply()">Cancel</button>
+      <button class="submit-apply-btn" onclick="submitApply()">Submit Application →</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast">✅ Application submitted successfully!</div>
+
+<script>
+const jobs=[
+  {id:1,title:"Full Stack Developer",company:"TechCorp India",logo:"🏢",color:"#dbeafe",location:"Bangalore",type:"Full-time",exp:"1-3 years",salary:"₹8-14 LPA",cat:"Technology",skills:["React","Node.js","MongoDB","REST API"],desc:"Build scalable web applications using modern stack. Work with a passionate team on cutting-edge products.",featured:true,date:"2 days ago"},
+  {id:2,title:"UI/UX Designer",company:"DesignStudio",logo:"🎨",color:"#fce7f3",location:"Remote",type:"Remote",exp:"1-3 years",salary:"₹6-10 LPA",cat:"Design",skills:["Figma","Adobe XD","Prototyping","User Research"],desc:"Create beautiful and intuitive user experiences for mobile and web products.",featured:false,date:"1 day ago"},
+  {id:3,title:"Data Analyst",company:"DataMinds",logo:"📊",color:"#d1fae5",location:"Mumbai",type:"Full-time",exp:"Fresher",salary:"₹4-7 LPA",cat:"Technology",skills:["Python","SQL","Power BI","Excel"],desc:"Analyze data to help business make smarter decisions. Perfect for freshers with strong analytical skills.",featured:false,date:"Today"},
+  {id:4,title:"Android Developer",company:"AppVenture",logo:"📱",color:"#dcfce7",location:"Hyderabad",type:"Full-time",exp:"1-3 years",salary:"₹7-12 LPA",cat:"Technology",skills:["Kotlin","Java","Android SDK","Firebase"],desc:"Develop and maintain Android applications for millions of users across India.",featured:true,date:"3 days ago"},
+  {id:5,title:"Digital Marketing Executive",company:"GrowthBox",logo:"📣",color:"#fef9c3",location:"Delhi",type:"Full-time",exp:"Fresher",salary:"₹3-5 LPA",cat:"Marketing",skills:["SEO","Google Ads","Social Media","Analytics"],desc:"Drive digital campaigns and grow our online presence across multiple platforms.",featured:false,date:"Today"},
+  {id:6,title:"DevOps Engineer",company:"CloudStack",logo:"☁️",color:"#ede9fe",location:"Pune",type:"Full-time",exp:"3-5 years",salary:"₹12-20 LPA",cat:"Technology",skills:["AWS","Docker","Kubernetes","CI/CD"],desc:"Manage cloud infrastructure and automate deployment pipelines for enterprise clients.",featured:false,date:"5 days ago"},
+  {id:7,title:"Frontend React Developer",company:"WebWorks",logo:"⚛️",color:"#e0f2fe",location:"Bangalore",type:"Full-time",exp:"1-3 years",salary:"₹7-13 LPA",cat:"Technology",skills:["React","TypeScript","Tailwind CSS","Redux"],desc:"Build high-performance, beautiful front-end experiences for our SaaS platform.",featured:true,date:"2 days ago"},
+  {id:8,title:"HR Executive",company:"PeopleFirst",logo:"👥",color:"#fce7f3",location:"Mumbai",type:"Full-time",exp:"Fresher",salary:"₹3-5 LPA",cat:"HR",skills:["Recruitment","Onboarding","HRMS","Communication"],desc:"Support talent acquisition and employee engagement initiatives in a fast-growing startup.",featured:false,date:"1 day ago"},
+  {id:9,title:"Python Backend Developer",company:"APIForge",logo:"🐍",color:"#d1fae5",location:"Remote",type:"Remote",exp:"1-3 years",salary:"₹8-15 LPA",cat:"Technology",skills:["Python","Django","FastAPI","PostgreSQL"],desc:"Build robust REST APIs and microservices for fintech applications serving 10L+ users.",featured:false,date:"Today"},
+  {id:10,title:"Software Engineering Intern",company:"StartupLab",logo:"🚀",color:"#ede9fe",location:"Pune",type:"Internship",exp:"Fresher",salary:"₹15-25K/month",cat:"Technology",skills:["HTML","CSS","JavaScript","Git"],desc:"6-month paid internship. Work on real projects, learn from senior engineers, and get a full-time offer.",featured:false,date:"Today"},
+  {id:11,title:"Business Analyst",company:"FinTech Solutions",logo:"💹",color:"#fef9c3",location:"Hyderabad",type:"Full-time",exp:"1-3 years",salary:"₹6-10 LPA",cat:"Finance",skills:["Requirement Gathering","SQL","Agile","Jira"],desc:"Bridge the gap between business and technology teams to deliver impactful software solutions.",featured:false,date:"4 days ago"},
+  {id:12,title:"Sales Manager",company:"B2BSales Inc",logo:"🤝",color:"#fee2e2",location:"Delhi",type:"Full-time",exp:"3-5 years",salary:"₹8-14 LPA",cat:"Sales",skills:["B2B Sales","CRM","Negotiation","Lead Generation"],desc:"Lead a team of sales executives and drive revenue growth for our enterprise product.",featured:false,date:"2 days ago"},
+];
+
+let applied=new Set();let bookmarked=new Set();let applyJobId=null;
+try{applied=new Set(JSON.parse(localStorage.getItem('hirehub_applied')||'[]'));}catch(e){}
+try{bookmarked=new Set(JSON.parse(localStorage.getItem('hirehub_bookmarked')||'[]'));}catch(e){}
+function save(){localStorage.setItem('hirehub_applied',JSON.stringify([...applied]));localStorage.setItem('hirehub_bookmarked',JSON.stringify([...bookmarked]));}
+
+function getFilters(){
+  const types=[...document.querySelectorAll('.check-item input:checked')].map(i=>i.value);
+  return{q:document.getElementById('job-search').value.toLowerCase(),loc:document.getElementById('loc-filter').value,types,exp:document.getElementById('exp-filter').value,cat:document.getElementById('cat-filter').value,sort:document.getElementById('sort-sel').value};
+}
+
+function renderJobs(){
+  const f=getFilters();
+  let list=jobs.filter(j=>{
+    const mq=!f.q||j.title.toLowerCase().includes(f.q)||j.company.toLowerCase().includes(f.q)||j.skills.some(s=>s.toLowerCase().includes(f.q));
+    const ml=!f.loc||j.location===f.loc;
+    const mt=!f.types.length||f.types.includes(j.type);
+    const me=!f.exp||j.exp===f.exp;
+    const mc=!f.cat||j.cat===f.cat;
+    return mq&&ml&&mt&&me&&mc;
+  });
+  if(f.sort==='salary')list=[...list].sort((a,b)=>parseInt(b.salary)-parseInt(a.salary));
+  document.getElementById('results-info').textContent=`${list.length} job${list.length!==1?'s':''} found`;
+  document.getElementById('total-jobs').textContent=jobs.length;
+  document.getElementById('new-jobs').textContent=jobs.filter(j=>j.date==='Today').length;
+  document.getElementById('applied-count').textContent=applied.size;
+  document.getElementById('applied-stat').textContent=applied.size;
+  const div=document.getElementById('jobs-list');
+  if(list.length===0){div.innerHTML='<div style="text-align:center;padding:40px;color:#94a3b8"><div style="font-size:3rem">🔍</div><p>No jobs match your criteria.</p></div>';return;}
+  div.innerHTML=list.map(j=>`
+    <div class="job-card ${j.featured?'featured':''}">
+      <div class="job-top">
+        <div class="company-logo" style="background:${j.color}">${j.logo}</div>
+        <div class="job-main">
+          <div class="job-title">${j.title} ${j.featured?'<span class="job-tag tag-featured">⭐ Featured</span>':''}</div>
+          <div class="company-name">${j.company}</div>
+          <div class="job-tags">
+            <span class="job-tag tag-type">${j.type}</span>
+            <span class="job-tag tag-loc">📍 ${j.location}</span>
+            <span class="job-tag tag-salary">💰 ${j.salary}</span>
+            <span class="job-tag tag-exp">🎓 ${j.exp}</span>
+          </div>
+        </div>
+      </div>
+      <div class="job-desc">${j.desc}</div>
+      <div class="job-skills">${j.skills.map(s=>`<span class="skill-pill">${s}</span>`).join('')}</div>
+      <div class="job-footer">
+        <div class="job-date">📅 ${j.date}</div>
+        <div style="display:flex;gap:8px">
+          <button class="bookmark-btn ${bookmarked.has(j.id)?'active':''}" onclick="toggleBookmark(${j.id})">${bookmarked.has(j.id)?'🔖 Saved':'🔖 Save'}</button>
+          <button class="apply-btn-card ${applied.has(j.id)?'applied':''}" onclick="${applied.has(j.id)?'':` openApplyModal(${j.id})`}">${applied.has(j.id)?'✅ Applied':'Apply Now'}</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function toggleBookmark(id){if(bookmarked.has(id))bookmarked.delete(id);else bookmarked.add(id);save();renderJobs();}
+function openApplyModal(id){applyJobId=id;if(id){const j=jobs.find(x=>x.id===id);document.getElementById('apply-job-title').textContent='Apply for '+j.title;document.getElementById('apply-company-name').textContent=j.company+' • '+j.location;}else{document.getElementById('apply-job-title').textContent='Post a Job';document.getElementById('apply-company-name').textContent='Share an opportunity';}document.getElementById('apply-modal').classList.add('open');}
+function closeApply(){document.getElementById('apply-modal').classList.remove('open');}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
+function submitApply(){
+  const name=document.getElementById('a-name').value.trim();const email=document.getElementById('a-email').value.trim();
+  if(!name||!email){alert('Please fill name and email.');return;}
+  if(applyJobId){applied.add(applyJobId);save();}
+  closeApply();showToast('✅ Application submitted successfully!');renderJobs();
+  ['a-name','a-email','a-phone','a-link','a-cover'].forEach(id=>document.getElementById(id).value='');
+}
+function showApplied(){alert(`You have applied to ${applied.size} job(s). Feature: View applied jobs (full backend needed).`);}
+renderJobs();
+</script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #1a1a2e;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.container {
+  text-align: center;
+}
+
+h1 { font-size: 26px; margin-bottom: 12px; color: #4ade80; }
+
+.info-bar {
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+  margin-bottom: 12px;
+  font-size: 14px;
+  color: #aaa;
+}
+
+.info-bar strong { color: #4ade80; }
+
+#gameCanvas {
+  display: block;
+  border: 3px solid #4ade80;
+  border-radius: 4px;
+  background-color: #0f0f1a;
+  position: relative;
+}
+
+.overlay {
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  background: rgba(0,0,0,0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+/* position overlay on top of canvas */
+.container { position: relative; display: inline-block; }
+#gameCanvas { display: block; }
+.overlay {
+  position: absolute;
+  top: 60px; /* below title + info bar roughly */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 400px;
+  height: 400px;
+}
+
+.overlay-box {
+  text-align: center;
+  background: #16213e;
+  border: 1px solid #4ade80;
+  border-radius: 10px;
+  padding: 30px 25px;
+  width: 260px;
+}
+
+.overlay-box h2 { font-size: 22px; margin-bottom: 10px; color: #4ade80; }
+.overlay-box p { font-size: 13px; color: #aaa; margin-bottom: 15px; }
+
+.speed-select {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #aaa;
+  margin-bottom: 15px;
+}
+
+.speed-select select {
+  padding: 5px 10px;
+  border: 1px solid #4ade80;
+  border-radius: 4px;
+  background: #0f0f1a;
+  color: white;
+  font-size: 13px;
+}
+
+.btn {
+  padding: 10px 25px;
+  background-color: #4ade80;
+  color: #0f0f1a;
+  border: none;
+  border-radius: 5px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn:hover { background-color: #22c55e; }
+
+.controls-hint {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 12px;
+  font-size: 13px;
+  color: #555;
+}

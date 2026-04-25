@@ -1,0 +1,149 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background: #f7fbfd;
+  color: #1f2937;
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 30px;
+  background: #0ea5e9;
+  color: #fff;
+}
+
+.navbar nav a {
+  color: #fff;
+  margin-left: 20px;
+  text-decoration: none;
+}
+
+/* Hero */
+.hero {
+  height: 60vh;
+  background: url("https://images.unsplash.com/photo-1580281657527-47e6c76c48f0") center/cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-content {
+  background: rgba(255,255,255,0.9);
+  padding: 30px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: 36px;
+}
+
+.cta {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 10px 20px;
+  background: #0ea5e9;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 6px;
+}
+
+/* Categories */
+.categories {
+  padding: 40px 30px;
+}
+
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+}
+
+.tile {
+  background: #e0f2fe;
+  padding: 30px 10px;
+  text-align: center;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+/* Filters */
+.filters {
+  padding: 20px 30px;
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.filters select {
+  padding: 8px;
+}
+
+/* Medicines */
+.medicines {
+  padding: 40px 30px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 15px;
+  transition: 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+}
+
+.card img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.badge {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 3px 8px;
+  background: #fee2e2;
+  color: #b91c1c;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.card button {
+  width: 100%;
+  margin-top: 10px;
+  padding: 8px;
+  border: none;
+  background: #0ea5e9;
+  color: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* Cart */
+.cart {
+  padding: 40px 30px;
+}
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}

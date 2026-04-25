@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Regex Tester</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,Helvetica,sans-serif}
+body{min-height:100vh;display:flex;align-items:center;justify-content:center;background:#0f172a;padding:20px;color:#e2e8f0}
+.card{width:100%;max-width:800px;background:#020617;border-radius:16px;box-shadow:0 20px 40px rgba(0,0,0,.5);padding:22px}
+h1{text-align:center;margin-bottom:16px;font-size:1.4rem}
+.field{margin-bottom:12px}
+label{display:block;font-size:.8rem;margin-bottom:4px;color:#94a3b8}
+input,textarea{width:100%;padding:10px;border-radius:8px;border:1px solid #1e293b;background:#020617;color:#e2e8f0;font-family:"Courier New",monospace;font-size:.85rem}
+textarea{min-height:140px;resize:vertical}
+input:focus,textarea:focus{outline:none;border-color:#4c8bf5;box-shadow:0 0 0 1px #4c8bf5}
+.buttons{display:flex;gap:8px;margin-top:10px}
+button{flex:1;padding:10px;border:none;border-radius:8px;font-size:.85rem;cursor:pointer;background:#1e40af;color:#fff}
+button:hover{background:#1d4ed8}
+.secondary{background:#334155}
+.secondary:hover{background:#475569}
+.output{margin-top:14px}
+.matches{margin-top:8px;font-size:.85rem}
+.highlight{background:yellow;color:#000}
+.error{color:#ef4444;font-size:.85rem;margin-top:6px}
+.count{font-size:.85rem;margin-bottom:6px}
+.preview{margin-top:8px;padding:10px;background:#111827;border-radius:8px;white-space:pre-wrap;word-break:break-word}
+@media(max-width:600px){.card{padding:16px}}
+</style>
+</head>
+<body>
+<div class="card">
+<h1>Regex Tester</h1>
+
+<div class="field">
+<label>Pattern</label>
+<input type="text" id="pattern" placeholder="e.g. \\d+">
+</div>
+
+<div class="field">
+<label>Flags (g, i, m)</label>
+<input type="text" id="flags" placeholder="e.g. gi">
+</div>
+
+<div class="field">
+<label>Test Text</label>
+<textarea id="testText" placeholder="Enter text to test..."></textarea>
+</div>
+
+<div class="buttons">
+<button id="testBtn">Test Regex</button>
+<button class="secondary" id="clearBtn">Clear</button>
+</div>
+
+<div class="output">
+<div id="count" class="count"></div>
+<div id="matches" class="matches"></div>
+<div id="preview" class="preview"></div>
+<div id="error" class="error"></div>
+</div>
+</div>
+
+<script>
+const patternInput=document.getElementById('pattern');
+const flagsInput=document.getElementById('flags');
+const testText=document.getElementById('testText');
+const testBtn=document.getElementById('testBtn');
+const clearBtn=document.getElementById('clearBtn');
+const matchesDiv=document.getElementById('matches');
+const previewDiv=document.getElementById('preview');
+const errorDiv=document.getElementById('error');
+const countDiv=document.getElementById('count');
+
+function escapeHTML(str){
+return str.replace(/[&<>"']/g,function(m){return({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"})[m];});
+}
+
+testBtn.addEventListener('click',()=>{
+errorDiv.textContent='';
+matchesDiv.textContent='';
+previewDiv.innerHTML='';
+countDiv.textContent='';
+
+const pattern=patternInput.value;
+const flags=flagsInput.value;
+const text=testText.value;
+
+if(!pattern){errorDiv.textContent='Please enter a pattern';return;}
+
+try{
+const regex=new RegExp(pattern,flags);
+const matches=[...text.matchAll(regex)];
+countDiv.textContent=`Total Matches: ${matches.length}`;
+
+if(matches.length>0){
+matchesDiv.textContent='Matches: '+matches.map(m=>m[0]).join(', ');
+}
+
+let highlighted=escapeHTML(text);
+if(matches.length>0){
+highlighted=escapeHTML(text).replace(regex,function(m){return `<span class="highlight">${escapeHTML(m)}</span>`});
+}
+
+previewDiv.innerHTML=highlighted;
+
+}catch(e){
+errorDiv.textContent='Invalid Regex: '+e.message;
+}
+});
+
+clearBtn.addEventListener('click',()=>{
+patternInput.value='';
+flagsInput.value='';
+testText.value='';
+matchesDiv.textContent='';
+previewDiv.textContent='';
+errorDiv.textContent='';
+countDiv.textContent='';
+});
+</script>
+</body>
+</html>

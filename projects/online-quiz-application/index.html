@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QuizMaster — Online Quiz App</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;min-height:100vh;background:linear-gradient(135deg,#667eea,#764ba2);display:flex;align-items:center;justify-content:center;padding:20px}
+.card{background:#fff;border-radius:24px;padding:36px;width:100%;max-width:580px;box-shadow:0 20px 60px rgba(0,0,0,0.2)}
+
+/* HOME */
+.home .icon{text-align:center;font-size:4rem;margin-bottom:12px}
+.home h1{text-align:center;font-size:2rem;font-weight:800;color:#1e1b4b;margin-bottom:6px}
+.home p{text-align:center;color:#888;margin-bottom:2rem;font-size:0.9rem}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1.5rem}
+.topic-card{padding:16px;border-radius:16px;border:2px solid #eee;cursor:pointer;text-align:center;transition:all 0.2s}
+.topic-card:hover,.topic-card.selected{border-color:#667eea;background:#f0f0ff}
+.topic-icon{font-size:1.8rem;margin-bottom:6px}
+.topic-name{font-size:0.85rem;font-weight:700;color:#333}
+.topic-count{font-size:0.75rem;color:#aaa}
+.diff-row{display:flex;gap:8px;margin-bottom:1.5rem;justify-content:center}
+.diff-btn{padding:8px 20px;border-radius:50px;border:2px solid #eee;cursor:pointer;font-size:0.82rem;font-weight:700;transition:all 0.2s}
+.diff-btn.active{background:#667eea;color:#fff;border-color:#667eea}
+.start-btn{width:100%;padding:16px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border:none;border-radius:14px;font-size:1.1rem;font-weight:800;cursor:pointer;letter-spacing:1px;transition:opacity 0.2s}
+.start-btn:hover{opacity:0.9}
+
+/* QUIZ */
+.quiz-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+.q-progress{font-size:0.85rem;font-weight:700;color:#667eea}
+.q-score{font-size:0.85rem;font-weight:700;color:#10b981}
+.timer-ring{width:48px;height:48px;position:relative}
+.timer-ring svg{transform:rotate(-90deg)}
+.timer-text{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:0.85rem;font-weight:800;color:#1e1b4b}
+.progress-bar{height:6px;background:#eee;border-radius:99px;margin-bottom:1.5rem;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,#667eea,#764ba2);border-radius:99px;transition:width 0.4s}
+.q-cat{font-size:0.75rem;font-weight:700;color:#667eea;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.q-text{font-size:1.1rem;font-weight:700;color:#1e1b4b;line-height:1.5;margin-bottom:1.5rem}
+.options{display:flex;flex-direction:column;gap:10px}
+.option{
+  padding:14px 18px;border-radius:14px;border:2px solid #eee;cursor:pointer;
+  font-size:0.9rem;font-weight:500;transition:all 0.2s;display:flex;align-items:center;gap:12px;
+}
+.option:hover:not(.locked){border-color:#667eea;background:#f0f0ff}
+.option-letter{width:28px;height:28px;border-radius:50%;background:#f0f0f0;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.8rem;flex-shrink:0}
+.option.correct{border-color:#10b981;background:#ecfdf5;color:#065f46}
+.option.correct .option-letter{background:#10b981;color:#fff}
+.option.wrong{border-color:#ef4444;background:#fef2f2;color:#991b1b}
+.option.wrong .option-letter{background:#ef4444;color:#fff}
+.option.reveal{border-color:#10b981;background:#ecfdf5}
+.option.reveal .option-letter{background:#10b981;color:#fff}
+.next-btn{width:100%;margin-top:1.2rem;padding:14px;background:#667eea;color:#fff;border:none;border-radius:12px;font-size:1rem;font-weight:700;cursor:pointer;display:none;transition:background 0.2s}
+.next-btn:hover{background:#5a67d8}
+.feedback-txt{text-align:center;font-size:0.85rem;font-weight:700;margin-top:10px;min-height:20px}
+
+/* RESULT */
+.result{text-align:center}
+.result-emoji{font-size:4.5rem;margin-bottom:12px;display:block}
+.result h2{font-size:1.8rem;font-weight:800;color:#1e1b4b;margin-bottom:6px}
+.result-score{font-size:3.5rem;font-weight:900;margin:1rem 0;background:linear-gradient(135deg,#667eea,#764ba2);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.result-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:1.2rem 0}
+.res-stat{background:#f8f8ff;border-radius:12px;padding:12px}
+.res-stat-num{font-size:1.4rem;font-weight:800;color:#1e1b4b}
+.res-stat-lbl{font-size:0.72rem;color:#aaa;text-transform:uppercase}
+.replay-btn{width:100%;padding:14px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border:none;border-radius:14px;font-size:1rem;font-weight:800;cursor:pointer;margin-top:8px}
+</style>
+</head>
+<body>
+<div class="card" id="card">
+  <!-- HOME SCREEN -->
+  <div class="home" id="screen-home">
+    <div class="icon">🧠</div>
+    <h1>QuizMaster</h1>
+    <p>Test your knowledge across different topics</p>
+    <div class="topic-grid" id="topic-grid"></div>
+    <div class="diff-row">
+      <button class="diff-btn active" onclick="setDiff('easy',this)">Easy</button>
+      <button class="diff-btn" onclick="setDiff('medium',this)">Medium</button>
+      <button class="diff-btn" onclick="setDiff('hard',this)">Hard</button>
+    </div>
+    <button class="start-btn" onclick="startQuiz()">Start Quiz →</button>
+  </div>
+
+  <!-- QUIZ SCREEN -->
+  <div id="screen-quiz" style="display:none">
+    <div class="quiz-header">
+      <div class="q-progress" id="q-progress">Q 1 / 10</div>
+      <div class="timer-ring">
+        <svg width="48" height="48" viewBox="0 0 48 48">
+          <circle cx="24" cy="24" r="20" fill="none" stroke="#eee" stroke-width="4"/>
+          <circle cx="24" cy="24" r="20" fill="none" stroke="#667eea" stroke-width="4" stroke-dasharray="125.6" stroke-dashoffset="0" id="timer-circle" stroke-linecap="round"/>
+        </svg>
+        <div class="timer-text" id="timer-text">15</div>
+      </div>
+      <div class="q-score" id="q-score">Score: 0</div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:10%"></div></div>
+    <div class="q-cat" id="q-cat"></div>
+    <div class="q-text" id="q-text"></div>
+    <div class="options" id="options"></div>
+    <div class="feedback-txt" id="feedback-txt"></div>
+    <button class="next-btn" id="next-btn" onclick="nextQuestion()">Next Question →</button>
+  </div>
+
+  <!-- RESULT SCREEN -->
+  <div id="screen-result" style="display:none">
+    <div class="result">
+      <span class="result-emoji" id="result-emoji">🎉</span>
+      <h2 id="result-title">Great Job!</h2>
+      <div class="result-score" id="result-score">8/10</div>
+      <div class="result-stats">
+        <div class="res-stat"><div class="res-stat-num" id="r-correct" style="color:#10b981">0</div><div class="res-stat-lbl">Correct</div></div>
+        <div class="res-stat"><div class="res-stat-num" id="r-wrong" style="color:#ef4444">0</div><div class="res-stat-lbl">Wrong</div></div>
+        <div class="res-stat"><div class="res-stat-num" id="r-pct" style="color:#667eea">0%</div><div class="res-stat-lbl">Accuracy</div></div>
+      </div>
+      <button class="replay-btn" onclick="resetQuiz()">Play Again ↺</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const allQuestions={
+  Science:[
+    {q:"What planet is known as the Red Planet?",o:["Mars","Jupiter","Saturn","Venus"],a:0},
+    {q:"What is the chemical symbol for water?",o:["H2O","CO2","O2","H2"],a:0},
+    {q:"How many bones are in the human body?",o:["206","198","213","220"],a:0},
+    {q:"What is the speed of light (approx)?",o:["3×10⁸ m/s","3×10⁶ m/s","3×10¹⁰ m/s","3×10⁴ m/s"],a:0},
+    {q:"Which gas do plants absorb during photosynthesis?",o:["CO₂","O₂","N₂","H₂"],a:0},
+  ],
+  Technology:[
+    {q:"What does HTML stand for?",o:["HyperText Markup Language","HighText Machine Language","Hyper Transfer Markup Language","None"],a:0},
+    {q:"Which company created JavaScript?",o:["Netscape","Microsoft","Google","Apple"],a:0},
+    {q:"What does CSS stand for?",o:["Cascading Style Sheets","Computer Style Sheets","Creative Style Sheets","Colorful Style Sheets"],a:0},
+    {q:"Which is NOT a JavaScript framework?",o:["Django","React","Vue","Angular"],a:0},
+    {q:"What does API stand for?",o:["Application Programming Interface","Advanced Programming Interface","Application Process Interface","Auto Program Interface"],a:0},
+  ],
+  History:[
+    {q:"In which year did India gain independence?",o:["1947","1950","1942","1945"],a:0},
+    {q:"Who was the first President of India?",o:["Dr. Rajendra Prasad","Jawaharlal Nehru","Sardar Patel","B. R. Ambedkar"],a:0},
+    {q:"The Taj Mahal was built by which Mughal Emperor?",o:["Shah Jahan","Akbar","Aurangzeb","Humayun"],a:0},
+    {q:"Who wrote the Indian National Anthem?",o:["Rabindranath Tagore","Bankim Chandra","Mahatma Gandhi","Subhash Chandra Bose"],a:0},
+    {q:"In which year was the Battle of Panipat (first) fought?",o:["1526","1556","1600","1498"],a:0},
+  ],
+  Geography:[
+    {q:"What is the capital of India?",o:["New Delhi","Mumbai","Kolkata","Chennai"],a:0},
+    {q:"Which is the longest river in the world?",o:["Nile","Amazon","Ganges","Mississippi"],a:0},
+    {q:"Mount Everest is in which mountain range?",o:["Himalayas","Alps","Andes","Rockies"],a:0},
+    {q:"Which is the smallest continent?",o:["Australia","Europe","Antarctica","South America"],a:0},
+    {q:"The Sahara Desert is in which continent?",o:["Africa","Asia","South America","Australia"],a:0},
+  ],
+};
+const topics=Object.keys(allQuestions).map(k=>({name:k,icon:{Science:'🔬',Technology:'💻',History:'📜',Geography:'🌍'}[k],count:allQuestions[k].length}));
+let selectedTopic=topics[0].name;let difficulty='easy';
+let questions=[];let curr=0;let score=0;let timer;let timeLeft=15;
+
+// Build topic grid
+document.getElementById('topic-grid').innerHTML=topics.map((t,i)=>`
+  <div class="topic-card ${i===0?'selected':''}" onclick="selectTopic('${t.name}',this)">
+    <div class="topic-icon">${t.icon}</div>
+    <div class="topic-name">${t.name}</div>
+    <div class="topic-count">${t.count} questions</div>
+  </div>`).join('');
+
+function selectTopic(name,el){selectedTopic=name;document.querySelectorAll('.topic-card').forEach(c=>c.classList.remove('selected'));el.classList.add('selected');}
+function setDiff(d,btn){difficulty=d;document.querySelectorAll('.diff-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+
+function startQuiz(){
+  questions=[...allQuestions[selectedTopic]].sort(()=>Math.random()-0.5).slice(0,5);
+  curr=0;score=0;
+  show('screen-quiz');
+  loadQuestion();
+}
+
+function loadQuestion(){
+  clearInterval(timer);
+  const q=questions[curr];
+  document.getElementById('q-progress').textContent=`Q ${curr+1} / ${questions.length}`;
+  document.getElementById('q-score').textContent=`Score: ${score}`;
+  document.getElementById('progress-fill').style.width=((curr+1)/questions.length*100)+'%';
+  document.getElementById('q-cat').textContent=selectedTopic+' • '+difficulty.toUpperCase();
+  document.getElementById('q-text').textContent=q.q;
+  document.getElementById('feedback-txt').textContent='';
+  document.getElementById('next-btn').style.display='none';
+  const opts=document.getElementById('options');
+  const letters=['A','B','C','D'];
+  opts.innerHTML=q.o.map((o,i)=>`
+    <div class="option" onclick="answer(${i})" id="opt-${i}">
+      <div class="option-letter">${letters[i]}</div>${o}
+    </div>`).join('');
+
+  timeLeft=difficulty==='easy'?20:difficulty==='medium'?15:10;
+  updateTimer();
+  timer=setInterval(()=>{timeLeft--;updateTimer();if(timeLeft<=0){clearInterval(timer);timeUp();}},1000);
+}
+
+function updateTimer(){
+  const max=difficulty==='easy'?20:difficulty==='medium'?15:10;
+  const pct=timeLeft/max;
+  const offset=125.6*(1-pct);
+  document.getElementById('timer-circle').style.strokeDashoffset=offset;
+  document.getElementById('timer-circle').style.stroke=timeLeft<=5?'#ef4444':timeLeft<=8?'#f59e0b':'#667eea';
+  document.getElementById('timer-text').textContent=timeLeft;
+}
+
+function timeUp(){
+  lockOptions();revealAnswer();
+  document.getElementById('feedback-txt').innerHTML='<span style="color:#ef4444">⏱ Time up!</span>';
+  document.getElementById('next-btn').style.display='block';
+}
+
+function answer(i){
+  clearInterval(timer);
+  lockOptions();
+  const correct=questions[curr].a;
+  const opt=document.getElementById('opt-'+i);
+  if(i===correct){opt.classList.add('correct');score++;document.getElementById('feedback-txt').innerHTML='<span style="color:#10b981">✓ Correct!</span>';}
+  else{opt.classList.add('wrong');document.getElementById('feedback-txt').innerHTML='<span style="color:#ef4444">✗ Wrong!</span>';revealAnswer();}
+  document.getElementById('q-score').textContent=`Score: ${score}`;
+  document.getElementById('next-btn').style.display='block';
+}
+
+function lockOptions(){document.querySelectorAll('.option').forEach(o=>{o.classList.add('locked');o.style.cursor='default';o.onclick=null;});}
+function revealAnswer(){const a=questions[curr].a;document.getElementById('opt-'+a).classList.add('reveal');}
+
+function nextQuestion(){
+  curr++;
+  if(curr>=questions.length)showResult();
+  else loadQuestion();
+}
+
+function showResult(){
+  clearInterval(timer);show('screen-result');
+  const total=questions.length;const pct=Math.round(score/total*100);
+  const emojis=['😢','😕','🙂','😊','🎉'];const msgs=['Keep Trying!','Not Bad!','Good Job!','Great Job!','Perfect!'];
+  const tier=Math.floor(pct/25);
+  document.getElementById('result-emoji').textContent=emojis[Math.min(tier,4)];
+  document.getElementById('result-title').textContent=msgs[Math.min(tier,4)];
+  document.getElementById('result-score').textContent=score+'/'+total;
+  document.getElementById('r-correct').textContent=score;
+  document.getElementById('r-wrong').textContent=total-score;
+  document.getElementById('r-pct').textContent=pct+'%';
+}
+
+function resetQuiz(){show('screen-home');}
+function show(id){['screen-home','screen-quiz','screen-result'].forEach(s=>document.getElementById(s).style.display=s===id?'block':'none');}
+</script>
+</body>
+</html>

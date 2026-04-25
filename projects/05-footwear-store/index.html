@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Footwear Store</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- Navbar -->
+<header class="navbar">
+  <div class="logo">👟 Footwear Store</div>
+  <nav>
+    <a href="#">Home</a>
+    <a href="#shoes">Shoes</a>
+    <a href="#filters">Categories</a>
+    <a href="#cart">Cart (<span id="cart-count">0</span>)</a>
+  </nav>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <h1>Step Into Style</h1>
+  <p>Find the perfect pair for every step</p>
+  <a href="#shoes" class="btn">Shop Shoes</a>
+</section>
+
+<!-- Filters -->
+<section class="filters" id="filters">
+  <select onchange="filterCategory(this.value)">
+    <option value="All">All Categories</option>
+    <option value="Sports">Sports</option>
+    <option value="Casual">Casual</option>
+    <option value="Formal">Formal</option>
+  </select>
+
+  <select onchange="filterPrice(this.value)">
+    <option value="All">All Prices</option>
+    <option value="low">Under ₹2000</option>
+    <option value="mid">₹2000 – ₹5000</option>
+    <option value="high">Above ₹5000</option>
+  </select>
+
+  <input
+    type="text"
+    placeholder="Search by name or brand..."
+    onkeyup="searchShoes(this.value)"
+  />
+</section>
+
+<!-- Shoes -->
+<section class="shoes" id="shoes">
+  <h2>Our Collection</h2>
+  <div class="shoe-grid" id="shoe-list"></div>
+</section>
+
+<!-- Cart -->
+<section class="cart" id="cart">
+  <h2>Your Cart</h2>
+  <div id="cart-items"></div>
+  <h3>Total: ₹<span id="total-price">0</span></h3>
+</section>
+
+<script src="script.js"></script>
+</body>
+</html>

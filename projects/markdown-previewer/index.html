@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Markdown Previewer</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, Helvetica, sans-serif; }
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: #f4f6f8;
+    }
+    header {
+      text-align: center;
+      padding: 14px;
+      background: #1a3f8b;
+      color: #fff;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+    .container {
+      flex: 1;
+      display: flex;
+      gap: 0;
+      height: calc(100vh - 52px);
+    }
+    .panel {
+      flex: 1;
+      padding: 14px;
+      overflow: auto;
+    }
+    .editor {
+      border-right: 1px solid #ddd;
+      background: #fafafa;
+    }
+    textarea {
+      width: 100%;
+      height: calc(100% - 42px);
+      border: none;
+      resize: none;
+      outline: none;
+      background: transparent;
+      font-family: "Courier New", monospace;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+    .preview {
+      background: #fff;
+    }
+    .toolbar {
+      margin-bottom: 8px;
+      display: flex;
+      gap: 8px;
+    }
+    button {
+      padding: 6px 10px;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      background: #4c8bf5;
+      color: #fff;
+    }
+    button:hover { background: #3a73d9; }
+    .preview-content h1, .preview-content h2, .preview-content h3 {
+      margin: 8px 0;
+    }
+    .preview-content p { margin: 6px 0; }
+    .preview-content ul { margin-left: 18px; }
+    .preview-content code {
+      background: #f1f3f5;
+      padding: 2px 4px;
+      border-radius: 4px;
+      font-family: monospace;
+    }
+    .preview-content pre {
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 8px;
+      border-radius: 6px;
+      overflow-x: auto;
+    }
+    @media (max-width: 768px) {
+      .container { flex-direction: column; height: auto; }
+      .editor { border-right: none; border-bottom: 1px solid #ddd; height: 40vh; }
+      .preview { height: 60vh; }
+    }
+  </style>
+</head>
+<body>
+  <header>Markdown Previewer</header>
+  <div class="container">
+    <div class="panel editor">
+      <div class="toolbar">
+        <button id="sampleBtn">Sample</button>
+        <button id="clearBtn">Clear</button>
+      </div>
+      <textarea id="markdownInput" placeholder="Type Markdown here..."></textarea>
+    </div>
+    <div class="panel preview">
+      <div class="preview-content" id="preview"></div>
+    </div>
+  </div>
+
+  <script>
+    const input = document.getElementById('markdownInput');
+    const preview = document.getElementById('preview');
+    const sampleBtn = document.getElementById('sampleBtn');
+    const clearBtn = document.getElementById('clearBtn');
+
+    function updatePreview() {
+      preview.innerHTML = marked.parse(input.value);
+    }
+
+    input.addEventListener('input', updatePreview);
+
+    sampleBtn.addEventListener('click', () => {
+      input.value = `# Title\n\n**Bold text**\n\n*Italic text*\n\n- List item\n- Another item\n\n[Link](https://example.com)\n\n\`inline code\`\n\n\`\`\`js\nconsole.log("Hello");\n\`\`\``;
+      updatePreview();
+    });
+
+    clearBtn.addEventListener('click', () => {
+      input.value = '';
+      preview.innerHTML = '';
+    });
+  </script>
+</body>
+</html>

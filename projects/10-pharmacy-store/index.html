@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pharmacy Store</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- Navbar -->
+<header class="navbar">
+  <div class="logo">💊 Pharmacy Store</div>
+  <nav>
+    <a href="#">Home</a>
+    <a href="#medicines">Medicines</a>
+    <a href="#categories">Categories</a>
+    <a href="#cart">Cart (<span id="cart-count">0</span>)</a>
+  </nav>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-content">
+    <h1>Your Trusted Online Pharmacy</h1>
+    <p>Quality healthcare products at your doorstep</p>
+    <a href="#medicines" class="cta">Browse Medicines</a>
+  </div>
+</section>
+
+<!-- Categories -->
+<section class="categories" id="categories">
+  <h2>Shop by Category</h2>
+  <div class="category-grid">
+    <div class="tile">Tablets</div>
+    <div class="tile">Syrups</div>
+    <div class="tile">Supplements</div>
+    <div class="tile">Personal Care</div>
+    <div class="tile">First Aid</div>
+  </div>
+</section>
+
+<!-- Filters -->
+<section class="filters">
+  <select onchange="filterCategory(this.value)">
+    <option value="All">All Categories</option>
+    <option value="Tablets">Tablets</option>
+    <option value="Syrups">Syrups</option>
+    <option value="Supplements">Supplements</option>
+    <option value="Personal Care">Personal Care</option>
+    <option value="First Aid">First Aid</option>
+  </select>
+
+  <select onchange="filterPrescription(this.value)">
+    <option value="All">All Types</option>
+    <option value="rx">Prescription Required</option>
+    <option value="otc">OTC</option>
+  </select>
+</section>
+
+<!-- Medicines -->
+<section class="medicines" id="medicines">
+  <h2>Medicines & Products</h2>
+  <div class="grid" id="medicine-grid"></div>
+</section>
+
+<!-- Cart -->
+<section class="cart" id="cart">
+  <h2>Your Cart</h2>
+  <div id="cart-items"></div>
+  <h3>Total: ₹<span id="total-price">0</span></h3>
+</section>
+
+<script src="script.js"></script>
+</body>
+</html>

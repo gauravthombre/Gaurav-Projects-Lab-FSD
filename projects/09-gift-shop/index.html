@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gift Shop</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- Navbar -->
+<header class="navbar">
+  <div class="logo">🎁 Gift Shop</div>
+  <nav>
+    <a href="#">Home</a>
+    <a href="#gifts">Gifts</a>
+    <a href="#occasions">Occasions</a>
+    <a href="#cart">Cart (<span id="cart-count">0</span>)</a>
+  </nav>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-content">
+    <h1>Find the Perfect Gift</h1>
+    <p>Celebrate every moment with joy</p>
+    <a href="#gifts" class="cta">Browse Gifts</a>
+  </div>
+</section>
+
+<!-- Occasions -->
+<section class="occasions" id="occasions">
+  <h2>Shop by Occasion</h2>
+  <div class="occasion-grid">
+    <div class="tile">Birthday</div>
+    <div class="tile">Anniversary</div>
+    <div class="tile">Wedding</div>
+    <div class="tile">Festival</div>
+    <div class="tile">Kids</div>
+  </div>
+</section>
+
+<!-- Filters -->
+<section class="filters">
+  <select onchange="filterOccasion(this.value)">
+    <option value="All">All Occasions</option>
+    <option value="Birthday">Birthday</option>
+    <option value="Anniversary">Anniversary</option>
+    <option value="Wedding">Wedding</option>
+    <option value="Festival">Festival</option>
+    <option value="Kids">Kids</option>
+  </select>
+
+  <select onchange="filterPrice(this.value)">
+    <option value="All">All Prices</option>
+    <option value="low">Under ₹500</option>
+    <option value="mid">₹500–₹1500</option>
+    <option value="high">Above ₹1500</option>
+  </select>
+</section>
+
+<!-- Gifts -->
+<section class="gifts" id="gifts">
+  <h2>Gift Collection</h2>
+  <div class="grid" id="gift-grid"></div>
+</section>
+
+<!-- Cart -->
+<section class="cart" id="cart">
+  <h2>Your Cart</h2>
+  <div id="cart-items"></div>
+  <h3>Total: ₹<span id="total-price">0</span></h3>
+</section>
+
+<script src="script.js"></script>
+</body>
+</html>

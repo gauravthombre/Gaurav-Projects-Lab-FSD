@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BookNest — Online Library</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:#faf8f2;min-height:100vh}
+nav{background:#2d1b69;padding:0 32px;height:64px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-size:1.4rem;font-weight:800;color:#fff}.logo span{color:#fbbf24}
+.nav-actions{display:flex;gap:10px}
+.nav-btn{padding:8px 16px;border-radius:50px;border:none;cursor:pointer;font-size:0.85rem;font-weight:700}
+.btn-white{background:#fff;color:#2d1b69}
+.btn-gold{background:#fbbf24;color:#1e1b4b}
+.hero-section{background:linear-gradient(135deg,#2d1b69,#4c1d95,#7c3aed);padding:52px 32px;text-align:center;color:#fff}
+.hero-section h1{font-size:2.4rem;font-weight:900;margin-bottom:8px}
+.hero-section p{opacity:0.8;margin-bottom:24px;font-size:0.95rem}
+.search-hero{display:flex;gap:10px;max-width:560px;margin:0 auto}
+.search-hero input{flex:1;padding:14px 20px;border-radius:50px;border:none;font-size:0.95rem;outline:none}
+.search-hero button{padding:14px 24px;background:#fbbf24;color:#1e1b4b;border:none;border-radius:50px;font-weight:700;cursor:pointer;font-size:0.9rem}
+
+.main{max-width:1100px;margin:0 auto;padding:32px}
+.section-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:gap}
+.section-bar h2{font-size:1.2rem;font-weight:800;color:#1e1b4b}
+.genre-scroll{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:2px 0 8px}
+.genre-scroll::-webkit-scrollbar{display:none}
+.genre-btn{padding:7px 18px;border-radius:50px;border:2px solid #e5e7eb;background:#fff;cursor:pointer;font-size:0.82rem;font-weight:700;white-space:nowrap;transition:all 0.2s;color:#555}
+.genre-btn.active,.genre-btn:hover{background:#2d1b69;color:#fff;border-color:#2d1b69}
+
+.books-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:20px}
+.book-card{background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.07);cursor:pointer;transition:all 0.25s}
+.book-card:hover{transform:translateY(-5px);box-shadow:0 10px 30px rgba(0,0,0,0.12)}
+.book-cover{height:200px;display:flex;align-items:center;justify-content:center;font-size:4.5rem;position:relative}
+.book-badge{position:absolute;top:10px;right:10px;font-size:0.7rem;padding:3px 9px;border-radius:50px;font-weight:700}
+.badge-free{background:#d1fae5;color:#065f46}
+.badge-read{background:#dbeafe;color:#1e40af}
+.book-info{padding:14px}
+.book-title{font-weight:700;font-size:0.9rem;color:#1e1b4b;margin-bottom:4px;line-height:1.3}
+.book-author{font-size:0.78rem;color:#9ca3af;margin-bottom:6px}
+.book-footer{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:4px}
+.book-genre{font-size:0.7rem;padding:2px 8px;border-radius:50px;background:#ede9fe;color:#5b21b6;font-weight:600}
+.book-rating{font-size:0.78rem;color:#f59e0b}
+.book-actions{display:flex;gap:6px;margin-top:10px}
+.action-btn{flex:1;padding:7px;border-radius:10px;border:none;cursor:pointer;font-size:0.78rem;font-weight:700;transition:all 0.2s}
+.btn-wishlist{background:#fef3c7;color:#92400e}
+.btn-wishlist:hover,.btn-wishlist.active{background:#fbbf24;color:#fff}
+.btn-read{background:#ede9fe;color:#5b21b6}
+.btn-read:hover,.btn-read.active{background:#7c3aed;color:#fff}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.open{display:flex}
+.modal{background:#fff;border-radius:24px;max-width:540px;width:100%;max-height:90vh;overflow-y:auto}
+.modal-header{padding:28px 28px 0;display:flex;gap:20px;align-items:flex-start}
+.modal-cover{width:90px;height:130px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:3.5rem;flex-shrink:0}
+.modal-title{font-size:1.3rem;font-weight:800;color:#1e1b4b;margin-bottom:4px}
+.modal-author{font-size:0.88rem;color:#9ca3af;margin-bottom:8px}
+.modal-rating{color:#f59e0b;font-size:0.9rem}
+.modal-body{padding:20px 28px 28px}
+.modal-desc{font-size:0.88rem;color:#555;line-height:1.7;margin-bottom:16px}
+.modal-meta{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.meta-item{background:#f8f8f8;border-radius:10px;padding:10px}
+.meta-label{font-size:0.72rem;color:#9ca3af;text-transform:uppercase;letter-spacing:0.5px}
+.meta-value{font-size:0.9rem;font-weight:700;color:#1e1b4b}
+.modal-btns{display:flex;gap:10px}
+.modal-btn{flex:1;padding:12px;border-radius:12px;border:none;cursor:pointer;font-size:0.9rem;font-weight:700;transition:all 0.2s}
+.modal-btn.primary{background:#7c3aed;color:#fff}
+.modal-btn.primary:hover{background:#6d28d9}
+.modal-btn.secondary{background:#f3f4f6;color:#374151}
+.modal-close{position:absolute;top:16px;right:20px;background:none;border:none;font-size:1.4rem;cursor:pointer;color:#9ca3af}
+
+.wishlist-badge{background:#ef4444;color:#fff;border-radius:50%;padding:2px 6px;font-size:0.7rem;font-weight:700;margin-left:4px}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo">Book<span>Nest</span></div>
+  <div class="nav-actions">
+    <button class="nav-btn btn-white" onclick="showTab('library')">Library</button>
+    <button class="nav-btn btn-gold" onclick="showTab('wishlist')">Wishlist <span class="wishlist-badge" id="wish-count">0</span></button>
+  </div>
+</nav>
+
+<div class="hero-section" id="hero">
+  <h1>Your Digital Library</h1>
+  <p>Discover, read and manage thousands of books in one place</p>
+  <div class="search-hero">
+    <input type="text" id="search-input" placeholder="Search by title or author..." oninput="renderBooks()">
+    <button onclick="renderBooks()">Search</button>
+  </div>
+</div>
+
+<div class="main" id="main-content">
+  <div class="genre-scroll" id="genre-row"></div>
+  <div class="section-bar" style="margin-top:16px">
+    <h2 id="section-label">All Books</h2>
+  </div>
+  <div class="books-grid" id="books-grid"></div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal-inner" style="position:relative">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div id="modal-content"></div>
+  </div>
+</div>
+
+<script>
+const books=[
+  {id:1,title:"Harry Potter & the Sorcerer's Stone",author:"J.K. Rowling",genre:"Fantasy",emoji:"🧙",rating:4.9,pages:309,year:1997,desc:"A young boy discovers he's a wizard on his 11th birthday and is invited to attend Hogwarts School of Witchcraft and Wizardry. Thus begins the magical journey of Harry Potter.",free:true},
+  {id:2,title:"The Alchemist",author:"Paulo Coelho",genre:"Fiction",emoji:"🌙",rating:4.7,pages:208,year:1988,desc:"A young Andalusian shepherd sets out to follow his dreams and find a worldly treasure. An inspiring fable about following your dreams and listening to your heart.",free:true},
+  {id:3,title:"Atomic Habits",author:"James Clear",genre:"Self-Help",emoji:"⚛️",rating:4.8,pages:320,year:2018,desc:"An easy and proven way to build good habits and break bad ones. James Clear reveals practical strategies rooted in the science of behaviour change.",free:false},
+  {id:4,title:"Rich Dad Poor Dad",author:"Robert T. Kiyosaki",genre:"Finance",emoji:"💰",rating:4.6,pages:336,year:1997,desc:"What the rich teach their kids about money that the poor and middle class do not! A personal finance classic that challenges conventional wisdom.",free:false},
+  {id:5,title:"Wings of Fire",author:"A.P.J. Abdul Kalam",genre:"Biography",emoji:"🚀",rating:4.9,pages:196,year:1999,desc:"An autobiography of one of India's most beloved scientists and former President. A story of determination, hard work and vision.",free:true},
+  {id:6,title:"The Great Gatsby",author:"F. Scott Fitzgerald",genre:"Classic",emoji:"🥂",rating:4.3,pages:180,year:1925,desc:"A story of the fabulously wealthy Jay Gatsby and his love for the beautiful Daisy Buchanan, set against the excess and moral decay of the Jazz Age.",free:true},
+  {id:7,title:"1984",author:"George Orwell",genre:"Dystopia",emoji:"👁️",rating:4.8,pages:328,year:1949,desc:"A chilling dystopian novel about a society under oppressive government surveillance and thought control. A masterpiece of political fiction.",free:true},
+  {id:8,title:"Deep Work",author:"Cal Newport",genre:"Self-Help",emoji:"🧠",rating:4.7,pages:296,year:2016,desc:"Rules for focused success in a distracted world. Cal Newport argues that the ability to perform deep work is becoming increasingly rare and valuable.",free:false},
+  {id:9,title:"The Lean Startup",author:"Eric Ries",genre:"Business",emoji:"📈",rating:4.5,pages:336,year:2011,desc:"How today's entrepreneurs use continuous innovation to create radically successful businesses. A must-read for startup founders.",free:false},
+  {id:10,title:"Clean Code",author:"Robert C. Martin",genre:"Technology",emoji:"💻",rating:4.7,pages:431,year:2008,desc:"A handbook of agile software craftsmanship. Robert Martin presents revolutionary paradigms for writing better code.",free:false},
+  {id:11,title:"Think and Grow Rich",author:"Napoleon Hill",genre:"Finance",emoji:"🏆",rating:4.6,pages:238,year:1937,desc:"One of the best-selling books of all time. Napoleon Hill studied over 500 self-made millionaires and distilled their secrets into 13 principles.",free:true},
+  {id:12,title:"The Midnight Library",author:"Matt Haig",genre:"Fiction",emoji:"🌌",rating:4.5,pages:304,year:2020,desc:"Between life and death there is a library. When Nora Seed finds herself in this library, she must choose which life she really wants to live.",free:false},
+  {id:13,title:"Sapiens",author:"Yuval Noah Harari",genre:"History",emoji:"🦴",rating:4.8,pages:443,year:2011,desc:"A brief history of humankind. From the Stone Age to the 21st century, Harari charts the history and impact of our species.",free:false},
+  {id:14,title:"The Power of Now",author:"Eckhart Tolle",genre:"Self-Help",emoji:"🧘",rating:4.5,pages:236,year:1997,desc:"A guide to spiritual enlightenment. Tolle argues that the source of human suffering is excessive identification with the mind.",free:false},
+  {id:15,title:"To Kill a Mockingbird",author:"Harper Lee",genre:"Classic",emoji:"🐦",rating:4.8,pages:281,year:1960,desc:"A powerful story about racial injustice and the loss of innocence in the American South, seen through the eyes of young Scout Finch.",free:true},
+  {id:16,title:"Zero to One",author:"Peter Thiel",genre:"Business",emoji:"🦄",rating:4.5,pages:224,year:2014,desc:"Notes on startups, or how to build the future. Thiel challenges the notion that copying past success is the way to succeed.",free:false},
+];
+
+const genres=['All',...new Set(books.map(b=>b.genre))];
+const bgColors={Fantasy:'#ede9fe',Fiction:'#fce7f3',Self-Help:'#dcfce7','Finance':'#fef9c3',Biography:'#dbeafe',Classic:'#f3f4f6',Dystopia:'#fee2e2',Business:'#cffafe',Technology:'#e0f2fe',History:'#f0fdf4'};
+let wishlist=new Set();let readList=new Set();let activeGenre='All';let currentTab='library';
+try{const w=JSON.parse(localStorage.getItem('booknest_wish')||'[]');wishlist=new Set(w);}catch(e){}
+try{const r=JSON.parse(localStorage.getItem('booknest_read')||'[]');readList=new Set(r);}catch(e){}
+
+function save(){localStorage.setItem('booknest_wish',JSON.stringify([...wishlist]));localStorage.setItem('booknest_read',JSON.stringify([...readList]));}
+
+// Build genres
+document.getElementById('genre-row').innerHTML=genres.map(g=>`<button class="genre-btn${g==='All'?' active':''}" onclick="setGenre('${g}',this)">${g}</button>`).join('');
+
+function setGenre(g,btn){activeGenre=g;document.querySelectorAll('.genre-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderBooks();}
+
+function showTab(t){currentTab=t;document.getElementById('hero').style.display=t==='library'?'block':'none';renderBooks();}
+
+function renderBooks(){
+  const q=document.getElementById('search-input')?.value.toLowerCase()||'';
+  let list=books.filter(b=>{
+    const matchGenre=activeGenre==='All'||b.genre===activeGenre;
+    const matchQ=!q||b.title.toLowerCase().includes(q)||b.author.toLowerCase().includes(q);
+    const matchTab=currentTab==='library'?true:wishlist.has(b.id);
+    return matchGenre&&matchQ&&matchTab;
+  });
+  document.getElementById('section-label').textContent=currentTab==='wishlist'?`Wishlist (${wishlist.size})`:activeGenre==='All'?`All Books (${list.length})`:activeGenre;
+  document.getElementById('wish-count').textContent=wishlist.size;
+  const grid=document.getElementById('books-grid');
+  if(list.length===0){grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:40px;color:#9ca3af;font-size:3rem">📚<p style="font-size:0.9rem;margin-top:8px">No books found</p></div>';return;}
+  grid.innerHTML=list.map(b=>`
+    <div class="book-card" onclick="openModal(${b.id})">
+      <div class="book-cover" style="background:${(bgColors[b.genre])||'#f3e8ff'}">
+        ${b.emoji}
+        ${b.free?'<div class="book-badge badge-free">FREE</div>':''}
+        ${readList.has(b.id)?'<div class="book-badge badge-read" style="top:auto;bottom:10px">READ</div>':''}
+      </div>
+      <div class="book-info">
+        <div class="book-title">${b.title}</div>
+        <div class="book-author">${b.author}</div>
+        <div class="book-footer">
+          <span class="book-genre">${b.genre}</span>
+          <span class="book-rating">⭐ ${b.rating}</span>
+        </div>
+        <div class="book-actions">
+          <button class="action-btn btn-wishlist ${wishlist.has(b.id)?'active':''}" onclick="event.stopPropagation();toggleWish(${b.id})">${wishlist.has(b.id)?'❤️ Saved':'🤍 Save'}</button>
+          <button class="action-btn btn-read ${readList.has(b.id)?'active':''}" onclick="event.stopPropagation();toggleRead(${b.id})">${readList.has(b.id)?'✓ Read':'📖 Read'}</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function toggleWish(id){if(wishlist.has(id))wishlist.delete(id);else wishlist.add(id);save();renderBooks();}
+function toggleRead(id){if(readList.has(id))readList.delete(id);else readList.add(id);save();renderBooks();}
+
+function openModal(id){
+  const b=books.find(x=>x.id===id);
+  document.getElementById('modal-content').innerHTML=`
+    <div class="modal-header">
+      <div class="modal-cover" style="background:${(bgColors[b.genre])||'#f3e8ff'}">${b.emoji}</div>
+      <div>
+        <div class="modal-title">${b.title}</div>
+        <div class="modal-author">by ${b.author}</div>
+        <div class="modal-rating">${'★'.repeat(Math.floor(b.rating))} ${b.rating}/5</div>
+      </div>
+    </div>
+    <div class="modal-body">
+      <p class="modal-desc">${b.desc}</p>
+      <div class="modal-meta">
+        <div class="meta-item"><div class="meta-label">Genre</div><div class="meta-value">${b.genre}</div></div>
+        <div class="meta-item"><div class="meta-label">Pages</div><div class="meta-value">${b.pages}</div></div>
+        <div class="meta-item"><div class="meta-label">Year</div><div class="meta-value">${b.year}</div></div>
+        <div class="meta-item"><div class="meta-label">Access</div><div class="meta-value">${b.free?'🆓 Free':'💳 Premium'}</div></div>
+      </div>
+      <div class="modal-btns">
+        <button class="modal-btn secondary" onclick="toggleWish(${b.id});document.getElementById('modal-overlay').classList.remove('open')">${wishlist.has(b.id)?'❤️ Saved':'🤍 Save'}</button>
+        <button class="modal-btn primary" onclick="toggleRead(${b.id});document.getElementById('modal-overlay').classList.remove('open')">${readList.has(b.id)?'✓ Mark Unread':'📖 Mark Read'}</button>
+      </div>
+    </div>`;
+  document.getElementById('modal-overlay').classList.add('open');
+}
+function closeModal(e){if(!e||e.target===document.getElementById('modal-overlay'))document.getElementById('modal-overlay').classList.remove('open');}
+renderBooks();
+</script>
+</body>
+</html>
