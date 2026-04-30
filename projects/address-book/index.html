@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Address Book</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #3a7bd5 0%, #00d2fc 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            width: 100%;
+            max-width: 1200px;
+            height: 90vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #3a7bd5 0%, #00d2fc 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 40%;
+            border-right: 1px solid #eee;
+            display: flex;
+            flex-direction: column;
+            background: #f9f9f9;
+        }
+
+        .search-box {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #3a7bd5;
+            box-shadow: 0 0 0 3px rgba(58, 123, 213, 0.1);
+        }
+
+        .contact-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .contact-item {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            border-left: 4px solid #3a7bd5;
+            transition: all 0.3s ease;
+            border: 1px solid #eee;
+            border-left: 4px solid #3a7bd5;
+        }
+
+        .contact-item:hover {
+            box-shadow: 0 4px 12px rgba(58, 123, 213, 0.15);
+            transform: translateX(5px);
+        }
+
+        .contact-item.active {
+            background: #e3f2fd;
+            border-left-color: #00d2fc;
+        }
+
+        .contact-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 3px;
+        }
+
+        .contact-phone {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .empty-state {
+            padding: 30px 20px;
+            text-align: center;
+            color: #999;
+        }
+
+        .details-panel {
+            width: 60%;
+            display: flex;
+            flex-direction: column;
+            padding: 30px;
+            background: white;
+            overflow-y: auto;
+        }
+
+        .details-empty {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #999;
+            text-align: center;
+        }
+
+        .details-empty-icon {
+            font-size: 4rem;
+            margin-bottom: 15px;
+        }
+
+        .contact-details {
+            display: none;
+        }
+
+        .contact-details.active {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .detail-name {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .detail-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-edit {
+            background: #3a7bd5;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background: #2a5ca5;
+            transform: translateY(-2px);
+        }
+
+        .btn-delete {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #ff5252;
+            transform: translateY(-2px);
+        }
+
+        .detail-field {
+            margin-bottom: 20px;
+        }
+
+        .detail-label {
+            color: #666;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .detail-value {
+            color: #333;
+            font-size: 1.1rem;
+        }
+
+        .detail-value a {
+            color: #3a7bd5;
+            text-decoration: none;
+        }
+
+        .detail-value a:hover {
+            text-decoration: underline;
+        }
+
+        .btn-add {
+            margin-bottom: 10px;
+            padding: 15px;
+            background: linear-gradient(135deg, #3a7bd5 0%, #00d2fc 100%);
+            color: white;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 10px;
+        }
+
+        .btn-add:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(58, 123, 213, 0.4);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideIn 0.3s ease;
+        }
+
+        .modal-header {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            color: #555;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #3a7bd5;
+            box-shadow: 0 0 0 3px rgba(58, 123, 213, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-save {
+            flex: 1;
+            padding: 15px;
+            background: linear-gradient(135deg, #3a7bd5 0%, #00d2fc 100%);
+            color: white;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-save:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-cancel {
+            flex: 1;
+            padding: 15px;
+            background: #ccc;
+            color: #333;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-cancel:hover {
+            background: #bbb;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid #eee;
+                max-height: 40%;
+            }
+
+            .details-panel {
+                width: 100%;
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📞 Address Book</h1>
+            <p class="subtitle">Manage your contacts efficiently</p>
+        </div>
+
+        <div class="main-content">
+            <div class="sidebar">
+                <div class="search-box">
+                    <input type="text" class="search-input" id="searchInput" placeholder="🔍 Search contacts...">
+                </div>
+                <button class="btn-add" id="addContactBtn">+ New Contact</button>
+                <div class="contact-list" id="contactList">
+                    <div class="empty-state">No contacts yet</div>
+                </div>
+            </div>
+
+            <div class="details-panel">
+                <div class="details-empty" id="detailsEmpty">
+                    <div>
+                        <div class="details-empty-icon">👥</div>
+                        <p>Select a contact to view details</p>
+                    </div>
+                </div>
+                <div class="contact-details" id="contactDetails"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="contactModal">
+        <div class="modal-content">
+            <div class="modal-header" id="modalTitle">Add Contact</div>
+            <form id="contactForm">
+                <div class="form-group">
+                    <label for="formName">Full Name *</label>
+                    <input type="text" id="formName" placeholder="John Doe" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="formPhone">Phone Number</label>
+                    <input type="tel" id="formPhone" placeholder="+1 (555) 123-4567">
+                </div>
+
+                <div class="form-group">
+                    <label for="formEmail">Email Address</label>
+                    <input type="email" id="formEmail" placeholder="john@example.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="formAddress">Address</label>
+                    <input type="text" id="formAddress" placeholder="123 Main St, City, State">
+                </div>
+
+                <div class="form-group">
+                    <label for="formNotes">Notes</label>
+                    <textarea id="formNotes" placeholder="Add any notes..."></textarea>
+                </div>
+
+                <div class="modal-buttons">
+                    <button type="submit" class="btn-save">Save Contact</button>
+                    <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let contacts = JSON.parse(localStorage.getItem('contacts')) || [];
+        let selectedContactId = null;
+        let editingId = null;
+
+        const contactList = document.getElementById('contactList');
+        const detailsPanel = document.getElementById('contactDetails');
+        const detailsEmpty = document.getElementById('detailsEmpty');
+        const contactModal = document.getElementById('contactModal');
+        const contactForm = document.getElementById('contactForm');
+        const searchInput = document.getElementById('searchInput');
+        const addContactBtn = document.getElementById('addContactBtn');
+
+        addContactBtn.addEventListener('click', () => openModal());
+
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            saveContact();
+        });
+
+        searchInput.addEventListener('input', renderContacts);
+
+        function openModal(id = null) {
+            editingId = id;
+            if (id) {
+                const contact = contacts.find(c => c.id === id);
+                document.getElementById('modalTitle').textContent = 'Edit Contact';
+                document.getElementById('formName').value = contact.name;
+                document.getElementById('formPhone').value = contact.phone;
+                document.getElementById('formEmail').value = contact.email;
+                document.getElementById('formAddress').value = contact.address;
+                document.getElementById('formNotes').value = contact.notes;
+            } else {
+                document.getElementById('modalTitle').textContent = 'Add Contact';
+                contactForm.reset();
+            }
+            contactModal.classList.add('active');
+        }
+
+        function closeModal() {
+            contactModal.classList.remove('active');
+            editingId = null;
+        }
+
+        function saveContact() {
+            const contact = {
+                name: document.getElementById('formName').value,
+                phone: document.getElementById('formPhone').value,
+                email: document.getElementById('formEmail').value,
+                address: document.getElementById('formAddress').value,
+                notes: document.getElementById('formNotes').value
+            };
+
+            if (editingId) {
+                const idx = contacts.findIndex(c => c.id === editingId);
+                contacts[idx] = { ...contacts[idx], ...contact };
+            } else {
+                contacts.push({ id: Date.now(), ...contact });
+            }
+
+            saveContacts();
+            renderContacts();
+            closeModal();
+        }
+
+        function deleteContact(id) {
+            if (confirm('Delete this contact?')) {
+                contacts = contacts.filter(c => c.id !== id);
+                saveContacts();
+                selectedContactId = null;
+                detailsEmpty.style.display = 'block';
+                detailsPanel.classList.remove('active');
+                renderContacts();
+            }
+        }
+
+        function selectContact(id) {
+            selectedContactId = id;
+            const contact = contacts.find(c => c.id === id);
+
+            detailsEmpty.style.display = 'none';
+            detailsPanel.innerHTML = `
+                <div class="contact-details active">
+                    <div class="detail-header">
+                        <div class="detail-name">${contact.name}</div>
+                        <div class="detail-actions">
+                            <button class="btn-edit" onclick="openModal(${contact.id})">Edit</button>
+                            <button class="btn-delete" onclick="deleteContact(${contact.id})">Delete</button>
+                        </div>
+                    </div>
+                    ${contact.phone ? `
+                        <div class="detail-field">
+                            <div class="detail-label">📞 Phone</div>
+                            <div class="detail-value"><a href="tel:${contact.phone}">${contact.phone}</a></div>
+                        </div>
+                    ` : ''}
+                    ${contact.email ? `
+                        <div class="detail-field">
+                            <div class="detail-label">📧 Email</div>
+                            <div class="detail-value"><a href="mailto:${contact.email}">${contact.email}</a></div>
+                        </div>
+                    ` : ''}
+                    ${contact.address ? `
+                        <div class="detail-field">
+                            <div class="detail-label">📍 Address</div>
+                            <div class="detail-value">${contact.address}</div>
+                        </div>
+                    ` : ''}
+                    ${contact.notes ? `
+                        <div class="detail-field">
+                            <div class="detail-label">📝 Notes</div>
+                            <div class="detail-value">${contact.notes}</div>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        function renderContacts() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const filtered = contacts.filter(c => 
+                c.name.toLowerCase().includes(searchTerm) || 
+                c.phone.toLowerCase().includes(searchTerm) ||
+                c.email.toLowerCase().includes(searchTerm)
+            );
+
+            if (filtered.length === 0) {
+                contactList.innerHTML = '<div class="empty-state">No contacts found</div>';
+                return;
+            }
+
+            contactList.innerHTML = filtered.map(contact => `
+                <div class="contact-item ${contact.id === selectedContactId ? 'active' : ''}" 
+                     onclick="selectContact(${contact.id})">
+                    <div class="contact-name">${contact.name}</div>
+                    <div class="contact-phone">${contact.phone || contact.email || 'No contact info'}</div>
+                </div>
+            `).join('');
+        }
+
+        function saveContacts() {
+            localStorage.setItem('contacts', JSON.stringify(contacts));
+        }
+
+        // Close modal when clicking outside
+        contactModal.addEventListener('click', (e) => {
+            if (e.target === contactModal) closeModal();
+        });
+
+        renderContacts();
+    </script>
+</body>
+</html>

@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Notice Board</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ffa502 0%, #ff6b6b 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .search-box {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            width: 300px;
+            font-size: 1rem;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .search-box:focus {
+            outline: none;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-add-notice {
+            padding: 12px 25px;
+            background: white;
+            color: #ff6b6b;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-add-notice:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .notice-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border-left: 5px solid;
+            animation: popIn 0.3s ease;
+        }
+
+        @keyframes popIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9) rotateZ(-2deg);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) rotateZ(0deg);
+            }
+        }
+
+        .notice-card:hover {
+            transform: translateY(-5px) rotateZ(1deg);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .notice-card.priority-high {
+            border-left-color: #ff6b6b;
+            background: linear-gradient(135deg, #fff5f5 0%, white 100%);
+        }
+
+        .notice-card.priority-medium {
+            border-left-color: #ffa502;
+            background: linear-gradient(135deg, #fff8f0 0%, white 100%);
+        }
+
+        .notice-card.priority-low {
+            border-left-color: #4caf50;
+            background: linear-gradient(135deg, #f5fff5 0%, white 100%);
+        }
+
+        .notice-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            gap: 10px;
+        }
+
+        .notice-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #333;
+            word-break: break-word;
+            flex: 1;
+        }
+
+        .priority-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            white-space: nowrap;
+            letter-spacing: 0.5px;
+        }
+
+        .priority-high {
+            background: #ffcdd2;
+            color: #c62828;
+        }
+
+        .priority-medium {
+            background: #ffe0b2;
+            color: #e65100;
+        }
+
+        .priority-low {
+            background: #c8e6c9;
+            color: #2e7d32;
+        }
+
+        .notice-content {
+            color: #555;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 15px;
+            max-height: 100px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+        }
+
+        .notice-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            color: #999;
+            padding-top: 12px;
+            border-top: 1px solid #eee;
+        }
+
+        .notice-date {
+            flex: 1;
+        }
+
+        .notice-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-edit,
+        .btn-delete {
+            padding: 6px 10px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 0.8rem;
+        }
+
+        .btn-edit {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background: #764ba2;
+        }
+
+        .btn-delete {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #ff5252;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 80px 40px;
+            color: white;
+        }
+
+        .empty-state-icon {
+            font-size: 5rem;
+            margin-bottom: 20px;
+        }
+
+        .empty-state-text {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        .empty-state-subtext {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #555;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        input[type="text"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-save {
+            flex: 1;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-cancel {
+            flex: 1;
+            padding: 15px;
+            background: #ccc;
+            color: #333;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-cancel:hover {
+            background: #bbb;
+        }
+
+        @media (max-width: 600px) {
+            .board {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .btn-add-notice {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📌 Virtual Notice Board</h1>
+            <p class="subtitle">Share announcements and important notices</p>
+        </div>
+
+        <div class="controls">
+            <input type="text" class="search-box" id="searchInput" placeholder="🔍 Search notices...">
+            <button class="btn-add-notice" id="addBtn">+ Add Notice</button>
+        </div>
+
+        <div class="board" id="board">
+            <div class="empty-state">
+                <div class="empty-state-icon">📋</div>
+                <div class="empty-state-text">No notices yet</div>
+                <div class="empty-state-subtext">Create your first notice to get started!</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="noticeModal">
+        <div class="modal-content">
+            <h2 class="modal-title" id="modalTitle">Add Notice</h2>
+            <form id="noticeForm">
+                <div class="form-group">
+                    <label for="noticeTitle">Title *</label>
+                    <input type="text" id="noticeTitle" placeholder="Notice title" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="noticeContent">Content *</label>
+                    <textarea id="noticeContent" placeholder="Write your notice..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="noticePriority">Priority</label>
+                    <select id="noticePriority">
+                        <option value="low">Low</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+
+                <div class="modal-buttons">
+                    <button type="submit" class="btn-save">Save Notice</button>
+                    <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let notices = JSON.parse(localStorage.getItem('notices')) || [];
+        let editingId = null;
+
+        const modal = document.getElementById('noticeModal');
+        const board = document.getElementById('board');
+        const form = document.getElementById('noticeForm');
+        const searchInput = document.getElementById('searchInput');
+        const addBtn = document.getElementById('addBtn');
+
+        addBtn.addEventListener('click', () => openModal());
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            saveNotice();
+        });
+        searchInput.addEventListener('input', renderNotices);
+
+        function openModal(id = null) {
+            editingId = id;
+            form.reset();
+
+            if (id) {
+                const notice = notices.find(n => n.id === id);
+                document.getElementById('modalTitle').textContent = 'Edit Notice';
+                document.getElementById('noticeTitle').value = notice.title;
+                document.getElementById('noticeContent').value = notice.content;
+                document.getElementById('noticePriority').value = notice.priority;
+            } else {
+                document.getElementById('modalTitle').textContent = 'Add Notice';
+            }
+
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+            editingId = null;
+        }
+
+        function saveNotice() {
+            const notice = {
+                title: document.getElementById('noticeTitle').value,
+                content: document.getElementById('noticeContent').value,
+                priority: document.getElementById('noticePriority').value
+            };
+
+            if (editingId) {
+                const idx = notices.findIndex(n => n.id === editingId);
+                notices[idx] = { ...notices[idx], ...notice };
+            } else {
+                notices.unshift({
+                    id: Date.now(),
+                    ...notice,
+                    createdAt: new Date().toLocaleDateString()
+                });
+            }
+
+            saveNotices();
+            renderNotices();
+            closeModal();
+        }
+
+        function deleteNotice(id) {
+            if (confirm('Delete this notice?')) {
+                notices = notices.filter(n => n.id !== id);
+                saveNotices();
+                renderNotices();
+            }
+        }
+
+        function renderNotices() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const filtered = notices.filter(n =>
+                n.title.toLowerCase().includes(searchTerm) ||
+                n.content.toLowerCase().includes(searchTerm)
+            );
+
+            if (filtered.length === 0) {
+                board.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📋</div>
+                        <div class="empty-state-text">No notices found</div>
+                        <div class="empty-state-subtext">Try a different search or create a new notice!</div>
+                    </div>
+                `;
+                return;
+            }
+
+            board.innerHTML = filtered.map(notice => `
+                <div class="notice-card priority-${notice.priority}">
+                    <div class="notice-header">
+                        <h3 class="notice-title">${notice.title}</h3>
+                        <span class="priority-badge priority-${notice.priority}">
+                            ${notice.priority}
+                        </span>
+                    </div>
+                    <p class="notice-content">${notice.content}</p>
+                    <div class="notice-meta">
+                        <span class="notice-date">${notice.createdAt}</span>
+                        <div class="notice-actions">
+                            <button class="btn-edit" onclick="openModal(${notice.id})">Edit</button>
+                            <button class="btn-delete" onclick="deleteNotice(${notice.id})">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function saveNotices() {
+            localStorage.setItem('notices', JSON.stringify(notices));
+        }
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+
+        renderNotices();
+    </script>
+</body>
+</html>
