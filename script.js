@@ -106,8 +106,7 @@ const projects = [
 
 { name: "Tourism Static Website", description: "Tourism website using HTML/CSS.", image: "./assets/tourism.png", live: "./projects/tourism-static-website/index.html", code: "https://github.com/gauravthombre/Gaurav-Projects-Lab-FSD/tree/main/projects/tourism-static-website" },
 
-{ name: "Weight Converter", description: "Converts weight units.", image: "./assets/weight-converter.png", live: "./projects/weight-converter/index.html", code: "https://github.com/gauravthombre/Gaurav-Projects-Lab-FSD/tree/main/projects/weight-converter" }
-
+{ name: "Weight Converter", description: "Converts weight units.", image: "./assets/weight-converter.png", live: "./projects/weight-converter/index.html", code: "https://github.com/gauravthombre/Gaurav-Projects-Lab-FSD/tree/main/projects/weight-converter" },
 {
     name: "Clothing Store",
     description: "Fashion e-commerce website with product listing and UI interactions.",
