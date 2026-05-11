@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StockPilot — Inventory Management</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d1a;
+    --purple: #7c6ff7;
+    --teal: #4fd1c5;
+    --amber: #f6a623;
+    --red: #f56565;
+    --green: #48bb78;
+    --glass: rgba(255,255,255,0.06);
+    --glass-border: rgba(255,255,255,0.12);
+    --text: #e8e8f0;
+    --muted: rgba(232,232,240,0.5);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); font-family:'Outfit',sans-serif; color:var(--text); overflow-x:hidden; }
+  .orb { position:fixed; border-radius:50%; filter:blur(100px); opacity:0.14; pointer-events:none; animation:drift 14s ease-in-out infinite alternate; }
+  .orb1 { width:500px;height:500px;background:var(--teal);top:-120px;right:-80px; }
+  .orb2 { width:400px;height:400px;background:var(--purple);bottom:-100px;left:-80px;animation-delay:-7s; }
+  @keyframes drift { from{transform:translate(0,0)} to{transform:translate(20px,14px)} }
+
+  .sidebar { position:fixed;left:0;top:0;height:100vh;width:240px;background:rgba(13,13,26,0.88);backdrop-filter:blur(24px);border-right:1px solid var(--glass-border);display:flex;flex-direction:column;padding:24px 16px;z-index:100; }
+  .logo { font-size:20px;font-weight:700;margin-bottom:8px; }
+  .logo .stock { color:var(--teal); }
+  .logo-sub { font-size:10px;color:var(--muted);font-family:'Fira Code';letter-spacing:2px;margin-bottom:28px; }
+  .nav-group { font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;padding:0 8px;margin:16px 0 6px; }
+  .nav-item { display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;cursor:pointer;color:var(--muted);font-size:13px;transition:all 0.2s;margin-bottom:2px; }
+  .nav-item:hover, .nav-item.active { background:var(--glass);border:1px solid var(--glass-border);color:var(--text); }
+  .nav-item.active { color:var(--teal);border-color:rgba(79,209,197,0.3); }
+  .nav-badge { margin-left:auto;font-size:9px;padding:1px 7px;border-radius:999px;font-family:'Fira Code'; }
+  .badge-red { background:var(--red);color:white; }
+  .badge-amber { background:var(--amber);color:#1a1a00; }
+  .sidebar-footer { margin-top:auto; }
+  .user-pill { display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;background:var(--glass);border:1px solid var(--glass-border); }
+  .avatar { width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--purple));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:white; }
+
+  .main { margin-left:240px;padding:28px 32px;min-height:100vh; }
+  .topbar { display:flex;align-items:center;justify-content:space-between;margin-bottom:26px; }
+  .page-head h1 { font-size:26px;font-weight:700; }
+  .page-head p { font-size:13px;color:var(--muted);margin-top:2px; }
+  .topbar-actions { display:flex;gap:10px; }
+  .btn { padding:9px 18px;border-radius:9px;border:none;font-family:'Outfit';font-size:12px;font-weight:500;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:6px; }
+  .btn-primary { background:linear-gradient(135deg,var(--teal),#38b2ac);color:#0d0d1a;font-weight:700;box-shadow:0 4px 16px rgba(79,209,197,0.3); }
+  .btn-primary:hover { transform:translateY(-1px);box-shadow:0 6px 24px rgba(79,209,197,0.45); }
+  .btn-ghost { background:var(--glass);border:1px solid var(--glass-border);color:var(--text); }
+  .btn-red { background:rgba(245,101,101,0.15);border:1px solid rgba(245,101,101,0.3);color:var(--red); }
+
+  /* KPIs */
+  .kpi-row { display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px; }
+  .kpi { background:var(--glass);border:1px solid var(--glass-border);backdrop-filter:blur(18px);border-radius:14px;padding:18px;position:relative;overflow:hidden;animation:up 0.5s ease both; }
+  .kpi:nth-child(1){animation-delay:0.05s} .kpi:nth-child(2){animation-delay:0.1s} .kpi:nth-child(3){animation-delay:0.15s} .kpi:nth-child(4){animation-delay:0.2s}
+  @keyframes up { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+  .kpi-glow { position:absolute;top:-30px;right:-30px;width:90px;height:90px;border-radius:50%;opacity:0.12;filter:blur(24px); }
+  .kpi-label { font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px; }
+  .kpi-value { font-size:28px;font-weight:700;font-family:'Fira Code'; }
+  .kpi-sub { font-size:11px;margin-top:4px; }
+  .c-teal { color:var(--teal); }
+  .c-purple { color:var(--purple); }
+  .c-amber { color:var(--amber); }
+  .c-red { color:var(--red); }
+  .c-green { color:var(--green); }
+
+  /* Alerts */
+  .alerts-row { display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:22px; }
+  .alert-card { background:var(--glass);border:1px solid var(--glass-border);backdrop-filter:blur(18px);border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:12px; }
+  .alert-card.danger { border-color:rgba(245,101,101,0.35);background:rgba(245,101,101,0.05); }
+  .alert-card.warning { border-color:rgba(246,166,35,0.35);background:rgba(246,166,35,0.05); }
+  .alert-card.info { border-color:rgba(124,111,247,0.35);background:rgba(124,111,247,0.05); }
+  .alert-icon { font-size:22px; }
+  .alert-text { font-size:13px;font-weight:500; }
+  .alert-sub { font-size:11px;color:var(--muted);margin-top:2px; }
+
+  /* Table Section */
+  .table-section { background:var(--glass);border:1px solid var(--glass-border);backdrop-filter:blur(18px);border-radius:16px;padding:22px;margin-bottom:20px;animation:up 0.5s 0.25s ease both; }
+  .table-header { display:flex;align-items:center;justify-content:space-between;margin-bottom:18px; }
+  .section-title { font-size:15px;font-weight:600; }
+  .table-tools { display:flex;gap:8px;align-items:center; }
+  .search-input { background:var(--glass);border:1px solid var(--glass-border);color:var(--text);font-family:'Outfit';font-size:13px;padding:7px 12px;border-radius:8px;outline:none;width:200px;transition:border-color 0.2s; }
+  .search-input:focus { border-color:var(--teal); }
+  .search-input::placeholder { color:var(--muted); }
+  .filter-btn { padding:7px 12px;border-radius:8px;background:var(--glass);border:1px solid var(--glass-border);color:var(--muted);cursor:pointer;font-size:12px;transition:all 0.2s; }
+  .filter-btn.active { border-color:var(--teal);color:var(--teal); }
+
+  table { width:100%;border-collapse:collapse; }
+  th { font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);padding:8px 14px;text-align:left;border-bottom:1px solid var(--glass-border); }
+  td { padding:13px 14px;font-size:13px;border-bottom:1px solid rgba(255,255,255,0.04);transition:background 0.15s; }
+  tr:hover td { background:rgba(255,255,255,0.02); }
+  tr:last-child td { border-bottom:none; }
+  .item-cell { display:flex;align-items:center;gap:10px; }
+  .item-icon { width:36px;height:36px;border-radius:10px;background:var(--glass);border:1px solid var(--glass-border);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0; }
+  .item-name { font-weight:500;font-size:13px; }
+  .item-sku { font-size:10px;color:var(--muted);font-family:'Fira Code';margin-top:2px; }
+  .stock-bar-wrap { display:flex;align-items:center;gap:8px; }
+  .stock-bar { width:80px;height:6px;background:rgba(255,255,255,0.08);border-radius:999px;overflow:hidden; }
+  .stock-fill { height:100%;border-radius:999px;transition:width 0.5s ease; }
+  .stock-num { font-family:'Fira Code';font-size:12px; }
+  .status-pill { display:inline-block;padding:3px 10px;border-radius:999px;font-size:10px;font-family:'Fira Code'; }
+  .s-in { background:rgba(72,187,120,0.15);color:var(--green);border:1px solid rgba(72,187,120,0.3); }
+  .s-low { background:rgba(246,166,35,0.15);color:var(--amber);border:1px solid rgba(246,166,35,0.3); }
+  .s-out { background:rgba(245,101,101,0.15);color:var(--red);border:1px solid rgba(245,101,101,0.3); }
+  .action-btn { padding:5px 10px;border-radius:6px;border:1px solid var(--glass-border);background:var(--glass);color:var(--muted);cursor:pointer;font-size:11px;transition:all 0.2s;margin-right:4px; }
+  .action-btn:hover { color:var(--teal);border-color:var(--teal); }
+
+  /* Bottom Grid */
+  .bottom-grid { display:grid;grid-template-columns:1fr 1fr;gap:18px; }
+  .panel { background:var(--glass);border:1px solid var(--glass-border);backdrop-filter:blur(18px);border-radius:14px;padding:20px;animation:up 0.5s 0.4s ease both; }
+  .panel-title { font-size:14px;font-weight:600;margin-bottom:16px; }
+
+  /* Category Chart */
+  .cat-item { display:flex;align-items:center;gap:10px;margin-bottom:12px; }
+  .cat-label { font-size:12px;width:100px;flex-shrink:0; }
+  .cat-bar { flex:1;height:8px;background:rgba(255,255,255,0.06);border-radius:999px;overflow:hidden; }
+  .cat-fill { height:100%;border-radius:999px; }
+  .cat-pct { font-size:11px;font-family:'Fira Code';color:var(--muted);width:36px;text-align:right; }
+
+  /* Recent Transactions */
+  .txn-item { display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--glass-border); }
+  .txn-item:last-child { border-bottom:none; }
+  .txn-icon { width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0; }
+  .txn-in { background:rgba(72,187,120,0.15); }
+  .txn-out { background:rgba(245,101,101,0.15); }
+  .txn-adj { background:rgba(124,111,247,0.15); }
+  .txn-text { flex:1;font-size:12px; }
+  .txn-name { font-weight:500; }
+  .txn-time { font-size:10px;color:var(--muted); }
+  .txn-qty { font-family:'Fira Code';font-size:12px;font-weight:600; }
+
+  /* Modal */
+  .modal-overlay { display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(8px);z-index:200;align-items:center;justify-content:center; }
+  .modal-overlay.open { display:flex; }
+  .modal { background:rgba(16,16,28,0.97);border:1px solid var(--glass-border);border-radius:20px;width:560px;padding:30px;animation:mIn 0.3s ease; }
+  @keyframes mIn { from{opacity:0;transform:scale(0.96)} to{opacity:1;transform:scale(1)} }
+  .modal-header { display:flex;justify-content:space-between;align-items:center;margin-bottom:22px; }
+  .modal-title { font-size:20px;font-weight:700; }
+  .close-btn { background:none;border:none;color:var(--muted);cursor:pointer;font-size:18px; }
+  .form-grid { display:grid;grid-template-columns:1fr 1fr;gap:14px; }
+  .form-group { margin-bottom:16px; }
+  .form-label { font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:6px; }
+  .form-input, .form-select { width:100%;padding:10px 12px;background:var(--glass);border:1px solid var(--glass-border);border-radius:9px;color:var(--text);font-family:'Outfit';font-size:13px;outline:none;transition:border-color 0.2s; }
+  .form-input:focus { border-color:var(--teal); }
+  .form-select option { background:#1a1a2e; }
+  .modal-footer { display:flex;justify-content:end;gap:10px;margin-top:20px; }
+  .toast { position:fixed;bottom:24px;right:24px;background:rgba(16,16,28,0.97);border:1px solid var(--teal);border-radius:10px;padding:12px 20px;font-size:13px;color:var(--teal);z-index:999;display:none; }
+</style>
+</head>
+<body>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+
+<aside class="sidebar">
+  <div class="logo"><span class="stock">Stock</span>Pilot</div>
+  <div class="logo-sub">INVENTORY SYSTEM</div>
+  <div class="nav-group">Main</div>
+  <div class="nav-item active" onclick="setNav(this)">📊 Dashboard</div>
+  <div class="nav-item" onclick="setNav(this)">📦 Products <span class="nav-badge badge-amber">248</span></div>
+  <div class="nav-item" onclick="setNav(this)">⚠️ Low Stock <span class="nav-badge badge-red">12</span></div>
+  <div class="nav-item" onclick="setNav(this)">📋 Orders</div>
+  <div class="nav-group">Warehouse</div>
+  <div class="nav-item" onclick="setNav(this)">🏭 Warehouses</div>
+  <div class="nav-item" onclick="setNav(this)">🚚 Suppliers</div>
+  <div class="nav-item" onclick="setNav(this)">📥 Receive Stock</div>
+  <div class="nav-item" onclick="setNav(this)">📤 Dispatch</div>
+  <div class="nav-group">Reports</div>
+  <div class="nav-item" onclick="setNav(this)">📈 Analytics</div>
+  <div class="nav-item" onclick="setNav(this)">🧾 Audit Log</div>
+  <div class="nav-item" onclick="setNav(this)">⚙️ Settings</div>
+  <div class="sidebar-footer">
+    <div class="user-pill">
+      <div class="avatar">S</div>
+      <div style="flex:1">
+        <div style="font-size:12px;font-weight:600">Shriram</div>
+        <div style="font-size:10px;color:var(--muted)">Inventory Manager</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<main class="main">
+  <div class="topbar">
+    <div class="page-head">
+      <h1>Inventory Dashboard</h1>
+      <p>Real-time stock tracking · Last synced 2 min ago</p>
+    </div>
+    <div class="topbar-actions">
+      <button class="btn btn-ghost">📥 Import CSV</button>
+      <button class="btn btn-ghost">📤 Export</button>
+      <button class="btn btn-primary" onclick="openModal()">+ Add Product</button>
+    </div>
+  </div>
+
+  <!-- KPIs -->
+  <div class="kpi-row">
+    <div class="kpi">
+      <div class="kpi-glow" style="background:var(--teal)"></div>
+      <div class="kpi-label">Total Products</div>
+      <div class="kpi-value c-teal">248</div>
+      <div class="kpi-sub c-green">↑ 14 added this week</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-glow" style="background:var(--purple)"></div>
+      <div class="kpi-label">Total Stock Value</div>
+      <div class="kpi-value c-purple">₹18.4L</div>
+      <div class="kpi-sub c-green">↑ ₹2.1L vs last month</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-glow" style="background:var(--amber)"></div>
+      <div class="kpi-label">Low Stock Items</div>
+      <div class="kpi-value c-amber">12</div>
+      <div class="kpi-sub c-red">⚠ Reorder required</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-glow" style="background:var(--red)"></div>
+      <div class="kpi-label">Out of Stock</div>
+      <div class="kpi-value c-red">3</div>
+      <div class="kpi-sub c-muted" style="color:var(--muted)">Across 2 warehouses</div>
+    </div>
+  </div>
+
+  <!-- Alerts -->
+  <div class="alerts-row">
+    <div class="alert-card danger">
+      <div class="alert-icon">🚨</div>
+      <div><div class="alert-text">3 Items Out of Stock</div><div class="alert-sub">Immediate reorder needed</div></div>
+    </div>
+    <div class="alert-card warning">
+      <div class="alert-icon">⚠️</div>
+      <div><div class="alert-text">12 Items Below Threshold</div><div class="alert-sub">Review reorder points</div></div>
+    </div>
+    <div class="alert-card info">
+      <div class="alert-icon">📦</div>
+      <div><div class="alert-text">Shipment Arriving Today</div><div class="alert-sub">From Reliance Suppliers · 240 units</div></div>
+    </div>
+  </div>
+
+  <!-- Inventory Table -->
+  <div class="table-section">
+    <div class="table-header">
+      <div class="section-title">📦 Product Inventory</div>
+      <div class="table-tools">
+        <input class="search-input" placeholder="🔍 Search products..." oninput="filterTable(this.value)">
+        <button class="filter-btn active" onclick="filterBtn(this,'all')">All</button>
+        <button class="filter-btn" onclick="filterBtn(this,'in')">In Stock</button>
+        <button class="filter-btn" onclick="filterBtn(this,'low')">Low Stock</button>
+        <button class="filter-btn" onclick="filterBtn(this,'out')">Out of Stock</button>
+      </div>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Category</th>
+          <th>Stock Level</th>
+          <th>Unit Price</th>
+          <th>Total Value</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="inventory-table"></tbody>
+    </table>
+  </div>
+
+  <div class="bottom-grid">
+    <!-- Category Breakdown -->
+    <div class="panel">
+      <div class="panel-title">📂 Stock by Category</div>
+      <div id="categories"></div>
+    </div>
+    <!-- Recent Transactions -->
+    <div class="panel">
+      <div class="panel-title">🔄 Recent Transactions</div>
+      <div id="transactions"></div>
+    </div>
+  </div>
+</main>
+
+<!-- Add Product Modal -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Add New Product</div>
+      <button class="close-btn" onclick="closeModal()">✕</button>
+    </div>
+    <div class="form-group"><label class="form-label">Product Name</label><input class="form-input" id="p-name" placeholder="e.g. Wireless Keyboard"></div>
+    <div class="form-grid">
+      <div class="form-group"><label class="form-label">SKU</label><input class="form-input" id="p-sku" placeholder="SKU-001"></div>
+      <div class="form-group"><label class="form-label">Category</label>
+        <select class="form-select" id="p-cat"><option>Electronics</option><option>Furniture</option><option>Stationery</option><option>Clothing</option><option>Food</option></select>
+      </div>
+    </div>
+    <div class="form-grid">
+      <div class="form-group"><label class="form-label">Quantity</label><input class="form-input" id="p-qty" type="number" placeholder="0"></div>
+      <div class="form-group"><label class="form-label">Reorder Level</label><input class="form-input" id="p-reorder" type="number" placeholder="10"></div>
+    </div>
+    <div class="form-grid">
+      <div class="form-group"><label class="form-label">Unit Price (₹)</label><input class="form-input" id="p-price" type="number" placeholder="999"></div>
+      <div class="form-group"><label class="form-label">Supplier</label><input class="form-input" id="p-supplier" placeholder="Supplier name"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="addProduct()">+ Add Product</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast">✓ Product added!</div>
+
+<script>
+let products = [
+  { icon:'💻', name:'MacBook Pro M3', sku:'SKU-001', cat:'Electronics', qty:24, reorder:10, price:189999, status:'in' },
+  { icon:'⌨️', name:'Logitech MX Keys', sku:'SKU-002', cat:'Electronics', qty:8, reorder:15, price:8999, status:'low' },
+  { icon:'🖱️', name:'MX Master 3S Mouse', sku:'SKU-003', cat:'Electronics', qty:0, reorder:10, price:9999, status:'out' },
+  { icon:'🪑', name:'Ergonomic Office Chair', sku:'SKU-004', cat:'Furniture', qty:42, reorder:5, price:24999, status:'in' },
+  { icon:'📱', name:'iPhone 15 Pro Max', sku:'SKU-005', cat:'Electronics', qty:6, reorder:10, price:159900, status:'low' },
+  { icon:'🖨️', name:'HP LaserJet Pro', sku:'SKU-006', cat:'Electronics', qty:15, reorder:5, price:32000, status:'in' },
+  { icon:'📋', name:'A4 Paper Ream (500s)', sku:'SKU-007', cat:'Stationery', qty:200, reorder:50, price:450, status:'in' },
+  { icon:'🖥️', name:'Dell 27" 4K Monitor', sku:'SKU-008', cat:'Electronics', qty:0, reorder:5, price:54999, status:'out' },
+  { icon:'🪴', name:'Standing Desk', sku:'SKU-009', cat:'Furniture', qty:7, reorder:8, price:34999, status:'low' },
+  { icon:'🎧', name:'Sony WH-1000XM5', sku:'SKU-010', cat:'Electronics', qty:18, reorder:10, price:29990, status:'in' },
+];
+
+const statusLabels = { in:'In Stock', low:'Low Stock', out:'Out of Stock' };
+const statusClass = { in:'s-in', low:'s-low', out:'s-out' };
+
+function renderTable(data) {
+  document.getElementById('inventory-table').innerHTML = data.map((p,i) => {
+    const pct = p.status==='out'?0:Math.min(100, Math.round((p.qty/Math.max(p.reorder*3,1))*100));
+    const barColor = p.status==='in'?'var(--green)': p.status==='low'?'var(--amber)':'var(--red)';
+    const totalVal = (p.qty * p.price).toLocaleString('en-IN');
+    return `<tr>
+      <td><div class="item-cell"><div class="item-icon">${p.icon}</div><div><div class="item-name">${p.name}</div><div class="item-sku">${p.sku}</div></div></div></td>
+      <td style="color:var(--muted);font-size:12px">${p.cat}</td>
+      <td><div class="stock-bar-wrap"><div class="stock-bar"><div class="stock-fill" style="width:${pct}%;background:${barColor}"></div></div><span class="stock-num" style="color:${barColor}">${p.qty}</span></div></td>
+      <td style="font-family:'Fira Code';font-size:12px">₹${p.price.toLocaleString('en-IN')}</td>
+      <td style="font-family:'Fira Code';font-size:12px;color:var(--teal)">₹${totalVal}</td>
+      <td><span class="status-pill ${statusClass[p.status]}">${statusLabels[p.status]}</span></td>
+      <td>
+        <button class="action-btn" onclick="adjustStock(${i})">±</button>
+        <button class="action-btn" onclick="reorder(${i})">🔄</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+let currentFilter = 'all';
+function filterTable(q) {
+  const filtered = products.filter(p=>p.name.toLowerCase().includes(q.toLowerCase())||p.sku.toLowerCase().includes(q.toLowerCase()));
+  renderTable(currentFilter==='all'?filtered:filtered.filter(p=>p.status===currentFilter));
+}
+function filterBtn(el, f) {
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  currentFilter = f;
+  renderTable(f==='all'?products:products.filter(p=>p.status===f));
+}
+
+const categories = [
+  { name:'Electronics', pct:62, color:'var(--purple)' },
+  { name:'Furniture', pct:18, color:'var(--teal)' },
+  { name:'Stationery', pct:12, color:'var(--amber)' },
+  { name:'Clothing', pct:5, color:'var(--green)' },
+  { name:'Food & FMCG', pct:3, color:'var(--red)' },
+];
+document.getElementById('categories').innerHTML = categories.map(c=>`
+  <div class="cat-item">
+    <div class="cat-label">${c.name}</div>
+    <div class="cat-bar"><div class="cat-fill" style="width:${c.pct}%;background:${c.color}"></div></div>
+    <div class="cat-pct">${c.pct}%</div>
+  </div>
+`).join('');
+
+const transactions = [
+  { type:'in', icon:'📥', name:'Received 50x Logitech MX Keys', time:'Today, 10:15 AM', qty:'+50', color:'var(--green)' },
+  { type:'out', icon:'📤', name:'Dispatched 12x iPhone 15 Pro', time:'Today, 9:30 AM', qty:'-12', color:'var(--red)' },
+  { type:'adj', icon:'✏️', name:'Adjusted: Dell Monitor qty corrected', time:'Yesterday, 3:00 PM', qty:'Δ -2', color:'var(--purple)' },
+  { type:'in', icon:'📥', name:'Received 100x A4 Paper Reams', time:'Yesterday, 1:00 PM', qty:'+100', color:'var(--green)' },
+  { type:'out', icon:'📤', name:'Dispatched 5x Ergonomic Chairs', time:'May 5, 2025', qty:'-5', color:'var(--red)' },
+];
+document.getElementById('transactions').innerHTML = transactions.map(t=>`
+  <div class="txn-item">
+    <div class="txn-icon txn-${t.type}">${t.icon}</div>
+    <div class="txn-text"><div class="txn-name">${t.name}</div><div class="txn-time">${t.time}</div></div>
+    <div class="txn-qty" style="color:${t.color}">${t.qty}</div>
+  </div>
+`).join('');
+
+function setNav(el) { document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active')); el.classList.add('active'); }
+function openModal() { document.getElementById('modal').classList.add('open'); }
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
+function addProduct() {
+  const name = document.getElementById('p-name').value;
+  const sku = document.getElementById('p-sku').value;
+  const cat = document.getElementById('p-cat').value;
+  const qty = parseInt(document.getElementById('p-qty').value)||0;
+  const reorder = parseInt(document.getElementById('p-reorder').value)||10;
+  const price = parseFloat(document.getElementById('p-price').value)||0;
+  if (!name) { alert('Product name required'); return; }
+  const status = qty===0?'out':qty<=reorder?'low':'in';
+  products.unshift({ icon:'📦', name, sku:sku||'SKU-NEW', cat, qty, reorder, price, status });
+  renderTable(products);
+  closeModal();
+  const t = document.getElementById('toast');
+  t.textContent = `✓ ${name} added to inventory`;
+  t.style.display='block';
+  setTimeout(()=>t.style.display='none',3000);
+}
+function adjustStock(i) {
+  const n = parseInt(prompt(`Adjust stock for "${products[i].name}" (current: ${products[i].qty})\nEnter new quantity:`));
+  if (isNaN(n)) return;
+  products[i].qty = Math.max(0,n);
+  products[i].status = n===0?'out':n<=products[i].reorder?'low':'in';
+  renderTable(products);
+}
+function reorder(i) {
+  const t = document.getElementById('toast');
+  t.textContent = `✓ Reorder request sent for ${products[i].name}`;
+  t.style.display='block';
+  setTimeout(()=>t.style.display='none',3000);
+}
+
+renderTable(products);
+</script>
+</body>
+</html>

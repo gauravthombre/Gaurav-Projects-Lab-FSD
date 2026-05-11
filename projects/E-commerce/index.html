@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ShopNest — E-Commerce Store</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-brand">🛍️ ShopNest</div>
+    <div class="nav-search">
+      <input type="text" id="search-inp" placeholder="Search products..." oninput="Shop.search()"/>
+      <button onclick="Shop.search()">🔍</button>
+    </div>
+    <div class="nav-actions">
+      <button class="nav-btn" onclick="Shop.toggleWishlist()">❤️ <span id="wish-count">0</span></button>
+      <button class="nav-btn cart-btn" onclick="Shop.toggleCart()">
+        🛒 Cart <span class="cart-badge" id="cart-badge">0</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-content">
+      <div class="hero-badge">🔥 Up to 60% OFF</div>
+      <h1>Find Your Perfect Product</h1>
+      <p>Thousands of products. Amazing deals. Fast delivery.</p>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main-layout">
+
+    <!-- FILTER SIDEBAR -->
+    <aside class="filter-sidebar">
+      <h3 class="filter-title">Filters</h3>
+      <div class="filter-group">
+        <label>Category</label>
+        <div class="cat-filters" id="cat-filters"></div>
+      </div>
+      <div class="filter-group">
+        <label>Price Range</label>
+        <div class="price-row">
+          <input type="number" id="price-min" placeholder="Min ₹" oninput="Shop.applyFilters()"/>
+          <span>–</span>
+          <input type="number" id="price-max" placeholder="Max ₹" oninput="Shop.applyFilters()"/>
+        </div>
+      </div>
+      <div class="filter-group">
+        <label>Rating</label>
+        <select id="rating-filter" onchange="Shop.applyFilters()">
+          <option value="">Any Rating</option>
+          <option value="4">4★ and above</option>
+          <option value="3">3★ and above</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Sort By</label>
+        <select id="sort-filter" onchange="Shop.applyFilters()">
+          <option value="default">Default</option>
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+          <option value="rating">Top Rated</option>
+          <option value="newest">Newest</option>
+        </select>
+      </div>
+      <button class="btn-clear-filter" onclick="Shop.clearFilters()">Clear Filters</button>
+    </aside>
+
+    <!-- PRODUCTS -->
+    <main class="products-section">
+      <div class="products-header">
+        <span id="results-count">Showing all products</span>
+        <div class="view-toggle">
+          <button id="vt-grid" class="vt active" onclick="Shop.setView('grid',this)">⊞</button>
+          <button id="vt-list" class="vt" onclick="Shop.setView('list',this)">☰</button>
+        </div>
+      </div>
+      <div class="products-grid" id="products-grid"></div>
+    </main>
+  </div>
+
+  <!-- CART DRAWER -->
+  <div class="drawer-overlay" id="cart-overlay" onclick="Shop.toggleCart()"></div>
+  <div class="cart-drawer" id="cart-drawer">
+    <div class="drawer-header">
+      <h2>Your Cart</h2>
+      <button class="drawer-close" onclick="Shop.toggleCart()">✕</button>
+    </div>
+    <div class="cart-items" id="cart-items"></div>
+    <div class="cart-footer" id="cart-footer"></div>
+  </div>
+
+  <!-- WISHLIST DRAWER -->
+  <div class="drawer-overlay" id="wish-overlay" onclick="Shop.toggleWishlist()"></div>
+  <div class="cart-drawer" id="wish-drawer">
+    <div class="drawer-header">
+      <h2>❤️ Wishlist</h2>
+      <button class="drawer-close" onclick="Shop.toggleWishlist()">✕</button>
+    </div>
+    <div class="cart-items" id="wish-items"></div>
+  </div>
+
+  <!-- PRODUCT MODAL -->
+  <div class="modal-overlay" id="product-modal">
+    <div class="product-modal-inner" id="product-modal-inner"></div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

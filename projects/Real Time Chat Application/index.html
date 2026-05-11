@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ChatWave – Real-Time Chat</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div id="app">
+
+  <!-- ── LOGIN SCREEN ── -->
+  <div id="login-screen" class="screen active">
+    <div class="login-box">
+      <div class="login-logo">💬</div>
+      <h1>ChatWave</h1>
+      <p>Connect with people instantly</p>
+      <div class="input-wrap">
+        <span class="input-icon">👤</span>
+        <input id="login-name" type="text" placeholder="Enter your name" maxlength="24" />
+      </div>
+      <div class="avatar-pick">
+        <span class="ap-label">Pick avatar</span>
+        <div class="avatar-list" id="avatar-list"></div>
+      </div>
+      <button id="login-btn" onclick="doLogin()">Start Chatting →</button>
+    </div>
+  </div>
+
+  <!-- ── MAIN CHAT ── -->
+  <div id="chat-screen" class="screen">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-top">
+        <div class="app-brand">💬 ChatWave</div>
+        <div class="search-wrap">
+          <input type="text" placeholder="Search…" id="search-box" oninput="filterRooms(this.value)" />
+        </div>
+      </div>
+
+      <div class="rooms-section">
+        <div class="section-label">CHANNELS</div>
+        <div id="room-list"></div>
+      </div>
+
+      <div class="rooms-section">
+        <div class="section-label">DIRECT MESSAGES</div>
+        <div id="dm-list"></div>
+      </div>
+
+      <div class="sidebar-bottom">
+        <div class="me-card">
+          <div class="me-avatar" id="me-avatar-disp"></div>
+          <div class="me-info">
+            <div class="me-name" id="me-name-disp"></div>
+            <div class="me-status">● Online</div>
+          </div>
+          <button class="logout-btn" onclick="doLogout()" title="Logout">⏻</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- CHAT AREA -->
+    <section class="chat-area">
+      <div class="chat-header">
+        <div class="ch-left">
+          <div class="ch-icon" id="ch-icon"></div>
+          <div>
+            <div class="ch-name" id="ch-name">Select a room</div>
+            <div class="ch-meta" id="ch-meta"></div>
+          </div>
+        </div>
+        <div class="ch-actions">
+          <button class="ch-btn" title="Call">📞</button>
+          <button class="ch-btn" title="Video">🎥</button>
+          <button class="ch-btn" title="Search" onclick="toggleSearchBar()">🔍</button>
+          <button class="ch-btn" title="Members" onclick="toggleMemberPanel()">👥</button>
+        </div>
+      </div>
+
+      <!-- Inline message search -->
+      <div class="msg-search-bar" id="msg-search-bar">
+        <input type="text" placeholder="Search messages…" id="msg-search-input" oninput="searchMessages(this.value)" />
+        <button onclick="toggleSearchBar()">✕</button>
+      </div>
+
+      <div class="messages-wrap" id="messages-wrap">
+        <div class="welcome-placeholder" id="welcome-placeholder">
+          <div style="font-size:56px">💬</div>
+          <h2>Welcome to ChatWave!</h2>
+          <p>Select a channel or DM on the left to start chatting.</p>
+        </div>
+        <div id="messages-list"></div>
+      </div>
+
+      <div class="typing-bar" id="typing-bar"></div>
+
+      <div class="input-area" id="input-area">
+        <div class="emoji-picker" id="emoji-picker"></div>
+        <button class="emoji-toggle" onclick="toggleEmoji()">😊</button>
+        <div class="msg-input-wrap">
+          <input type="text" id="msg-input" placeholder="Message #general" onkeydown="handleKey(event)" oninput="handleTyping()" />
+        </div>
+        <label class="attach-btn" title="Attach file">
+          📎<input type="file" style="display:none" onchange="handleFile(this)" />
+        </label>
+        <button class="send-btn" onclick="sendMessage()">➤</button>
+      </div>
+    </section>
+
+    <!-- MEMBER PANEL -->
+    <div class="member-panel" id="member-panel">
+      <div class="mp-title">Members <span id="mp-count"></span></div>
+      <div id="mp-list"></div>
+    </div>
+
+  </div>
+</div>
+<script src="script.js"></script>
+</body>
+</html>

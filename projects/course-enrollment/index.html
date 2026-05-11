@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Enrollment</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .search-box,
+        .filter-select {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .search-box {
+            width: 300px;
+        }
+
+        .search-box:focus,
+        .filter-select:focus {
+            outline: none;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-add-course {
+            padding: 12px 25px;
+            background: white;
+            color: #667eea;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .btn-add-course:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 12px 25px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .tab-btn.active {
+            background: white;
+            color: #667eea;
+        }
+
+        .tab-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .course-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            animation: popIn 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        @keyframes popIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .course-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .course-banner {
+            height: 150px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            display: flex;
+            align-items: flex-end;
+        }
+
+        .course-icon {
+            font-size: 3rem;
+        }
+
+        .course-body {
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .course-title {
+            color: #333;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            word-break: break-word;
+        }
+
+        .course-instructor {
+            color: #999;
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+        }
+
+        .course-description {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 15px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            flex: 1;
+        }
+
+        .course-meta {
+            display: flex;
+            gap: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            color: #999;
+            font-size: 0.85rem;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .course-footer {
+            padding-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-action {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        .btn-enroll {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-enroll:hover {
+            background: #764ba2;
+        }
+
+        .btn-enrolled {
+            background: #4caf50;
+            color: white;
+            cursor: default;
+        }
+
+        .btn-delete {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #ff5252;
+        }
+
+        .empty-state {
+            background: white;
+            border-radius: 15px;
+            padding: 80px 40px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .empty-state-icon {
+            font-size: 5rem;
+            margin-bottom: 20px;
+        }
+
+        .empty-state-text {
+            color: #666;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        .empty-state-subtext {
+            color: #999;
+            font-size: 1rem;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #555;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 1rem;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-save {
+            flex: 1;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        .btn-cancel {
+            flex: 1;
+            padding: 15px;
+            background: #ccc;
+            color: #333;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 600px) {
+            .courses-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .btn-add-course,
+            .filter-select {
+                width: 100%;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎓 Course Enrollment</h1>
+            <p class="subtitle">Browse and enroll in courses</p>
+        </div>
+
+        <div class="controls">
+            <input type="text" class="search-box" id="searchInput" placeholder="🔍 Search courses...">
+            <select class="filter-select" id="filterSelect">
+                <option value="">All Categories</option>
+                <option value="web">Web Development</option>
+                <option value="mobile">Mobile Development</option>
+                <option value="data">Data Science</option>
+                <option value="design">Design</option>
+                <option value="other">Other</option>
+            </select>
+            <button class="btn-add-course" id="addCourseBtn">+ Add Course</button>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('available')">Available Courses</button>
+            <button class="tab-btn" onclick="switchTab('enrolled')">My Enrollments</button>
+        </div>
+
+        <div id="availableTab">
+            <div class="courses-grid" id="coursesGrid">
+                <div class="empty-state">
+                    <div class="empty-state-icon">📚</div>
+                    <div class="empty-state-text">No courses yet</div>
+                    <div class="empty-state-subtext">Add your first course to get started!</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="enrolledTab" style="display: none;">
+            <div class="courses-grid" id="enrolledGrid">
+                <div class="empty-state">
+                    <div class="empty-state-icon">📖</div>
+                    <div class="empty-state-text">Not enrolled yet</div>
+                    <div class="empty-state-subtext">Enroll in a course to get started!</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="courseModal">
+        <div class="modal-content">
+            <h2 class="modal-title">Add Course</h2>
+            <form id="courseForm">
+                <div class="form-group">
+                    <label for="courseTitle">Course Title *</label>
+                    <input type="text" id="courseTitle" placeholder="Course name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="courseCategory">Category *</label>
+                    <select id="courseCategory" required>
+                        <option value="web">Web Development</option>
+                        <option value="mobile">Mobile Development</option>
+                        <option value="data">Data Science</option>
+                        <option value="design">Design</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="courseInstructor">Instructor *</label>
+                    <input type="text" id="courseInstructor" placeholder="Instructor name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="courseDescription">Description</label>
+                    <textarea id="courseDescription" placeholder="Course description..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="courseDuration">Duration (hours) *</label>
+                    <input type="number" id="courseDuration" placeholder="40" value="40" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="courseLevel">Level *</label>
+                    <select id="courseLevel" required>
+                        <option value="beginner">Beginner</option>
+                        <option value="intermediate">Intermediate</option>
+                        <option value="advanced">Advanced</option>
+                    </select>
+                </div>
+
+                <div class="modal-buttons">
+                    <button type="submit" class="btn-save">Add Course</button>
+                    <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let courses = JSON.parse(localStorage.getItem('courses')) || [];
+        let enrollments = JSON.parse(localStorage.getItem('enrollments')) || [];
+
+        const modal = document.getElementById('courseModal');
+        const form = document.getElementById('courseForm');
+        const searchInput = document.getElementById('searchInput');
+        const filterSelect = document.getElementById('filterSelect');
+        const addCourseBtn = document.getElementById('addCourseBtn');
+
+        addCourseBtn.addEventListener('click', () => openModal());
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            saveCourse();
+        });
+        searchInput.addEventListener('input', () => renderCourses('available'));
+        filterSelect.addEventListener('change', () => renderCourses('available'));
+
+        function openModal() {
+            form.reset();
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            document.getElementById('availableTab').style.display = tab === 'available' ? 'block' : 'none';
+            document.getElementById('enrolledTab').style.display = tab === 'enrolled' ? 'block' : 'none';
+
+            renderCourses(tab);
+        }
+
+        function saveCourse() {
+            const course = {
+                id: Date.now(),
+                title: document.getElementById('courseTitle').value,
+                category: document.getElementById('courseCategory').value,
+                instructor: document.getElementById('courseInstructor').value,
+                description: document.getElementById('courseDescription').value,
+                duration: document.getElementById('courseDuration').value,
+                level: document.getElementById('courseLevel').value,
+                icon: '📚',
+                createdAt: new Date().toLocaleDateString()
+            };
+
+            courses.unshift(course);
+            saveCourses();
+            renderCourses('available');
+            closeModal();
+        }
+
+        function enrollCourse(courseId) {
+            if (!enrollments.find(e => e.courseId === courseId)) {
+                enrollments.push({
+                    courseId,
+                    enrolledAt: new Date().toLocaleDateString(),
+                    progress: 0
+                });
+                saveEnrollments();
+                renderCourses('available');
+            }
+        }
+
+        function unenrollCourse(courseId) {
+            if (confirm('Unenroll from this course?')) {
+                enrollments = enrollments.filter(e => e.courseId !== courseId);
+                saveEnrollments();
+                renderCourses('enrolled');
+            }
+        }
+
+        function deleteCourse(courseId) {
+            if (confirm('Delete this course?')) {
+                courses = courses.filter(c => c.id !== courseId);
+                saveCourses();
+                renderCourses('available');
+            }
+        }
+
+        function renderCourses(view) {
+            const searchTerm = searchInput.value.toLowerCase();
+            const filterCategory = filterSelect.value;
+
+            let filtered = courses;
+
+            if (view === 'available') {
+                filtered = courses.filter(c => {
+                    const matchesSearch = c.title.toLowerCase().includes(searchTerm) ||
+                                        c.instructor.toLowerCase().includes(searchTerm);
+                    const matchesFilter = !filterCategory || c.category === filterCategory;
+                    return matchesSearch && matchesFilter && !enrollments.find(e => e.courseId === c.id);
+                });
+
+                if (filtered.length === 0) {
+                    document.getElementById('coursesGrid').innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📚</div>
+                            <div class="empty-state-text">No courses found</div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                document.getElementById('coursesGrid').innerHTML = filtered.map(course => `
+                    <div class="course-card">
+                        <div class="course-banner">
+                            <div class="course-icon">${course.icon}</div>
+                        </div>
+                        <div class="course-body">
+                            <h3 class="course-title">${course.title}</h3>
+                            <p class="course-instructor">👨‍🏫 ${course.instructor}</p>
+                            <p class="course-description">${course.description}</p>
+                            <div class="course-meta">
+                                <span class="meta-item">⏱️ ${course.duration}h</span>
+                                <span class="meta-item">📊 ${course.level}</span>
+                            </div>
+                            <div class="course-footer">
+                                <button class="btn-action btn-enroll" onclick="enrollCourse(${course.id})">Enroll Now</button>
+                                <button class="btn-action btn-delete" onclick="deleteCourse(${course.id})">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                const enrolledCourses = courses.filter(c => enrollments.find(e => e.courseId === c.id));
+
+                if (enrolledCourses.length === 0) {
+                    document.getElementById('enrolledGrid').innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📖</div>
+                            <div class="empty-state-text">Not enrolled yet</div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                document.getElementById('enrolledGrid').innerHTML = enrolledCourses.map(course => {
+                    const enrollment = enrollments.find(e => e.courseId === course.id);
+                    return `
+                        <div class="course-card">
+                            <div class="course-banner">
+                                <div class="course-icon">${course.icon}</div>
+                            </div>
+                            <div class="course-body">
+                                <h3 class="course-title">${course.title}</h3>
+                                <p class="course-instructor">👨‍🏫 ${course.instructor}</p>
+                                <p class="course-description">${course.description}</p>
+                                <div class="course-meta">
+                                    <span class="meta-item">⏱️ ${course.duration}h</span>
+                                    <span class="meta-item">📊 ${course.level}</span>
+                                </div>
+                                <div class="course-footer">
+                                    <button class="btn-action btn-enrolled" disabled>✓ Enrolled</button>
+                                    <button class="btn-action btn-delete" onclick="unenrollCourse(${course.id})">Unenroll</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        function saveCourses() {
+            localStorage.setItem('courses', JSON.stringify(courses));
+        }
+
+        function saveEnrollments() {
+            localStorage.setItem('enrollments', JSON.stringify(enrollments));
+        }
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+
+        renderCourses('available');
+    </script>
+</body>
+</html>

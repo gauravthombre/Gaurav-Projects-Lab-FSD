@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Website + Admin</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.8;
+        }
+
+        .admin-btn {
+            background: white;
+            color: #667eea;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            border: none;
+            transition: all 0.3s;
+        }
+
+        .admin-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #667eea15, #764ba215);
+            padding: 80px 20px;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .hero-btn {
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .hero-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        section {
+            padding: 60px 20px;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 40px;
+            text-align: center;
+            color: #333;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .service-card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
+        }
+
+        .service-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .service-card h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .service-card p {
+            color: #666;
+            line-height: 1.8;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .team-member {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .team-member:hover {
+            transform: translateY(-8px);
+        }
+
+        .member-avatar {
+            height: 200px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+        }
+
+        .member-info {
+            padding: 20px;
+        }
+
+        .member-info h3 {
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .member-info p {
+            color: #999;
+            font-size: 0.9rem;
+        }
+
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+        }
+
+        /* Admin Panel */
+        .admin-panel {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .admin-panel.active {
+            display: flex;
+        }
+
+        .admin-modal {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .admin-header h2 {
+            color: #333;
+            font-size: 1.5rem;
+        }
+
+        .close-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+        }
+
+        .close-btn:hover {
+            background: #ff5252;
+            transform: rotate(90deg);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #555;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+        }
+
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .form-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-save {
+            flex: 1;
+            padding: 12px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-save:hover {
+            background: #764ba2;
+        }
+
+        .btn-cancel {
+            flex: 1;
+            padding: 12px;
+            background: #ccc;
+            color: #333;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-cancel:hover {
+            background: #bbb;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 15px;
+                font-size: 0.9rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="logo">🚀 TechCorp</div>
+            <ul class="nav-links">
+                <li><a onclick="scrollToSection('services')">Services</a></li>
+                <li><a onclick="scrollToSection('team')">Team</a></li>
+                <li><a onclick="scrollToSection('contact')">Contact</a></li>
+                <li><button class="admin-btn" onclick="openAdminPanel()">Admin</button></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Welcome to TechCorp</h1>
+            <p>Innovating the future with cutting-edge technology solutions</p>
+            <button class="hero-btn">Get Started</button>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services">
+        <div class="container">
+            <h2 class="section-title">Our Services</h2>
+            <div class="services-grid" id="servicesGrid">
+                <div class="service-card">
+                    <div class="service-icon">💻</div>
+                    <h3>Web Development</h3>
+                    <p>Custom web applications built with modern technologies</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">📱</div>
+                    <h3>Mobile Apps</h3>
+                    <p>Native and cross-platform mobile applications</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">☁️</div>
+                    <h3>Cloud Solutions</h3>
+                    <p>Scalable cloud infrastructure and services</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section id="team">
+        <div class="container">
+            <h2 class="section-title">Our Team</h2>
+            <div class="team-grid" id="teamGrid">
+                <div class="team-member">
+                    <div class="member-avatar">👨‍💼</div>
+                    <div class="member-info">
+                        <h3>John Smith</h3>
+                        <p>CEO & Founder</p>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <div class="member-avatar">👩‍💻</div>
+                    <div class="member-info">
+                        <h3>Sarah Johnson</h3>
+                        <p>CTO</p>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <div class="member-avatar">👨‍💻</div>
+                    <div class="member-info">
+                        <h3>Mike Chen</h3>
+                        <p>Lead Developer</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact">
+        <div class="container">
+            <h2 class="section-title">Contact Us</h2>
+            <div style="text-align: center; max-width: 600px; margin: 0 auto;">
+                <p style="color: #666; font-size: 1.1rem; line-height: 1.8;">
+                    📧 info@techcorp.com<br>
+                    📞 +1 (555) 123-4567<br>
+                    📍 123 Tech Street, Silicon Valley, CA 94025
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 TechCorp. All rights reserved.</p>
+    </footer>
+
+    <!-- Admin Panel -->
+    <div class="admin-panel" id="adminPanel">
+        <div class="admin-modal">
+            <div class="admin-header">
+                <h2>Admin Panel</h2>
+                <button class="close-btn" onclick="closeAdminPanel()">×</button>
+            </div>
+            <div id="adminContent">
+                <div style="text-align: center; padding: 40px;">
+                    <p style="color: #666; margin-bottom: 20px;">Select an item to edit:</p>
+                    <button class="admin-btn" style="display: block; margin: 10px auto; width: 200px;" onclick="editService(0)">Edit Service 1</button>
+                    <button class="admin-btn" style="display: block; margin: 10px auto; width: 200px;" onclick="editService(1)">Edit Service 2</button>
+                    <button class="admin-btn" style="display: block; margin: 10px auto; width: 200px;" onclick="editService(2)">Edit Service 3</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let services = JSON.parse(localStorage.getItem('services')) || [
+            { title: 'Web Development', description: 'Custom web applications built with modern technologies', icon: '💻' },
+            { title: 'Mobile Apps', description: 'Native and cross-platform mobile applications', icon: '📱' },
+            { title: 'Cloud Solutions', description: 'Scalable cloud infrastructure and services', icon: '☁️' }
+        ];
+
+        function openAdminPanel() {
+            document.getElementById('adminPanel').classList.add('active');
+        }
+
+        function closeAdminPanel() {
+            document.getElementById('adminPanel').classList.remove('active');
+        }
+
+        function editService(index) {
+            const service = services[index];
+            const adminContent = document.getElementById('adminContent');
+            
+            adminContent.innerHTML = `
+                <form onsubmit="saveService(event, ${index})">
+                    <div class="form-group">
+                        <label for="title">Service Title</label>
+                        <input type="text" id="title" value="${service.title}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea id="description" required>${service.description}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="icon">Icon</label>
+                        <input type="text" id="icon" value="${service.icon}" required>
+                    </div>
+                    <div class="form-buttons">
+                        <button type="submit" class="btn-save">Save Changes</button>
+                        <button type="button" class="btn-cancel" onclick="editService(-1)">Back</button>
+                    </div>
+                </form>
+            `;
+        }
+
+        function saveService(event, index) {
+            event.preventDefault();
+            services[index] = {
+                title: document.getElementById('title').value,
+                description: document.getElementById('description').value,
+                icon: document.getElementById('icon').value
+            };
+            localStorage.setItem('services', JSON.stringify(services));
+            renderServices();
+            editService(-1);
+        }
+
+        function renderServices() {
+            const servicesGrid = document.getElementById('servicesGrid');
+            servicesGrid.innerHTML = services.map((service, index) => `
+                <div class="service-card">
+                    <div class="service-icon">${service.icon}</div>
+                    <h3>${service.title}</h3>
+                    <p>${service.description}</p>
+                </div>
+            `).join('');
+        }
+
+        function scrollToSection(section) {
+            const element = document.getElementById(section);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        document.getElementById('adminPanel').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('adminPanel')) {
+                closeAdminPanel();
+            }
+        });
+
+        renderServices();
+    </script>
+</body>
+</html>

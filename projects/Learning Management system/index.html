@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LearnHub - Mini LMS</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+  <nav class="sidebar">
+    <div class="brand">LearnHub</div>
+    <div class="nav-links">
+      <a class="nav-link active" data-page="dashboard" onclick="showPage('dashboard')">📊 Dashboard</a>
+      <a class="nav-link" data-page="courses" onclick="showPage('courses')">📚 Courses</a>
+      <a class="nav-link" data-page="my-courses" onclick="showPage('my-courses')">🎓 My Learning</a>
+      <a class="nav-link" data-page="progress" onclick="showPage('progress')">📈 Progress</a>
+    </div>
+    <div class="user-info">
+      <div class="avatar">JS</div>
+      <div><div class="uname">John Student</div><small>Free Plan</small></div>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <!-- Dashboard -->
+    <div id="dashboard" class="page active">
+      <h1>Good morning, John! ☀️</h1>
+      <p class="subtitle">Continue where you left off</p>
+      <div class="stats-row">
+        <div class="stat-card"><span class="stat-num" id="enrolled-count">0</span><span>Enrolled</span></div>
+        <div class="stat-card"><span class="stat-num" id="completed-count">0</span><span>Completed</span></div>
+        <div class="stat-card"><span class="stat-num" id="progress-count">0%</span><span>Avg Progress</span></div>
+        <div class="stat-card"><span class="stat-num">12</span><span>Certificates</span></div>
+      </div>
+      <h2>Continue Learning</h2>
+      <div class="course-grid" id="continue-grid"></div>
+    </div>
+
+    <!-- Courses -->
+    <div id="courses" class="page">
+      <h1>Explore Courses</h1>
+      <div class="search-bar">
+        <input type="text" id="search-input" placeholder="Search courses..." oninput="filterCourses()">
+        <select id="cat-filter" onchange="filterCourses()">
+          <option value="">All Categories</option>
+          <option value="Web Dev">Web Dev</option>
+          <option value="Design">Design</option>
+          <option value="Data">Data</option>
+          <option value="Mobile">Mobile</option>
+        </select>
+      </div>
+      <div class="course-grid" id="all-courses-grid"></div>
+    </div>
+
+    <!-- My Courses -->
+    <div id="my-courses" class="page">
+      <h1>My Learning</h1>
+      <div class="course-grid" id="my-courses-grid"></div>
+    </div>
+
+    <!-- Progress -->
+    <div id="progress" class="page">
+      <h1>My Progress</h1>
+      <div id="progress-list"></div>
+    </div>
+
+    <!-- Course Player -->
+    <div id="player" class="page">
+      <button class="btn-back" onclick="showPage('my-courses')">← Back</button>
+      <div class="player-layout">
+        <div class="video-area">
+          <div class="video-placeholder" id="video-player">
+            <div class="play-icon">▶</div>
+            <div id="current-lesson-title">Select a lesson</div>
+          </div>
+          <div class="lesson-meta">
+            <h2 id="lesson-heading"></h2>
+            <p id="lesson-desc"></p>
+            <button class="btn-primary" onclick="markComplete()">Mark as Complete ✓</button>
+          </div>
+        </div>
+        <div class="curriculum">
+          <h3>Course Content</h3>
+          <div id="lesson-list"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<script src="script.js"></script>
+</body>
+</html>

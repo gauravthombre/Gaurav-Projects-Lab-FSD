@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FoodDash – Online Food Ordering</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header>
+  <div class="header-inner">
+    <div class="logo">🍕 FoodDash</div>
+    <div class="location-bar">
+      <span>📍</span>
+      <input id="location-input" type="text" value="123 Main Street, New York" placeholder="Delivery address" />
+    </div>
+    <div class="header-right">
+      <button class="icon-btn" onclick="toggleWishlist()">❤️ <span id="wish-count">0</span></button>
+      <button class="cart-trigger" onclick="toggleCart()">
+        🛒 Cart
+        <span class="cart-pill" id="cart-count">0</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-content">
+    <h1>Hungry? <br>We've Got You <span class="hero-accent">Covered 🚀</span></h1>
+    <p>Order from 500+ restaurants. Fast delivery. Great food.</p>
+    <div class="hero-search">
+      <input id="search-input" type="text" placeholder="Search food, cuisine, restaurant…" oninput="applyFilters()" />
+      <button onclick="applyFilters()">Search</button>
+    </div>
+  </div>
+  <div class="hero-visual">🍔🍕🌮🍣🍜🧁</div>
+</section>
+
+<!-- ── FILTER BAR ── -->
+<div class="filter-bar">
+  <div class="categories" id="cat-bar"></div>
+  <div class="filter-extras">
+    <select id="sort-sel" onchange="applyFilters()">
+      <option value="">Sort by</option>
+      <option value="rating">Top Rated</option>
+      <option value="price-asc">Price ↑</option>
+      <option value="price-desc">Price ↓</option>
+      <option value="time">Fastest</option>
+    </select>
+    <label class="toggle-label">
+      <input type="checkbox" id="veg-toggle" onchange="applyFilters()" /> Veg Only
+    </label>
+    <label class="toggle-label">
+      <input type="checkbox" id="deal-toggle" onchange="applyFilters()" /> On Sale
+    </label>
+  </div>
+</div>
+
+<!-- ── PROMO BANNERS ── -->
+<div class="promo-row">
+  <div class="promo-card" style="background:linear-gradient(135deg,#ff6b35,#f7931e)">
+    <div>🎉 50% OFF first order!</div><small>Use code: <b>FIRST50</b></small>
+  </div>
+  <div class="promo-card" style="background:linear-gradient(135deg,#6366f1,#a78bfa)">
+    <div>🆓 Free delivery today</div><small>Orders above $20</small>
+  </div>
+  <div class="promo-card" style="background:linear-gradient(135deg,#059669,#34d399)">
+    <div>⚡ 20-min delivery</div><small>Select partners only</small>
+  </div>
+</div>
+
+<!-- ── MAIN GRID ── -->
+<main class="main-wrap">
+  <div class="results-header">
+    <span id="result-count">Showing all</span>
+    <div class="view-toggle">
+      <button class="view-btn active" onclick="setView('grid',this)">⊞ Grid</button>
+      <button class="view-btn" onclick="setView('list',this)">☰ List</button>
+    </div>
+  </div>
+  <div class="food-grid" id="food-grid"></div>
+</main>
+
+<!-- ── CART OVERLAY ── -->
+<div class="overlay" id="overlay" onclick="toggleCart()"></div>
+
+<!-- ── CART DRAWER ── -->
+<aside class="cart-drawer" id="cart-drawer">
+  <div class="cd-header">
+    <h2>🛒 Your Order</h2>
+    <button onclick="toggleCart()">✕</button>
+  </div>
+
+  <div class="cd-restaurant" id="cd-restaurant"></div>
+
+  <div class="cd-items" id="cd-items"></div>
+
+  <div class="cd-footer" id="cd-footer"></div>
+</aside>
+
+<!-- ── WISHLIST DRAWER ── -->
+<aside class="wish-drawer" id="wish-drawer">
+  <div class="cd-header">
+    <h2>❤️ Wishlist</h2>
+    <button onclick="toggleWishlist()">✕</button>
+  </div>
+  <div class="cd-items" id="wish-items"></div>
+</aside>
+
+<!-- ── ORDER TRACKER MODAL ── -->
+<div class="tracker-modal" id="tracker-modal">
+  <div class="tm-card">
+    <div class="tm-top">
+      <div class="tm-icon">🎉</div>
+      <h2>Order Placed!</h2>
+      <p id="tm-subtitle">Your food is on its way</p>
+      <div class="tm-order-id" id="tm-order-id"></div>
+    </div>
+    <div class="tracker-steps" id="tracker-steps"></div>
+    <div class="tm-eta" id="tm-eta">Estimated arrival: <strong>30 min</strong></div>
+    <div class="tm-rating" id="tm-rating" style="display:none">
+      <p>How was your last order?</p>
+      <div class="stars" id="star-row"></div>
+    </div>
+    <button class="tm-close" onclick="closeTracker()">Track Another Order</button>
+  </div>
+</div>
+
+<!-- ── ITEM DETAIL MODAL ── -->
+<div class="item-modal-bg" id="item-modal-bg" onclick="closeItemModal(event)">
+  <div class="item-modal" id="item-modal"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="script.js"></script>
+</body>
+</html>

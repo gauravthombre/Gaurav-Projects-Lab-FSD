@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CineMax – Book Tickets</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav class="navbar">
+  <div class="logo">CINE<span>MAX</span></div>
+  <ul class="nav-links">
+    <li><a href="#">Movies</a></li>
+    <li><a href="#">Cinemas</a></li>
+    <li><a href="#">Events</a></li>
+    <li><a class="btn-login" href="#">Sign In</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="hero-text">
+    <p class="tag">NOW SHOWING</p>
+    <h1>DUNE:<br>PART THREE</h1>
+    <p class="desc">The epic saga concludes. Paul Atreides faces his final destiny across the stars.</p>
+    <div class="meta"><span>⭐ 9.1</span><span>2h 48m</span><span>Sci-Fi</span></div>
+    <button class="btn-book" onclick="showBooking()">BOOK NOW</button>
+  </div>
+  <div class="hero-poster">
+    <div class="poster-card">
+      <div class="poster-img"></div>
+    </div>
+  </div>
+</section>
+
+<section class="movies-section">
+  <h2>TRENDING THIS WEEK</h2>
+  <div class="movies-grid" id="moviesGrid"></div>
+</section>
+
+<!-- Booking Modal -->
+<div class="modal-overlay" id="modalOverlay" onclick="hideBooking()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="hideBooking()">✕</button>
+    <h2>SELECT SEATS</h2>
+    <p class="movie-title-small">DUNE: PART THREE</p>
+
+    <div class="showtime-select">
+      <span class="showtime active">10:30 AM</span>
+      <span class="showtime">1:45 PM</span>
+      <span class="showtime">4:00 PM</span>
+      <span class="showtime">7:15 PM</span>
+      <span class="showtime">10:00 PM</span>
+    </div>
+
+    <div class="screen-label">SCREEN</div>
+    <div class="screen-curve"></div>
+
+    <div class="seats-grid" id="seatsGrid"></div>
+
+    <div class="seat-legend">
+      <span><i class="seat-icon available"></i> Available</span>
+      <span><i class="seat-icon selected"></i> Selected</span>
+      <span><i class="seat-icon taken"></i> Taken</span>
+    </div>
+
+    <div class="booking-summary">
+      <div>Selected: <span id="selectedCount">0</span> seat(s)</div>
+      <div>Total: ₹<span id="totalPrice">0</span></div>
+    </div>
+    <button class="btn-confirm" onclick="confirmBooking()">CONFIRM BOOKING</button>
+  </div>
+</div>
+
+<div class="toast" id="toast">🎬 Booking Confirmed! Enjoy the movie.</div>
+
+<script src="script.js"></script>
+</body>
+</html>

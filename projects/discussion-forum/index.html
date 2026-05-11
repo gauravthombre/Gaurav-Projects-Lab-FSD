@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discussion Forum</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .top-bar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .search-box {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            width: 300px;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .search-box:focus {
+            outline: none;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-new-thread {
+            padding: 12px 25px;
+            background: white;
+            color: #667eea;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .btn-new-thread:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .thread-list {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .thread-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 5px solid #667eea;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .thread-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .thread-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            gap: 10px;
+        }
+
+        .thread-title {
+            color: #333;
+            font-size: 1.2rem;
+            font-weight: 700;
+            word-break: break-word;
+            flex: 1;
+        }
+
+        .thread-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: #667eea;
+            color: white;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .thread-meta {
+            color: #999;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .thread-excerpt {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 15px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .thread-stats {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 12px;
+            border-top: 1px solid #eee;
+            color: #999;
+            font-size: 0.9rem;
+        }
+
+        .empty-state {
+            background: white;
+            border-radius: 15px;
+            padding: 80px 40px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .empty-state-icon {
+            font-size: 5rem;
+            margin-bottom: 20px;
+        }
+
+        .empty-state-text {
+            color: #666;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        .thread-detail {
+            display: none;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            animation: slideIn 0.3s ease;
+        }
+
+        .thread-detail.active {
+            display: block;
+        }
+
+        .detail-header {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .detail-title {
+            color: #333;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .detail-meta {
+            color: #999;
+            font-size: 0.95rem;
+        }
+
+        .detail-content {
+            color: #666;
+            font-size: 1rem;
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+
+        .replies-section {
+            margin-bottom: 30px;
+        }
+
+        .replies-title {
+            color: #333;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .reply-form {
+            background: #f9f9f9;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            color: #555;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn-submit {
+            padding: 12px 30px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        .btn-submit:hover {
+            background: #764ba2;
+        }
+
+        .btn-back {
+            padding: 10px 20px;
+            background: #999;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .btn-back:hover {
+            background: #777;
+        }
+
+        .replies-list {
+            display: grid;
+            gap: 15px;
+        }
+
+        .reply {
+            background: #f9f9f9;
+            border-radius: 10px;
+            padding: 20px;
+            border-left: 3px solid #667eea;
+        }
+
+        .reply-author {
+            color: #333;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .reply-time {
+            color: #999;
+            font-size: 0.85rem;
+            margin-bottom: 10px;
+        }
+
+        .reply-content {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .btn-delete {
+            padding: 6px 12px;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .btn-delete:hover {
+            background: #ff5252;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            margin-bottom: 15px;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-save {
+            flex: 1;
+            padding: 15px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        .btn-cancel {
+            flex: 1;
+            padding: 15px;
+            background: #ccc;
+            color: #333;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 600px) {
+            .search-box {
+                width: 100%;
+            }
+
+            .top-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .btn-new-thread {
+                width: 100%;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💬 Discussion Forum</h1>
+            <p class="subtitle">Share ideas and discuss with the community</p>
+        </div>
+
+        <div id="threadListView">
+            <div class="top-bar">
+                <input type="text" class="search-box" id="searchInput" placeholder="🔍 Search threads...">
+                <button class="btn-new-thread" id="newThreadBtn">+ New Thread</button>
+            </div>
+
+            <div class="thread-list" id="threadList">
+                <div class="empty-state">
+                    <div class="empty-state-icon">💬</div>
+                    <div class="empty-state-text">No threads yet</div>
+                    <p style="color: #999; margin-top: 10px;">Start a discussion by creating the first thread!</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="threadDetailView" class="thread-detail">
+            <button class="btn-back" onclick="backToList()">← Back to Threads</button>
+            <div id="detailContent"></div>
+        </div>
+    </div>
+
+    <div class="modal" id="newThreadModal">
+        <div class="modal-content">
+            <h2 class="modal-title">Start New Thread</h2>
+            <form id="threadForm">
+                <div class="form-group">
+                    <label for="threadTitle">Thread Title *</label>
+                    <input type="text" id="threadTitle" placeholder="What would you like to discuss?" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="threadContent">Content *</label>
+                    <textarea id="threadContent" placeholder="Write your message..." required></textarea>
+                </div>
+
+                <div class="modal-buttons">
+                    <button type="submit" class="btn-save">Create Thread</button>
+                    <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let threads = JSON.parse(localStorage.getItem('threads')) || [];
+        let currentThreadId = null;
+
+        const modal = document.getElementById('newThreadModal');
+        const form = document.getElementById('threadForm');
+        const searchInput = document.getElementById('searchInput');
+        const newThreadBtn = document.getElementById('newThreadBtn');
+        const threadList = document.getElementById('threadList');
+        const threadListView = document.getElementById('threadListView');
+        const threadDetailView = document.getElementById('threadDetailView');
+
+        newThreadBtn.addEventListener('click', () => openModal());
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            createThread();
+        });
+        searchInput.addEventListener('input', renderThreads);
+
+        function openModal() {
+            form.reset();
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+        }
+
+        function createThread() {
+            const title = document.getElementById('threadTitle').value;
+            const content = document.getElementById('threadContent').value;
+
+            const thread = {
+                id: Date.now(),
+                title,
+                content,
+                author: 'Anonymous',
+                createdAt: new Date().toLocaleDateString(),
+                createdTime: new Date().toLocaleTimeString(),
+                replies: []
+            };
+
+            threads.unshift(thread);
+            saveThreads();
+            renderThreads();
+            closeModal();
+        }
+
+        function viewThread(threadId) {
+            currentThreadId = threadId;
+            const thread = threads.find(t => t.id === threadId);
+            
+            threadListView.style.display = 'none';
+            threadDetailView.classList.add('active');
+
+            const repliesHTML = thread.replies.length === 0 ? 
+                '<p style="color: #999;">No replies yet. Be the first to reply!</p>' :
+                `<div class="replies-list">
+                    ${thread.replies.map(reply => `
+                        <div class="reply">
+                            <div class="reply-author">${reply.author}</div>
+                            <div class="reply-time">${reply.createdAt} at ${reply.createdTime}</div>
+                            <div class="reply-content">${reply.content}</div>
+                            <button class="btn-delete" onclick="deleteReply(${threadId}, ${reply.id})">Delete</button>
+                        </div>
+                    `).join('')}
+                </div>`;
+
+            threadDetailView.innerHTML = `
+                <button class="btn-back" onclick="backToList()">← Back to Threads</button>
+                <div class="detail-header">
+                    <h2 class="detail-title">${thread.title}</h2>
+                    <div class="detail-meta">
+                        Posted by ${thread.author} on ${thread.createdAt} at ${thread.createdTime}
+                    </div>
+                </div>
+                <div class="detail-content">${thread.content}</div>
+
+                <div class="replies-section">
+                    <h3 class="replies-title">Replies (${thread.replies.length})</h3>
+                    <div class="reply-form">
+                        <form onsubmit="addReply(event, ${threadId})">
+                            <div class="form-group">
+                                <label for="replyContent">Your Reply</label>
+                                <textarea id="replyContent" placeholder="Write your reply..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn-submit">Post Reply</button>
+                        </form>
+                    </div>
+                    ${repliesHTML}
+                </div>
+            `;
+        }
+
+        function backToList() {
+            threadListView.style.display = 'block';
+            threadDetailView.classList.remove('active');
+            currentThreadId = null;
+        }
+
+        function addReply(event, threadId) {
+            event.preventDefault();
+            const content = document.getElementById('replyContent').value;
+            const thread = threads.find(t => t.id === threadId);
+
+            const reply = {
+                id: Date.now(),
+                author: 'Anonymous',
+                content,
+                createdAt: new Date().toLocaleDateString(),
+                createdTime: new Date().toLocaleTimeString()
+            };
+
+            thread.replies.push(reply);
+            saveThreads();
+            viewThread(threadId);
+        }
+
+        function deleteReply(threadId, replyId) {
+            if (confirm('Delete this reply?')) {
+                const thread = threads.find(t => t.id === threadId);
+                thread.replies = thread.replies.filter(r => r.id !== replyId);
+                saveThreads();
+                viewThread(threadId);
+            }
+        }
+
+        function deleteThread(threadId) {
+            if (confirm('Delete this thread?')) {
+                threads = threads.filter(t => t.id !== threadId);
+                saveThreads();
+                renderThreads();
+            }
+        }
+
+        function renderThreads() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const filtered = threads.filter(t =>
+                t.title.toLowerCase().includes(searchTerm) ||
+                t.content.toLowerCase().includes(searchTerm)
+            );
+
+            if (filtered.length === 0) {
+                threadList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">💬</div>
+                        <div class="empty-state-text">No threads found</div>
+                        <p style="color: #999; margin-top: 10px;">Try a different search or create a new thread!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            threadList.innerHTML = filtered.map(thread => `
+                <div class="thread-card" onclick="viewThread(${thread.id})">
+                    <div class="thread-header">
+                        <h3 class="thread-title">${thread.title}</h3>
+                        <span class="thread-badge">${thread.replies.length} replies</span>
+                    </div>
+                    <div class="thread-meta">
+                        Posted by ${thread.author} on ${thread.createdAt}
+                    </div>
+                    <p class="thread-excerpt">${thread.content}</p>
+                    <div class="thread-stats">
+                        <span>👤 ${thread.author}</span>
+                        <span>💬 ${thread.replies.length} replies</span>
+                        <span>📅 ${thread.createdAt}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function saveThreads() {
+            localStorage.setItem('threads', JSON.stringify(threads));
+        }
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+
+        renderThreads();
+    </script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ExamPro - Online Examination System</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+  <!-- Login Screen -->
+  <div id="login-screen" class="screen active">
+    <div class="login-container">
+      <div class="logo">⬡ ExamPro</div>
+      <h1>Ready to Test Your Knowledge?</h1>
+      <div class="form-group">
+        <label>Student Name</label>
+        <input type="text" id="student-name" placeholder="Enter your name">
+      </div>
+      <div class="form-group">
+        <label>Select Exam</label>
+        <select id="exam-select">
+          <option value="js">JavaScript Fundamentals</option>
+          <option value="html">HTML & CSS Basics</option>
+          <option value="python">Python Programming</option>
+        </select>
+      </div>
+      <button class="btn-primary" onclick="startExam()">Begin Exam →</button>
+    </div>
+  </div>
+
+  <!-- Exam Screen -->
+  <div id="exam-screen" class="screen">
+    <header class="exam-header">
+      <div class="exam-info">
+        <span id="exam-title">JavaScript Fundamentals</span>
+        <span id="student-display"></span>
+      </div>
+      <div class="timer-box">
+        <span class="timer-label">Time Left</span>
+        <span id="timer">30:00</span>
+      </div>
+      <div class="progress-info">
+        <span id="q-counter">Q 1/10</span>
+      </div>
+    </header>
+    <div class="exam-body">
+      <div class="progress-bar"><div id="progress-fill"></div></div>
+      <div class="question-card">
+        <div class="q-number" id="q-num">01</div>
+        <h2 id="question-text"></h2>
+        <div class="options" id="options-container"></div>
+        <div class="nav-btns">
+          <button class="btn-sec" onclick="prevQ()" id="prev-btn">← Previous</button>
+          <button class="btn-primary" onclick="nextQ()" id="next-btn">Next →</button>
+        </div>
+      </div>
+    </div>
+    <div class="question-nav" id="q-nav"></div>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="result-screen" class="screen">
+    <div class="result-container">
+      <div id="result-icon">🏆</div>
+      <h1 id="result-title">Excellent Work!</h1>
+      <div class="score-display">
+        <span id="score-num">0</span><span>/10</span>
+      </div>
+      <div class="score-bar"><div id="score-fill"></div></div>
+      <div class="stats-grid">
+        <div class="stat"><span id="correct-count">0</span><small>Correct</small></div>
+        <div class="stat"><span id="wrong-count">0</span><small>Wrong</small></div>
+        <div class="stat"><span id="skip-count">0</span><small>Skipped</small></div>
+        <div class="stat"><span id="time-taken">0m</span><small>Time Taken</small></div>
+      </div>
+      <div class="review-section">
+        <h3>Answer Review</h3>
+        <div id="review-list"></div>
+      </div>
+      <button class="btn-primary" onclick="resetExam()">Take Another Exam</button>
+    </div>
+  </div>
+</div>
+<script src="script.js"></script>
+</body>
+</html>

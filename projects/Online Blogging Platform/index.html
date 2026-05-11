@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inkwell — Blogging Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Outfit:wght@300;400;500;600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d1a;
+    --purple: #7c6ff7;
+    --teal: #4fd1c5;
+    --amber: #f6a623;
+    --glass: rgba(255,255,255,0.06);
+    --glass-border: rgba(255,255,255,0.14);
+    --text: #e8e8f0;
+    --muted: rgba(232,232,240,0.5);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: var(--bg);
+    font-family: 'Outfit', sans-serif;
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  /* Orbs */
+  .orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: 0.18;
+    pointer-events: none;
+    animation: drift 12s ease-in-out infinite alternate;
+  }
+  .orb1 { width:500px;height:500px;background:var(--purple);top:-150px;left:-100px; }
+  .orb2 { width:400px;height:400px;background:var(--teal);bottom:-100px;right:-80px;animation-delay:-5s; }
+  .orb3 { width:300px;height:300px;background:var(--amber);top:50%;left:60%;animation-delay:-3s; }
+  @keyframes drift { from{transform:translate(0,0) scale(1)} to{transform:translate(30px,20px) scale(1.05)} }
+
+  /* Sidebar */
+  .sidebar {
+    position: fixed; left:0; top:0; height:100vh; width:260px;
+    background: rgba(13,13,26,0.8);
+    backdrop-filter: blur(24px);
+    border-right: 1px solid var(--glass-border);
+    display: flex; flex-direction: column;
+    padding: 28px 20px;
+    z-index: 100;
+  }
+  .logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 600;
+    background: linear-gradient(135deg, var(--purple), var(--teal));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 36px;
+    letter-spacing: 1px;
+  }
+  .logo span { font-style: italic; }
+  .nav-section { font-size: 10px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; margin: 20px 0 8px; }
+  .nav-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 14px; border-radius: 10px;
+    cursor: pointer; color: var(--muted);
+    font-size: 14px; font-weight: 400;
+    transition: all 0.2s; margin-bottom: 2px;
+  }
+  .nav-item:hover, .nav-item.active {
+    background: var(--glass);
+    color: var(--text);
+    border: 1px solid var(--glass-border);
+  }
+  .nav-item.active { color: var(--purple); }
+  .nav-icon { font-size: 16px; width: 20px; text-align: center; }
+  .badge {
+    margin-left: auto;
+    background: var(--purple);
+    color: white;
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 999px;
+    font-family: 'Fira Code';
+  }
+  .sidebar-bottom { margin-top: auto; }
+  .user-card {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px; border-radius: 12px;
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+  }
+  .avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--purple), var(--teal));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 600; color: white;
+  }
+  .user-info .name { font-size: 13px; font-weight: 500; }
+  .user-info .role { font-size: 11px; color: var(--muted); }
+
+  /* Main */
+  .main { margin-left: 260px; padding: 32px 36px; min-height: 100vh; }
+  .topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 32px;
+  }
+  .page-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px; font-weight: 600;
+    line-height: 1.1;
+  }
+  .page-title span { font-style: italic; color: var(--purple); }
+  .btn {
+    padding: 10px 22px; border-radius: 10px; border: none;
+    font-family: 'Outfit'; font-size: 13px; font-weight: 500;
+    cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 8px;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--purple), #5a52d5);
+    color: white;
+    box-shadow: 0 4px 20px rgba(124,111,247,0.4);
+  }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 28px rgba(124,111,247,0.5); }
+  .btn-ghost {
+    background: var(--glass); border: 1px solid var(--glass-border);
+    color: var(--text);
+  }
+
+  /* Stats */
+  .stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin-bottom: 28px; }
+  .stat-card {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(18px);
+    border-radius: 16px;
+    padding: 20px;
+    position: relative; overflow: hidden;
+    animation: slideUp 0.5s ease both;
+  }
+  .stat-card:nth-child(1){animation-delay:0.05s}
+  .stat-card:nth-child(2){animation-delay:0.1s}
+  .stat-card:nth-child(3){animation-delay:0.15s}
+  .stat-card:nth-child(4){animation-delay:0.2s}
+  @keyframes slideUp {
+    from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)}
+  }
+  .stat-accent {
+    position: absolute; top:-20px; right:-20px;
+    width: 80px; height: 80px; border-radius: 50%;
+    opacity: 0.15; filter: blur(20px);
+  }
+  .stat-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .stat-value { font-size: 30px; font-weight: 600; font-family: 'Cormorant Garamond'; }
+  .stat-delta { font-size: 11px; color: var(--teal); margin-top: 4px; }
+
+  /* Content Grid */
+  .content-grid { display: grid; grid-template-columns: 1fr 320px; gap: 24px; }
+
+  /* Posts */
+  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .section-title { font-size: 16px; font-weight: 600; }
+  .filter-tabs { display: flex; gap: 6px; }
+  .tab {
+    padding: 6px 14px; border-radius: 8px; font-size: 12px; cursor: pointer;
+    border: 1px solid transparent; transition: all 0.2s; color: var(--muted);
+  }
+  .tab.active { background: var(--glass); border-color: var(--glass-border); color: var(--text); }
+
+  .post-card {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(18px);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    animation: slideUp 0.5s ease both;
+  }
+  .post-card:hover { border-color: var(--purple); transform: translateX(3px); }
+  .post-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .post-cat {
+    font-size: 10px; padding: 3px 10px; border-radius: 999px;
+    font-family: 'Fira Code'; letter-spacing: 0.5px;
+  }
+  .cat-tech { background: rgba(124,111,247,0.2); color: var(--purple); border: 1px solid rgba(124,111,247,0.3); }
+  .cat-life { background: rgba(79,209,197,0.2); color: var(--teal); border: 1px solid rgba(79,209,197,0.3); }
+  .cat-design { background: rgba(246,166,35,0.2); color: var(--amber); border: 1px solid rgba(246,166,35,0.3); }
+  .post-date { font-size: 11px; color: var(--muted); }
+  .post-title { font-family: 'Cormorant Garamond'; font-size: 20px; font-weight: 600; margin-bottom: 6px; line-height: 1.3; }
+  .post-excerpt { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 14px; }
+  .post-footer { display: flex; align-items: center; justify-content: space-between; }
+  .post-author { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); }
+  .post-author .av { width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--teal));display:flex;align-items:center;justify-content:center;font-size:10px;color:white;font-weight:600; }
+  .post-stats { display: flex; gap: 14px; }
+  .post-stat { font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 4px; }
+  .status-dot { width:6px;height:6px;border-radius:50%;display:inline-block; }
+  .published { background: var(--teal); }
+  .draft { background: var(--amber); }
+
+  /* Right sidebar */
+  .right-panel {}
+  .panel-card {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(18px);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 16px;
+    animation: slideUp 0.5s 0.3s ease both;
+  }
+  .trending-item {
+    display: flex; align-items: start; gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--glass-border);
+  }
+  .trending-item:last-child { border-bottom: none; }
+  .trending-num { font-family: 'Fira Code'; font-size: 11px; color: var(--purple); opacity: 0.7; padding-top: 2px; }
+  .trending-title { font-size: 13px; font-weight: 500; line-height: 1.4; }
+  .trending-views { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  .tag-cloud { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tag {
+    padding: 5px 12px; border-radius: 999px; font-size: 11px;
+    background: var(--glass); border: 1px solid var(--glass-border);
+    cursor: pointer; transition: all 0.2s; font-family: 'Fira Code';
+  }
+  .tag:hover { border-color: var(--purple); color: var(--purple); }
+
+  /* Editor Modal */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(8px);
+    z-index: 200;
+    align-items: center; justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: rgba(18,18,32,0.95);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    width: 720px; max-height: 90vh;
+    padding: 32px; overflow-y: auto;
+    animation: modalIn 0.3s ease;
+  }
+  @keyframes modalIn { from{opacity:0;transform:scale(0.95)} to{opacity:1;transform:scale(1)} }
+  .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+  .modal-title { font-family: 'Cormorant Garamond'; font-size: 26px; font-weight: 600; }
+  .close-btn { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 20px; }
+  .form-group { margin-bottom: 18px; }
+  .form-label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; display: block; }
+  .form-input, .form-textarea, .form-select {
+    width: 100%; padding: 12px 14px;
+    background: var(--glass); border: 1px solid var(--glass-border);
+    border-radius: 10px; color: var(--text);
+    font-family: 'Outfit'; font-size: 14px;
+    outline: none; transition: border-color 0.2s;
+  }
+  .form-input:focus, .form-textarea:focus { border-color: var(--purple); }
+  .form-textarea { resize: vertical; min-height: 140px; }
+  .form-select option { background: #1a1a2e; }
+  .toolbar { display: flex; gap: 6px; margin-bottom: 8px; flex-wrap: wrap; }
+  .tool-btn {
+    padding: 6px 10px; border-radius: 6px; border: 1px solid var(--glass-border);
+    background: var(--glass); color: var(--muted); cursor: pointer;
+    font-family: 'Fira Code'; font-size: 12px; transition: all 0.2s;
+  }
+  .tool-btn:hover { color: var(--text); border-color: var(--purple); }
+  .modal-footer { display: flex; justify-content: end; gap: 10px; margin-top: 20px; }
+
+  /* Toast */
+  .toast {
+    position: fixed; bottom: 28px; right: 28px;
+    background: rgba(18,18,32,0.95);
+    border: 1px solid var(--teal);
+    border-radius: 12px; padding: 14px 20px;
+    font-size: 13px; color: var(--teal);
+    z-index: 999; display: none;
+    animation: toastIn 0.3s ease;
+  }
+  @keyframes toastIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+  .search-bar {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--glass); border: 1px solid var(--glass-border);
+    border-radius: 10px; padding: 8px 14px;
+    font-size: 13px; color: var(--muted);
+    cursor: text;
+  }
+</style>
+</head>
+<body>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <div class="logo"><span>Ink</span>well</div>
+  <div class="nav-section">Content</div>
+  <div class="nav-item active" onclick="setNav(this)"><span class="nav-icon">📝</span> Dashboard</div>
+  <div class="nav-item" onclick="setNav(this)"><span class="nav-icon">📰</span> All Posts <span class="badge">24</span></div>
+  <div class="nav-item" onclick="setNav(this)"><span class="nav-icon">✏️</span> Drafts <span class="badge">5</span></div>
+  <div class="nav-item" onclick="setNav(this)"><span class="nav-icon">📂</span> Categories</div>
+  <div class="nav-section">Engagement</div>
+  <div class="nav-item" onclick="setNav(this)"><span class="nav-icon">💬</span> Comments <span class="badge">12</span></div>
+  <div class="nav-item" onclick="setNav(this)"><span class="nav-icon">👥</span> Readers</div>
+  <div class="nav-item" onclick="setNav(this)"><span class="nav-icon">📊</span> Analytics</div>
+  <div class="nav-section">Settings</div>
+  <div class="nav-item" onclick="setNav(this)"><span class="nav-icon">⚙️</span> Settings</div>
+  <div class="sidebar-bottom">
+    <div class="user-card">
+      <div class="avatar">S</div>
+      <div class="user-info">
+        <div class="name">Shriram</div>
+        <div class="role">Author · Pro</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- Main -->
+<main class="main">
+  <div class="topbar">
+    <div>
+      <div class="page-title">Your <span>Stories</span></div>
+      <div style="font-size:13px;color:var(--muted);margin-top:4px;">Welcome back — 3 drafts waiting for you</div>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center;">
+      <div class="search-bar" style="width:220px;">🔍 Search posts...</div>
+      <button class="btn btn-primary" onclick="openModal()">✦ New Post</button>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-accent" style="background:var(--purple)"></div>
+      <div class="stat-label">Total Posts</div>
+      <div class="stat-value">48</div>
+      <div class="stat-delta">↑ 4 this month</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-accent" style="background:var(--teal)"></div>
+      <div class="stat-label">Total Views</div>
+      <div class="stat-value">124K</div>
+      <div class="stat-delta">↑ 18% vs last month</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-accent" style="background:var(--amber)"></div>
+      <div class="stat-label">Subscribers</div>
+      <div class="stat-value">2,841</div>
+      <div class="stat-delta">↑ 142 new</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-accent" style="background:var(--purple)"></div>
+      <div class="stat-label">Avg Read Time</div>
+      <div class="stat-value">4.2m</div>
+      <div class="stat-delta">↑ 0.4m improvement</div>
+    </div>
+  </div>
+
+  <div class="content-grid">
+    <div>
+      <div class="section-header">
+        <div class="section-title">Recent Posts</div>
+        <div class="filter-tabs">
+          <div class="tab active" onclick="setTab(this)">All</div>
+          <div class="tab" onclick="setTab(this)">Published</div>
+          <div class="tab" onclick="setTab(this)">Drafts</div>
+        </div>
+      </div>
+      <div id="posts-container">
+        <!-- Posts rendered by JS -->
+      </div>
+    </div>
+
+    <div class="right-panel">
+      <div class="panel-card">
+        <div class="section-title" style="margin-bottom:14px;">🔥 Trending</div>
+        <div id="trending-container"></div>
+      </div>
+      <div class="panel-card">
+        <div class="section-title" style="margin-bottom:14px;">🏷️ Popular Tags</div>
+        <div class="tag-cloud" id="tags"></div>
+      </div>
+      <div class="panel-card">
+        <div class="section-title" style="margin-bottom:14px;">📅 Schedule</div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.8;">
+          <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--glass-border)">
+            <span>The Art of Focus</span><span style="color:var(--amber);font-family:'Fira Code';font-size:11px">Tomorrow</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--glass-border)">
+            <span>Deep Work Guide</span><span style="color:var(--teal);font-family:'Fira Code';font-size:11px">May 10</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0">
+            <span>CSS Grid Mastery</span><span style="color:var(--purple);font-family:'Fira Code';font-size:11px">May 14</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Editor Modal -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">New Post</div>
+      <button class="close-btn" onclick="closeModal()">✕</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Post Title</label>
+      <input type="text" class="form-input" placeholder="An unforgettable headline..." id="post-title">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Category</label>
+      <select class="form-select" id="post-cat">
+        <option>Technology</option>
+        <option>Lifestyle</option>
+        <option>Design</option>
+        <option>Philosophy</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Content</label>
+      <div class="toolbar">
+        <button class="tool-btn">B</button>
+        <button class="tool-btn"><i>I</i></button>
+        <button class="tool-btn">H1</button>
+        <button class="tool-btn">H2</button>
+        <button class="tool-btn">🔗</button>
+        <button class="tool-btn">📷</button>
+        <button class="tool-btn">❝</button>
+        <button class="tool-btn">`</button>
+      </div>
+      <textarea class="form-textarea" id="post-content" placeholder="Start writing your story..."></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Tags (comma separated)</label>
+      <input type="text" class="form-input" placeholder="design, css, frontend" id="post-tags">
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="savePost('draft')">Save Draft</button>
+      <button class="btn btn-primary" onclick="savePost('published')">✦ Publish</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">✓ Post published successfully!</div>
+
+<script>
+const posts = [
+  { title:"Building Better Design Systems in 2024", cat:"Technology", date:"May 5, 2025", author:"Shriram", views:"3.4K", likes:128, comments:24, status:"published", excerpt:"Design systems have evolved far beyond component libraries. In this deep dive we explore..." },
+  { title:"The Philosophy of Slow Living", cat:"Lifestyle", date:"May 2, 2025", author:"Priya R.", views:"8.1K", likes:342, comments:87, status:"published", excerpt:"In a world that glorifies speed, choosing slowness is a radical act. This essay explores what it means..." },
+  { title:"Glassmorphism: Beyond the Trend", cat:"Design", date:"Apr 28, 2025", author:"Shriram", views:"5.6K", likes:201, comments:45, status:"published", excerpt:"We look at where the glass aesthetic came from, where it's going, and how to use it without overdoing it..." },
+  { title:"Why I Deleted All My Social Apps", cat:"Lifestyle", date:"Apr 20, 2025", author:"Karan M.", views:"12.3K", likes:891, comments:156, status:"published", excerpt:"The experiment started as 30 days. It became permanent. Here's what changed and what I learned..." },
+  { title:"Rust vs Go: An Honest Comparison", cat:"Technology", date:"Apr 15, 2025", author:"Shriram", views:"2.1K", likes:74, comments:31, status:"draft", excerpt:"Both languages promise systems-level performance. But they target very different programmers..." },
+];
+
+const catClass = { Technology:'cat-tech', Lifestyle:'cat-life', Design:'cat-design', Philosophy:'cat-tech' };
+
+function renderPosts() {
+  const container = document.getElementById('posts-container');
+  container.innerHTML = posts.map((p,i) => `
+    <div class="post-card" style="animation-delay:${i*0.07}s">
+      <div class="post-meta">
+        <span class="post-cat ${catClass[p.cat]||'cat-tech'}">${p.cat}</span>
+        <span class="post-date">${p.date}</span>
+        <span class="status-dot ${p.status}"></span>
+        <span style="font-size:11px;color:var(--muted)">${p.status}</span>
+      </div>
+      <div class="post-title">${p.title}</div>
+      <div class="post-excerpt">${p.excerpt}</div>
+      <div class="post-footer">
+        <div class="post-author">
+          <div class="av">${p.author[0]}</div>
+          ${p.author}
+        </div>
+        <div class="post-stats">
+          <span class="post-stat">👁 ${p.views}</span>
+          <span class="post-stat">❤️ ${p.likes}</span>
+          <span class="post-stat">💬 ${p.comments}</span>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+const trending = [
+  { title:"Why I Deleted All My Social Apps", views:"12.3K views" },
+  { title:"The Philosophy of Slow Living", views:"8.1K views" },
+  { title:"Glassmorphism: Beyond the Trend", views:"5.6K views" },
+  { title:"Building Better Design Systems", views:"3.4K views" },
+];
+function renderTrending() {
+  document.getElementById('trending-container').innerHTML = trending.map((t,i)=>`
+    <div class="trending-item">
+      <div class="trending-num">0${i+1}</div>
+      <div><div class="trending-title">${t.title}</div><div class="trending-views">${t.views}</div></div>
+    </div>
+  `).join('');
+}
+
+const tags = ['CSS','JavaScript','React','Design','Lifestyle','Mindfulness','Productivity','Rust','TypeScript','UI/UX'];
+document.getElementById('tags').innerHTML = tags.map(t=>`<div class="tag">#${t}</div>`).join('');
+
+function setNav(el) { document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active')); el.classList.add('active'); }
+function setTab(el) { document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active')); el.classList.add('active'); }
+function openModal() { document.getElementById('modal').classList.add('open'); }
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
+function savePost(status) {
+  const title = document.getElementById('post-title').value;
+  const cat = document.getElementById('post-cat').value;
+  const content = document.getElementById('post-content').value;
+  if(!title) { alert('Please add a title'); return; }
+  posts.unshift({ title, cat, date:'Just now', author:'Shriram', views:'0', likes:0, comments:0, status, excerpt: content.slice(0,100)+'...' });
+  renderPosts();
+  closeModal();
+  const toast = document.getElementById('toast');
+  toast.textContent = status === 'published' ? '✓ Post published!' : '✓ Draft saved!';
+  toast.style.display = 'block';
+  setTimeout(()=>toast.style.display='none', 3000);
+  document.getElementById('post-title').value='';
+  document.getElementById('post-content').value='';
+}
+
+renderPosts(); renderTrending();
+</script>
+</body>
+</html>

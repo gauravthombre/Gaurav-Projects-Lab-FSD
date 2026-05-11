@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MedCare – Hospital Appointment System</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-logo">MED<span>CARE</span></div>
+  <nav>
+    <a href="#" class="nav-item active">🏥 Dashboard</a>
+    <a href="#" class="nav-item" onclick="showPage('book')">📅 Book Appointment</a>
+    <a href="#" class="nav-item" onclick="showPage('appointments')">📋 My Appointments</a>
+    <a href="#" class="nav-item" onclick="showPage('doctors')">👨‍⚕️ Doctors</a>
+    <a href="#" class="nav-item">💊 Prescriptions</a>
+    <a href="#" class="nav-item">📊 Reports</a>
+  </nav>
+  <div class="sidebar-user">
+    <div class="avatar">JD</div>
+    <div>
+      <p class="user-name">John Doe</p>
+      <p class="user-id">Patient #10042</p>
+    </div>
+  </div>
+</aside>
+
+<main class="main-content">
+
+  <!-- Dashboard -->
+  <div class="page active" id="page-dashboard">
+    <h1>Good Morning, John 👋</h1>
+    <p class="subtitle">Here's your health overview for today</p>
+
+    <div class="stats-grid">
+      <div class="stat-card blue">
+        <div class="stat-icon">📅</div>
+        <div class="stat-value">3</div>
+        <div class="stat-label">Upcoming Appointments</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-icon">✅</div>
+        <div class="stat-value">12</div>
+        <div class="stat-label">Completed Visits</div>
+      </div>
+      <div class="stat-card orange">
+        <div class="stat-icon">💊</div>
+        <div class="stat-value">2</div>
+        <div class="stat-label">Active Prescriptions</div>
+      </div>
+      <div class="stat-card purple">
+        <div class="stat-icon">🧪</div>
+        <div class="stat-value">1</div>
+        <div class="stat-label">Pending Lab Results</div>
+      </div>
+    </div>
+
+    <h2>Upcoming Appointments</h2>
+    <div class="appointments-list" id="dashAppts"></div>
+
+    <h2>Available Specialists</h2>
+    <div class="doctors-strip" id="dashDoctors"></div>
+  </div>
+
+  <!-- Book Appointment -->
+  <div class="page" id="page-book">
+    <h1>Book an Appointment</h1>
+    <p class="subtitle">Choose your specialist and preferred time</p>
+
+    <div class="book-form">
+      <div class="form-group">
+        <label>Specialization</label>
+        <select id="specSelect" onchange="filterDoctors()">
+          <option value="">All Specializations</option>
+          <option>Cardiology</option>
+          <option>Neurology</option>
+          <option>Orthopedics</option>
+          <option>Dermatology</option>
+          <option>Pediatrics</option>
+          <option>General Medicine</option>
+        </select>
+      </div>
+
+      <h3>Select a Doctor</h3>
+      <div class="doctor-cards" id="doctorCards"></div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Date</label>
+          <input type="date" id="apptDate">
+        </div>
+        <div class="form-group">
+          <label>Time Slot</label>
+          <select id="apptTime">
+            <option>09:00 AM</option>
+            <option>10:00 AM</option>
+            <option>11:00 AM</option>
+            <option>12:00 PM</option>
+            <option>02:00 PM</option>
+            <option>03:00 PM</option>
+            <option>04:00 PM</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Reason for Visit</label>
+        <textarea placeholder="Briefly describe your symptoms or reason for visit..." rows="3"></textarea>
+      </div>
+
+      <button class="btn-primary" onclick="bookAppointment()">Confirm Appointment</button>
+    </div>
+  </div>
+
+  <!-- My Appointments -->
+  <div class="page" id="page-appointments">
+    <h1>My Appointments</h1>
+    <p class="subtitle">Track and manage all your appointments</p>
+    <div class="appointments-list" id="allAppts"></div>
+  </div>
+
+  <!-- Doctors -->
+  <div class="page" id="page-doctors">
+    <h1>Our Doctors</h1>
+    <p class="subtitle">Expert specialists for your care</p>
+    <div class="doctor-cards full" id="allDoctors"></div>
+  </div>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script src="script.js"></script>
+</body>
+</html>

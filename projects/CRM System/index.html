@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NexusCRM — Customer Relationship Management</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d1a;
+    --purple: #7c6ff7;
+    --teal: #4fd1c5;
+    --amber: #f6a623;
+    --red: #f56565;
+    --green: #48bb78;
+    --glass: rgba(255,255,255,0.06);
+    --glass-border: rgba(255,255,255,0.12);
+    --text: #e8e8f0;
+    --muted: rgba(232,232,240,0.5);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); font-family:'Outfit',sans-serif; color:var(--text); overflow-x:hidden; }
+  .orb { position:fixed; border-radius:50%; filter:blur(100px); opacity:0.15; pointer-events:none; animation:drift 14s ease-in-out infinite alternate; }
+  .orb1 { width:600px;height:600px;background:var(--purple);top:-200px;left:-150px; }
+  .orb2 { width:400px;height:400px;background:var(--teal);bottom:-100px;right:-100px;animation-delay:-6s; }
+  @keyframes drift { from{transform:translate(0,0)} to{transform:translate(25px,15px)} }
+
+  .sidebar {
+    position:fixed; left:0; top:0; height:100vh; width:240px;
+    background:rgba(13,13,26,0.85); backdrop-filter:blur(24px);
+    border-right:1px solid var(--glass-border); display:flex; flex-direction:column;
+    padding:24px 16px; z-index:100;
+  }
+  .logo { font-size:20px; font-weight:700; margin-bottom:32px; padding:0 8px; }
+  .logo .nexus { color:var(--purple); }
+  .logo .crm { color:var(--teal); }
+  .nav-group { font-size:10px; letter-spacing:2px; color:var(--muted); text-transform:uppercase; padding:0 8px; margin:18px 0 6px; }
+  .nav-item { display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:9px; cursor:pointer; color:var(--muted); font-size:13px; transition:all 0.2s; margin-bottom:2px; }
+  .nav-item:hover,.nav-item.active { background:var(--glass); border:1px solid var(--glass-border); color:var(--text); }
+  .nav-item.active { color:var(--purple); border-color:rgba(124,111,247,0.3); }
+  .nav-badge { margin-left:auto; background:var(--purple); color:white; font-size:9px; padding:1px 6px; border-radius:999px; font-family:'Fira Code'; }
+  .nav-badge.red { background:var(--red); }
+  .sidebar-footer { margin-top:auto; }
+  .user-pill { display:flex; align-items:center; gap:10px; padding:10px; border-radius:10px; background:var(--glass); border:1px solid var(--glass-border); }
+  .avatar { width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--teal));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:white; }
+  .user-info .uname { font-size:12px;font-weight:600; }
+  .user-info .urole { font-size:10px;color:var(--muted); }
+
+  .main { margin-left:240px; padding:28px 32px; }
+  .topbar { display:flex; align-items:center; justify-content:space-between; margin-bottom:28px; }
+  .page-head h1 { font-size:26px; font-weight:700; }
+  .page-head p { font-size:13px; color:var(--muted); margin-top:2px; }
+  .topbar-actions { display:flex; gap:10px; }
+  .btn { padding:9px 18px; border-radius:9px; border:none; font-family:'Outfit'; font-size:12px; font-weight:500; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; gap:6px; }
+  .btn-primary { background:linear-gradient(135deg,var(--purple),#5a52d5); color:white; box-shadow:0 4px 16px rgba(124,111,247,0.35); }
+  .btn-primary:hover { transform:translateY(-1px); box-shadow:0 6px 24px rgba(124,111,247,0.5); }
+  .btn-ghost { background:var(--glass); border:1px solid var(--glass-border); color:var(--text); }
+
+  /* KPI Row */
+  .kpi-row { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:24px; }
+  .kpi-card { background:var(--glass); border:1px solid var(--glass-border); backdrop-filter:blur(18px); border-radius:14px; padding:18px; position:relative; overflow:hidden; animation:up 0.5s ease both; }
+  .kpi-card:nth-child(1){animation-delay:0.05s} .kpi-card:nth-child(2){animation-delay:0.1s} .kpi-card:nth-child(3){animation-delay:0.15s} .kpi-card:nth-child(4){animation-delay:0.2s}
+  @keyframes up { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+  .kpi-icon { font-size:22px; margin-bottom:10px; }
+  .kpi-label { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; }
+  .kpi-value { font-size:28px; font-weight:700; font-family:'Fira Code'; margin:4px 0; }
+  .kpi-change { font-size:11px; }
+  .up { color:var(--green); }
+  .down { color:var(--red); }
+
+  /* Pipeline */
+  .pipeline-section { margin-bottom:24px; }
+  .section-title { font-size:15px; font-weight:600; margin-bottom:14px; }
+  .pipeline { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; }
+  .pipeline-col { background:var(--glass); border:1px solid var(--glass-border); backdrop-filter:blur(18px); border-radius:14px; padding:14px; min-height:320px; }
+  .col-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+  .col-title { font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:1px; }
+  .col-count { font-size:11px; font-family:'Fira Code'; background:rgba(255,255,255,0.08); padding:2px 8px; border-radius:999px; }
+  .deal-card { background:rgba(255,255,255,0.04); border:1px solid var(--glass-border); border-radius:10px; padding:12px; margin-bottom:8px; cursor:pointer; transition:all 0.2s; }
+  .deal-card:hover { border-color:var(--purple); transform:translateY(-1px); }
+  .deal-name { font-size:13px; font-weight:500; margin-bottom:4px; }
+  .deal-company { font-size:11px; color:var(--muted); margin-bottom:8px; }
+  .deal-value { font-size:12px; font-family:'Fira Code'; color:var(--teal); }
+  .deal-meta { display:flex; align-items:center; justify-content:space-between; margin-top:8px; }
+  .deal-owner { width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--teal));display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:white; }
+  .deal-days { font-size:10px; color:var(--muted); font-family:'Fira Code'; }
+  .stage-lead { border-top:2px solid var(--amber); }
+  .stage-contact { border-top:2px solid var(--purple); }
+  .stage-proposal { border-top:2px solid var(--teal); }
+  .stage-negotiation { border-top:2px solid var(--green); }
+  .stage-won { border-top:2px solid #48bb78; }
+
+  /* Bottom Grid */
+  .bottom-grid { display:grid; grid-template-columns:1fr 340px; gap:18px; }
+  .panel { background:var(--glass); border:1px solid var(--glass-border); backdrop-filter:blur(18px); border-radius:14px; padding:20px; animation:up 0.5s 0.35s ease both; }
+
+  /* Contacts Table */
+  table { width:100%; border-collapse:collapse; }
+  th { font-size:10px; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); padding:8px 12px; text-align:left; border-bottom:1px solid var(--glass-border); }
+  td { padding:11px 12px; font-size:13px; border-bottom:1px solid rgba(255,255,255,0.04); }
+  tr:hover td { background:rgba(255,255,255,0.02); }
+  .contact-cell { display:flex; align-items:center; gap:10px; }
+  .contact-av { width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--amber));display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:white;flex-shrink:0; }
+  .contact-name { font-weight:500; }
+  .contact-email { font-size:11px; color:var(--muted); }
+  .status-pill { display:inline-block; padding:3px 9px; border-radius:999px; font-size:10px; font-family:'Fira Code'; }
+  .status-active { background:rgba(72,187,120,0.15); color:var(--green); border:1px solid rgba(72,187,120,0.3); }
+  .status-lead { background:rgba(246,166,35,0.15); color:var(--amber); border:1px solid rgba(246,166,35,0.3); }
+  .status-cold { background:rgba(255,255,255,0.06); color:var(--muted); border:1px solid var(--glass-border); }
+
+  /* Activities */
+  .activity-item { display:flex; gap:12px; padding:10px 0; border-bottom:1px solid var(--glass-border); }
+  .activity-item:last-child { border-bottom:none; }
+  .act-icon { width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;background:var(--glass); }
+  .act-text { font-size:12px; line-height:1.5; }
+  .act-time { font-size:10px; color:var(--muted); margin-top:2px; font-family:'Fira Code'; }
+
+  /* Modal */
+  .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); backdrop-filter:blur(8px); z-index:200; align-items:center; justify-content:center; }
+  .modal-overlay.open { display:flex; }
+  .modal { background:rgba(18,18,32,0.97); border:1px solid var(--glass-border); border-radius:18px; width:560px; padding:28px; animation:min 0.3s ease; }
+  @keyframes min { from{opacity:0;transform:scale(0.96)} to{opacity:1;transform:scale(1)} }
+  .modal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:22px; }
+  .modal-title { font-size:20px; font-weight:700; }
+  .close-btn { background:none; border:none; color:var(--muted); cursor:pointer; font-size:18px; }
+  .form-group { margin-bottom:16px; }
+  .form-label { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; display:block; margin-bottom:6px; }
+  .form-input, .form-select { width:100%; padding:10px 12px; background:var(--glass); border:1px solid var(--glass-border); border-radius:9px; color:var(--text); font-family:'Outfit'; font-size:13px; outline:none; transition:border-color 0.2s; }
+  .form-input:focus { border-color:var(--purple); }
+  .form-select option { background:#1a1a2e; }
+  .form-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .modal-footer { display:flex; justify-content:end; gap:10px; margin-top:20px; }
+  .toast { position:fixed; bottom:24px; right:24px; background:rgba(18,18,32,0.97); border:1px solid var(--teal); border-radius:10px; padding:12px 18px; font-size:13px; color:var(--teal); z-index:999; display:none; }
+</style>
+</head>
+<body>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+
+<aside class="sidebar">
+  <div class="logo"><span class="nexus">Nexus</span><span class="crm">CRM</span></div>
+  <div class="nav-group">Core</div>
+  <div class="nav-item active" onclick="setNav(this)">📊 Dashboard</div>
+  <div class="nav-item" onclick="setNav(this)">👥 Contacts <span class="nav-badge">148</span></div>
+  <div class="nav-item" onclick="setNav(this)">🏢 Companies</div>
+  <div class="nav-item" onclick="setNav(this)">💼 Deals <span class="nav-badge">32</span></div>
+  <div class="nav-group">Sales</div>
+  <div class="nav-item" onclick="setNav(this)">🔀 Pipeline</div>
+  <div class="nav-item" onclick="setNav(this)">📋 Tasks <span class="nav-badge red">7</span></div>
+  <div class="nav-item" onclick="setNav(this)">📧 Emails</div>
+  <div class="nav-item" onclick="setNav(this)">📅 Meetings</div>
+  <div class="nav-group">Insights</div>
+  <div class="nav-item" onclick="setNav(this)">📈 Reports</div>
+  <div class="nav-item" onclick="setNav(this)">⚙️ Settings</div>
+  <div class="sidebar-footer">
+    <div class="user-pill">
+      <div class="avatar">S</div>
+      <div class="user-info">
+        <div class="uname">Shriram</div>
+        <div class="urole">Sales Manager</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<main class="main">
+  <div class="topbar">
+    <div class="page-head">
+      <h1>CRM Dashboard</h1>
+      <p>Thursday, May 7, 2025 · Q2 Performance</p>
+    </div>
+    <div class="topbar-actions">
+      <button class="btn btn-ghost">📥 Import</button>
+      <button class="btn btn-primary" onclick="openModal()">+ Add Contact</button>
+    </div>
+  </div>
+
+  <div class="kpi-row">
+    <div class="kpi-card">
+      <div class="kpi-icon">💰</div>
+      <div class="kpi-label">Revenue (Q2)</div>
+      <div class="kpi-value" style="color:var(--teal)">₹84.2L</div>
+      <div class="kpi-change up">↑ 23% vs Q1</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon">📊</div>
+      <div class="kpi-label">Pipeline Value</div>
+      <div class="kpi-value" style="color:var(--purple)">₹2.1Cr</div>
+      <div class="kpi-change up">↑ 14 new deals</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon">🎯</div>
+      <div class="kpi-label">Win Rate</div>
+      <div class="kpi-value" style="color:var(--amber)">67%</div>
+      <div class="kpi-change up">↑ 5% improvement</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon">⏱️</div>
+      <div class="kpi-label">Avg Deal Cycle</div>
+      <div class="kpi-value" style="color:var(--text)">18d</div>
+      <div class="kpi-change down">↓ 3 days faster</div>
+    </div>
+  </div>
+
+  <!-- Pipeline -->
+  <div class="pipeline-section">
+    <div class="section-title">Sales Pipeline</div>
+    <div class="pipeline">
+      <div class="pipeline-col stage-lead">
+        <div class="col-header"><span class="col-title" style="color:var(--amber)">Lead</span><span class="col-count">6</span></div>
+        <div class="deal-card"><div class="deal-name">Tata Consultancy</div><div class="deal-company">TCS · Enterprise</div><div class="deal-value">₹8,50,000</div><div class="deal-meta"><div class="deal-owner">S</div><div class="deal-days">Day 2</div></div></div>
+        <div class="deal-card"><div class="deal-name">Flipkart SEO Suite</div><div class="deal-company">Flipkart · Mid-Market</div><div class="deal-value">₹3,20,000</div><div class="deal-meta"><div class="deal-owner">P</div><div class="deal-days">Day 5</div></div></div>
+        <div class="deal-card"><div class="deal-name">Zomato Analytics</div><div class="deal-company">Zomato · Startup</div><div class="deal-value">₹1,80,000</div><div class="deal-meta"><div class="deal-owner">K</div><div class="deal-days">Day 1</div></div></div>
+      </div>
+      <div class="pipeline-col stage-contact">
+        <div class="col-header"><span class="col-title" style="color:var(--purple)">Contact</span><span class="col-count">4</span></div>
+        <div class="deal-card"><div class="deal-name">Infosys Platform</div><div class="deal-company">Infosys · Enterprise</div><div class="deal-value">₹12,00,000</div><div class="deal-meta"><div class="deal-owner">S</div><div class="deal-days">Day 8</div></div></div>
+        <div class="deal-card"><div class="deal-name">Byju's CMS</div><div class="deal-company">Byju's · EdTech</div><div class="deal-value">₹4,50,000</div><div class="deal-meta"><div class="deal-owner">A</div><div class="deal-days">Day 11</div></div></div>
+      </div>
+      <div class="pipeline-col stage-proposal">
+        <div class="col-header"><span class="col-title" style="color:var(--teal)">Proposal</span><span class="col-count">5</span></div>
+        <div class="deal-card"><div class="deal-name">Reliance Jio</div><div class="deal-company">Jio · Telecom</div><div class="deal-value">₹24,00,000</div><div class="deal-meta"><div class="deal-owner">S</div><div class="deal-days">Day 14</div></div></div>
+        <div class="deal-card"><div class="deal-name">HDFC Digital</div><div class="deal-company">HDFC Bank · Finance</div><div class="deal-value">₹18,00,000</div><div class="deal-meta"><div class="deal-owner">M</div><div class="deal-days">Day 20</div></div></div>
+      </div>
+      <div class="pipeline-col stage-negotiation">
+        <div class="col-header"><span class="col-title" style="color:var(--green)">Negotiate</span><span class="col-count">3</span></div>
+        <div class="deal-card"><div class="deal-name">Razorpay API</div><div class="deal-company">Razorpay · Fintech</div><div class="deal-value">₹9,60,000</div><div class="deal-meta"><div class="deal-owner">S</div><div class="deal-days">Day 25</div></div></div>
+      </div>
+      <div class="pipeline-col stage-won">
+        <div class="col-header"><span class="col-title" style="color:var(--green)">Won ✓</span><span class="col-count">8</span></div>
+        <div class="deal-card" style="border-color:rgba(72,187,120,0.25)"><div class="deal-name">Swiggy Dashboard</div><div class="deal-company">Swiggy · FoodTech</div><div class="deal-value" style="color:var(--green)">₹6,40,000</div><div class="deal-meta"><div class="deal-owner">S</div><div class="deal-days">Closed</div></div></div>
+        <div class="deal-card" style="border-color:rgba(72,187,120,0.25)"><div class="deal-name">OYO Rooms CRM</div><div class="deal-company">OYO · Hospitality</div><div class="deal-value" style="color:var(--green)">₹3,80,000</div><div class="deal-meta"><div class="deal-owner">P</div><div class="deal-days">Closed</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-grid">
+    <div class="panel">
+      <div class="section-title" style="margin-bottom:14px">Recent Contacts</div>
+      <table>
+        <thead><tr><th>Contact</th><th>Company</th><th>Status</th><th>Value</th><th>Last Touch</th></tr></thead>
+        <tbody id="contacts-tbody"></tbody>
+      </table>
+    </div>
+    <div class="panel">
+      <div class="section-title" style="margin-bottom:14px">Recent Activity</div>
+      <div id="activities"></div>
+    </div>
+  </div>
+</main>
+
+<!-- Add Contact Modal -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Add Contact</div>
+      <button class="close-btn" onclick="closeModal()">✕</button>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">First Name</label><input class="form-input" id="fname" placeholder="Ravi"></div>
+      <div class="form-group"><label class="form-label">Last Name</label><input class="form-input" id="lname" placeholder="Sharma"></div>
+    </div>
+    <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="email" type="email" placeholder="ravi@company.com"></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Company</label><input class="form-input" id="company" placeholder="Infosys"></div>
+      <div class="form-group"><label class="form-label">Status</label>
+        <select class="form-select" id="status"><option>Lead</option><option>Active</option><option>Cold</option></select>
+      </div>
+    </div>
+    <div class="form-group"><label class="form-label">Deal Value (₹)</label><input class="form-input" id="value" type="number" placeholder="500000"></div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="addContact()">+ Add Contact</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast">✓ Contact added!</div>
+
+<script>
+const contacts = [
+  { name:'Ananya Krishnan', email:'ananya@tcs.com', company:'TCS', status:'active', value:'₹8,50,000', touch:'Today' },
+  { name:'Rohan Mehra', email:'rohan@infosys.com', company:'Infosys', status:'lead', value:'₹12,00,000', touch:'Yesterday' },
+  { name:'Priya Nair', email:'priya@flipkart.com', company:'Flipkart', status:'active', value:'₹3,20,000', touch:'May 5' },
+  { name:'Vikram Singh', email:'vikram@hdfc.com', company:'HDFC Bank', status:'lead', value:'₹18,00,000', touch:'May 4' },
+  { name:'Divya Rao', email:'divya@zomato.com', company:'Zomato', status:'cold', value:'₹1,80,000', touch:'Apr 30' },
+];
+const statusMap = { active:'status-active', lead:'status-lead', cold:'status-cold' };
+
+function renderContacts() {
+  document.getElementById('contacts-tbody').innerHTML = contacts.map(c=>`
+    <tr>
+      <td><div class="contact-cell"><div class="contact-av">${c.name[0]}</div><div><div class="contact-name">${c.name}</div><div class="contact-email">${c.email}</div></div></div></td>
+      <td>${c.company}</td>
+      <td><span class="status-pill ${statusMap[c.status]}">${c.status}</span></td>
+      <td style="font-family:'Fira Code';font-size:12px;color:var(--teal)">${c.value}</td>
+      <td style="font-size:12px;color:var(--muted)">${c.touch}</td>
+    </tr>
+  `).join('');
+}
+
+const activities = [
+  { icon:'📧', text:'Email sent to <b>Ananya Krishnan</b> regarding Q2 proposal', time:'10 min ago' },
+  { icon:'📞', text:'Call logged with <b>Rohan Mehra</b> · 18 min duration', time:'1 hour ago' },
+  { icon:'✅', text:'Deal <b>Swiggy Dashboard</b> marked as Won', time:'2 hours ago' },
+  { icon:'📝', text:'Note added to <b>HDFC Digital</b> account', time:'Today, 9:30 AM' },
+  { icon:'👥', text:'New contact <b>Vikram Singh</b> added from HDFC Bank', time:'Yesterday' },
+  { icon:'📋', text:'Task "Send follow-up to Byju\'s" completed', time:'Yesterday' },
+];
+document.getElementById('activities').innerHTML = activities.map(a=>`
+  <div class="activity-item">
+    <div class="act-icon">${a.icon}</div>
+    <div><div class="act-text">${a.text}</div><div class="act-time">${a.time}</div></div>
+  </div>
+`).join('');
+
+function setNav(el) { document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active')); el.classList.add('active'); }
+function openModal() { document.getElementById('modal').classList.add('open'); }
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
+function addContact() {
+  const fname = document.getElementById('fname').value;
+  const lname = document.getElementById('lname').value;
+  const email = document.getElementById('email').value;
+  const company = document.getElementById('company').value;
+  const status = document.getElementById('status').value.toLowerCase();
+  const value = document.getElementById('value').value;
+  if (!fname || !email) { alert('Name and email required'); return; }
+  contacts.unshift({ name:`${fname} ${lname}`, email, company, status, value: value?`₹${parseInt(value).toLocaleString('en-IN')}`:'—', touch:'Just now' });
+  renderContacts();
+  closeModal();
+  const toast = document.getElementById('toast');
+  toast.style.display = 'block';
+  setTimeout(()=>toast.style.display='none', 3000);
+}
+renderContacts();
+</script>
+</body>
+</html>

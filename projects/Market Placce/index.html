@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bazaar – Online Marketplace</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">BAZAAR</div>
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search for anything..." oninput="searchProducts()">
+      <button>🔍</button>
+    </div>
+    <div class="header-actions">
+      <button class="btn-seller" onclick="showPage('sell')">+ Sell Item</button>
+      <div class="cart-icon" onclick="showCart()">🛒 <span id="cartCount">0</span></div>
+      <div class="user-avatar">AB</div>
+    </div>
+  </div>
+  <nav class="categories">
+    <span class="cat active" onclick="filterCat('')">All</span>
+    <span class="cat" onclick="filterCat('Electronics')">Electronics</span>
+    <span class="cat" onclick="filterCat('Fashion')">Fashion</span>
+    <span class="cat" onclick="filterCat('Home')">Home & Garden</span>
+    <span class="cat" onclick="filterCat('Sports')">Sports</span>
+    <span class="cat" onclick="filterCat('Books')">Books</span>
+  </nav>
+</header>
+
+<!-- Pages -->
+<main>
+
+  <div class="page active" id="page-home">
+    <div class="banner">
+      <div class="banner-text">
+        <h1>Shop Millions of Items</h1>
+        <p>Buy and sell with confidence on India's top marketplace</p>
+      </div>
+    </div>
+    <div class="section-header"><h2>Featured Products</h2></div>
+    <div class="products-grid" id="productsGrid"></div>
+  </div>
+
+  <div class="page" id="page-sell">
+    <div class="sell-form-wrap">
+      <h2>List an Item for Sale</h2>
+      <p class="sub">Reach millions of buyers across India</p>
+      <div class="sell-form">
+        <div class="form-group">
+          <label>Product Title</label>
+          <input type="text" id="sellTitle" placeholder="e.g. iPhone 14 Pro – 256GB">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Category</label>
+            <select id="sellCat">
+              <option>Electronics</option><option>Fashion</option><option>Home</option><option>Sports</option><option>Books</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Price (₹)</label>
+            <input type="number" id="sellPrice" placeholder="0">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea id="sellDesc" rows="4" placeholder="Describe your item, condition, etc."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Condition</label>
+          <select id="sellCondition">
+            <option>New</option><option>Like New</option><option>Good</option><option>Fair</option>
+          </select>
+        </div>
+        <button class="btn-primary" onclick="listItem()">List Item for Sale</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="page" id="page-cart">
+    <h2>Your Cart</h2>
+    <div class="cart-wrap">
+      <div class="cart-items" id="cartItems"></div>
+      <div class="cart-summary" id="cartSummary"></div>
+    </div>
+  </div>
+
+  <div class="page" id="page-product">
+    <div id="productDetail"></div>
+  </div>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
